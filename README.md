@@ -33,3 +33,5 @@ npm run check:launch
   `POSTHOG_KEY` is unset, the analytics script exits without loading PostHog.
 - Sentry is intentionally deferred for the static launch until project access
   and a production DSN are available. See `docs/observability.md`.
+- Blog conversion hygiene is covered by `npm run check:blog` and included in
+  `npm run check:launch`.
