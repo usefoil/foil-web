@@ -31,3 +31,5 @@ npm run check:launch
 - Set `SITE_URL` if production moves to another canonical domain.
 - Set `POSTHOG_KEY` and optional `POSTHOG_HOST` to enable analytics. When
   `POSTHOG_KEY` is unset, the analytics script exits without loading PostHog.
+- Sentry is intentionally deferred for the static launch until project access
+  and a production DSN are available. See `docs/observability.md`.
