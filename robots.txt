@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mean-weasel.github.io/foil/sitemap.xml
