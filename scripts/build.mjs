@@ -13,7 +13,7 @@ const textExtensions = new Set([".html", ".css", ".js", ".json", ".md", ".txt", 
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
 
-for (const entry of ["assets", "blog", "index.html", "styles.css", "robots.txt", "sitemap.xml", "analytics.js"]) {
+for (const entry of ["assets", "blog", "privacy", "index.html", "styles.css", "robots.txt", "sitemap.xml", "analytics.js"]) {
   await cp(join(root, entry), join(dist, entry), {
     recursive: true,
     filter: (source) => !excluded.has(source.split("/").at(-1))

@@ -21,6 +21,7 @@ const currentRelease = {
 
 const htmlFiles = [
   "index.html",
+  "privacy/index.html",
   "blog/index.html",
   "blog/superwhisper-alternative-for-mac/index.html",
   "blog/wispr-flow-vs-superwhisper-vs-foil/index.html",
@@ -74,6 +75,13 @@ assert(!/bridge[^.]{0,90}\b(shipped|released|available|download|install)\b/i.tes
 assert(allText.includes(`Foil ${currentRelease.version}`), `install trust copy must mention current release ${currentRelease.version}`);
 assert(allText.includes(`/releases/download/${currentRelease.tag}/Foil-${currentRelease.version}-macos.dmg.sha256`), "install trust copy must link the current DMG checksum");
 assert(allText.includes(`${currentRelease.dmgSha256.slice(0, 8)}...${currentRelease.dmgSha256.slice(-7)}`), "install trust copy must show the current DMG checksum fingerprint");
+assert(htmlFiles.includes("privacy/index.html"), "privacy page must be part of launch checks");
+assert(allText.includes('href="privacy/"'), "home page must link the privacy page");
+for (const serviceName of ["Vercel", "PostHog", "GitHub", "Sentry", "Supabase"]) {
+  assert(allText.includes(serviceName), `privacy surface must disclose ${serviceName}`);
+}
+assert(allText.includes("session recording") && allText.includes("disabled"), "privacy surface must disclose disabled session recording");
+assert(allText.includes("Supabase capture is not used by this static site"), "privacy surface must disclose current Supabase capture status");
 assert(robots.includes(`Sitemap: ${siteUrl}/sitemap.xml`), "robots.txt sitemap must use SITE_URL");
 
 for (const [, loc] of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
