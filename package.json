@@ -6,8 +6,9 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "check:analytics": "node scripts/check-analytics.mjs",
+    "check:blog": "node scripts/check-blog.mjs",
     "check:observability": "node scripts/check-observability.mjs",
-    "check:launch": "npm run build && node scripts/check-launch.mjs && npm run check:analytics && npm run check:observability",
+    "check:launch": "npm run build && node scripts/check-launch.mjs && npm run check:analytics && npm run check:blog && npm run check:observability",
     "serve": "python3 -m http.server 4173"
   },
   "engines": {
