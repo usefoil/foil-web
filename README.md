@@ -35,3 +35,5 @@ npm run check:launch
   and a production DSN are available. See `docs/observability.md`.
 - Blog conversion hygiene is covered by `npm run check:blog` and included in
   `npm run check:launch`.
+- Supabase capture is deferred until there is an approved capture use case,
+  RLS design, retention plan, and privacy/legal approval. See `docs/capture.md`.
