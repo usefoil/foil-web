@@ -23,3 +23,7 @@ The PostHog client is initialized with manual capture only, no pageview capture,
 | `blog_cta_click` | Blog preview, blog index, and article callout CTAs | `location`, `label`, `destination`, `page_path`, `environment` |
 
 Do not add event properties that include dictated text, clipboard contents, API keys, email addresses, or free-form user input.
+
+## Verification
+
+Run `npm run check:analytics` to simulate the PostHog loader locally without sending events. The check proves that analytics stay disabled without `POSTHOG_KEY`, the SDK initializes with privacy-conscious options when configured, and the intended conversion events capture only the documented properties.

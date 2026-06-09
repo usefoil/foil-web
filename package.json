@@ -5,7 +5,8 @@
   "description": "Static landing page and SEO content for Foil.",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "check:launch": "npm run build && node scripts/check-launch.mjs",
+    "check:analytics": "node scripts/check-analytics.mjs",
+    "check:launch": "npm run build && node scripts/check-launch.mjs && npm run check:analytics",
     "serve": "python3 -m http.server 4173"
   },
   "engines": {
