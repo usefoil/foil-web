@@ -21,6 +21,12 @@ For the Vercel build output and launch checks:
 npm run check:launch
 ```
 
+To smoke test a deployed preview or production URL:
+
+```sh
+SMOKE_URL=https://your-preview.example npm run check:deployed
+```
+
 ## Deployment Notes
 
 - Intended host: Vercel
@@ -37,3 +43,5 @@ npm run check:launch
   `npm run check:launch`.
 - Supabase capture is deferred until there is an approved capture use case,
   RLS design, retention plan, and privacy/legal approval. See `docs/capture.md`.
+- `.github/workflows/launch-smoke.yml` runs local launch checks on pull
+  requests and `main`; manual dispatch can also test a deployed URL.
