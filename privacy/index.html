@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Foil Privacy</title>
+    <meta
+      name="description"
+      content="Privacy notes for Foil web and the Foil macOS app, including analytics, transcription routes, local storage, and third-party services."
+    >
+    <link rel="canonical" href="https://usefoil.com/privacy/">
+    <meta property="og:title" content="Foil Privacy">
+    <meta property="og:description" content="How Foil handles website analytics, transcription routes, local app data, and third-party services.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://usefoil.com/privacy/">
+    <meta property="og:image" content="https://usefoil.com/assets/screenshots/foil-ready-control-center.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="theme-color" content="#0f4046">
+    <link rel="icon" href="../assets/foil-mark.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../styles.css?v=20260609-launch">
+    <script defer src="/analytics-config.js"></script>
+    <script defer src="/analytics.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../" aria-label="Foil home">
+        <img src="../assets/foil-mark.svg" alt="" width="34" height="34">
+        <span>Foil</span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href="../#workflow">Workflow</a>
+        <a href="../#providers">Providers</a>
+        <a href="../#privacy">Privacy</a>
+        <a href="../#install">Install</a>
+        <a href="https://github.com/usefoil/foil">GitHub</a>
+      </nav>
+    </header>
+
+    <main class="article-page">
+      <article>
+        <header class="article-hero">
+          <p class="detail-kicker">Privacy</p>
+          <h1>Foil privacy notes</h1>
+          <p>Last updated June 9, 2026. This page describes the current Foil website and macOS app privacy posture for launch.</p>
+        </header>
+
+        <div class="article-body">
+          <h2>Website analytics</h2>
+          <p>The Foil website is a static site hosted for launch on Vercel. Analytics are intentionally narrow and only load when a PostHog project key is configured at build time.</p>
+          <p>PostHog is configured for manual conversion events only. Autocapture, pageview capture, pageleave capture, dead-click capture, heatmaps, and session recording are disabled. Event properties are limited to location, label, destination, page path, and environment.</p>
+
+          <h2>Downloads and external services</h2>
+          <p>Foil downloads are hosted on GitHub Releases, and the Homebrew cask points to the same release artifact. Visiting GitHub or installing through Homebrew is subject to those services' own logs and policies.</p>
+          <p>Sentry is not currently wired into this static website. Supabase capture is not used by this static site. If either service is added for launch capture or observability, this page should be updated before production collection begins.</p>
+
+          <h2>Mac app data</h2>
+          <p>Foil can use local whisper.cpp, hosted transcription providers, or a custom OpenAI-compatible endpoint. Audio and transcript data go to the transcription or cleanup route you choose in the app.</p>
+          <p>API keys are stored in macOS Keychain. Transcription history is local to the Mac and can be limited or turned off. Successful audio files are deleted after transcription; failed audio may be retained locally for retryable failures.</p>
+          <p>Diagnostics are intended to be redacted before writing and should not include API keys, transcript text, raw audio, or clipboard contents.</p>
+
+          <h2>Feature status</h2>
+          <p>The bridge reliability work linked from the landing page is future-facing. This site treats it as ongoing reliability work, not a current product capability.</p>
+
+          <h2>Contact and updates</h2>
+          <p>For questions or corrections, open an issue in the <a href="https://github.com/usefoil/foil">Foil GitHub repository</a>. Privacy-impacting service changes should update this page and the analytics documentation before launch.</p>
+        </div>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <a class="brand footer-brand" href="../">
+          <img src="../assets/foil-mark.svg" alt="" width="32" height="32">
+          <span>Foil</span>
+        </a>
+        <p>Dictate into your Mac apps.</p>
+      </div>
+      <nav aria-label="Footer">
+        <a href="../">Home</a>
+        <a href="../#providers">Providers</a>
+        <a href="../#privacy">Privacy</a>
+        <a href="../#install">Install</a>
+        <a href="https://github.com/usefoil/foil">GitHub</a>
+      </nav>
+    </footer>
+  </body>
+</html>
