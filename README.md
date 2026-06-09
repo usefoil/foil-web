@@ -15,10 +15,19 @@ file server:
 python3 -m http.server 4173
 ```
 
+For the Vercel build output and launch checks:
+
+```sh
+npm run check:launch
+```
+
 ## Deployment Notes
 
 - Intended host: Vercel
 - Analytics target: PostHog
-- Production domain and canonical URLs are still pending; update `robots.txt`,
-  `sitemap.xml`, and page canonical/OG URLs before public SEO launch.
-
+- Production canonical default: `https://usefoil.com`
+- Vercel build command: `npm run build`
+- Vercel output directory: `dist`
+- Set `SITE_URL` if production moves to another canonical domain.
+- Set `POSTHOG_KEY` and optional `POSTHOG_HOST` to enable analytics. When
+  `POSTHOG_KEY` is unset, the analytics script exits without loading PostHog.

@@ -865,6 +865,11 @@ kbd {
   transform: rotate(-45deg);
 }
 
+.provider-link {
+  display: inline-flex;
+  margin-top: 18px;
+}
+
 .reliability-note {
   display: grid;
   grid-template-columns: minmax(180px, 0.28fr) minmax(260px, 0.72fr);
