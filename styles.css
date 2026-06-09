@@ -1226,6 +1226,11 @@ kbd {
   margin-top: 4px;
 }
 
+.download-card .release-proof {
+  margin-top: 0;
+  font-size: 0.94rem;
+}
+
 .text-link {
   color: var(--teal);
   font-weight: 700;

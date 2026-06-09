@@ -13,6 +13,11 @@ const requiredEvents = [
   "bridge_interest_click",
   "blog_cta_click"
 ];
+const currentRelease = {
+  version: "1.13.4",
+  tag: "v1.13.4",
+  dmgSha256: "1390e585aec6f50c2f779103ad0136fa974caa64acca91f0e787d4438bec5e1c"
+};
 
 const htmlFiles = [
   "index.html",
@@ -66,6 +71,9 @@ const allText = `${sitemap}\n${robots}\n${await Promise.all(htmlFiles.map((file)
 
 assert(!/mean-weasel\.github\.io\/foil|usefoil\.github\.io\/foil/i.test(allText), "stale GitHub Pages canonical URL found");
 assert(!/bridge[^.]{0,90}\b(shipped|released|available|download|install)\b/i.test(allText), "possible unsupported bridge availability claim found");
+assert(allText.includes(`Foil ${currentRelease.version}`), `install trust copy must mention current release ${currentRelease.version}`);
+assert(allText.includes(`/releases/download/${currentRelease.tag}/Foil-${currentRelease.version}-macos.dmg.sha256`), "install trust copy must link the current DMG checksum");
+assert(allText.includes(`${currentRelease.dmgSha256.slice(0, 8)}...${currentRelease.dmgSha256.slice(-7)}`), "install trust copy must show the current DMG checksum fingerprint");
 assert(robots.includes(`Sitemap: ${siteUrl}/sitemap.xml`), "robots.txt sitemap must use SITE_URL");
 
 for (const [, loc] of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
