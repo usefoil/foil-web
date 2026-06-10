@@ -28,6 +28,13 @@ Production Vercel environment variables currently include:
 - `POSTHOG_HOST=https://us.i.posthog.com`
 - `POSTHOG_KEY`, set in Vercel and not committed to the repo
 
+Sentry browser error monitoring is supported but remains disabled until these
+values are configured in the desired Vercel environment:
+
+- `SENTRY_DSN`
+- `SENTRY_ENVIRONMENT`
+- `SENTRY_RELEASE`
+
 ## Verification
 
 Run local launch checks before merging:
@@ -43,4 +50,6 @@ EXPECT_POSTHOG=1 EXPECTED_ANALYTICS_ENV=production SMOKE_URL=https://sayfoil.com
 ```
 
 The strict production smoke proves the canonical URL, sitemap/robots basics,
-key pages, and deployed PostHog analytics config.
+key pages, and deployed PostHog analytics config. After Sentry is configured,
+add `EXPECT_SENTRY=1` to the same command to assert the deployed public Sentry
+config.

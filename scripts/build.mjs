@@ -13,7 +13,7 @@ const textExtensions = new Set([".html", ".css", ".js", ".json", ".md", ".txt", 
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
 
-for (const entry of ["assets", "blog", "privacy", "index.html", "styles.css", "robots.txt", "sitemap.xml", "analytics.js"]) {
+for (const entry of ["assets", "blog", "privacy", "index.html", "styles.css", "robots.txt", "sitemap.xml", "analytics.js", "observability.js"]) {
   await cp(join(root, entry), join(dist, entry), {
     recursive: true,
     filter: (source) => !excluded.has(source.split("/").at(-1))
@@ -50,7 +50,10 @@ async function writeAnalyticsConfig() {
     posthogKey: process.env.POSTHOG_KEY || "",
     posthogHost,
     siteUrl,
-    environment: process.env.FOIL_ANALYTICS_ENV || process.env.VERCEL_ENV || "production"
+    environment: process.env.FOIL_ANALYTICS_ENV || process.env.VERCEL_ENV || "production",
+    sentryDsn: process.env.SENTRY_DSN || "",
+    sentryEnvironment: process.env.SENTRY_ENVIRONMENT || process.env.VERCEL_ENV || "",
+    sentryRelease: process.env.SENTRY_RELEASE || process.env.VERCEL_GIT_COMMIT_SHA || ""
   };
 
   const output = `window.FOIL_ANALYTICS_CONFIG = Object.freeze(${JSON.stringify(config, null, 2)});\n`;

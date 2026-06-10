@@ -33,6 +33,12 @@ For production, include the analytics assertion:
 EXPECT_POSTHOG=1 EXPECTED_ANALYTICS_ENV=production SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com npm run check:deployed
 ```
 
+Once production Sentry is configured, include the Sentry assertion too:
+
+```sh
+EXPECT_POSTHOG=1 EXPECT_SENTRY=1 EXPECTED_ANALYTICS_ENV=production SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com npm run check:deployed
+```
+
 ## Deployment Notes
 
 - Intended host: Vercel
@@ -45,8 +51,9 @@ EXPECT_POSTHOG=1 EXPECTED_ANALYTICS_ENV=production SMOKE_URL=https://sayfoil.com
   `POSTHOG_KEY` is unset, the analytics script exits without loading PostHog.
   Production Vercel currently sets `POSTHOG_KEY`, `POSTHOG_HOST`,
   `SITE_URL=https://sayfoil.com`, and `FOIL_ANALYTICS_ENV=production`.
-- Sentry is intentionally deferred for the static launch until project access
-  and a production DSN are available. See `docs/observability.md`.
+- Set `SENTRY_DSN`, `SENTRY_ENVIRONMENT`, and `SENTRY_RELEASE` to enable
+  env-gated Sentry browser error monitoring. When `SENTRY_DSN` is unset, the
+  observability script exits without loading Sentry. See `docs/observability.md`.
 - Vercel deployment setup and production smoke receipts are documented in
   `docs/deployment.md`.
 - Search Console and indexing receipts are documented in `docs/seo.md`.

@@ -19,6 +19,7 @@
     <link rel="icon" href="../assets/foil-mark.svg" type="image/svg+xml">
     <link rel="stylesheet" href="../styles.css?v=20260609-launch">
     <script defer src="/analytics-config.js"></script>
+    <script defer src="/observability.js"></script>
     <script defer src="/analytics.js"></script>
   </head>
   <body>
@@ -51,7 +52,7 @@
 
           <h2>Downloads and external services</h2>
           <p>Foil downloads are hosted on GitHub Releases, and the Homebrew cask points to the same release artifact. Visiting GitHub or installing through Homebrew is subject to those services' own logs and policies.</p>
-          <p>Sentry is not currently wired into this static website. Supabase capture is not used by this static site. If either service is added for launch capture or observability, this page should be updated before production collection begins.</p>
+          <p>Sentry browser error monitoring is prepared behind production configuration and only loads when a Sentry DSN is configured. Session replay, tracing, breadcrumbs, default personally identifiable information, transcript text, raw audio, clipboard contents, API keys, and free-form user input are not intended to be sent. Supabase capture is not used by this static site.</p>
 
           <h2>Mac app data</h2>
           <p>Foil can use local whisper.cpp, hosted transcription providers, or a custom OpenAI-compatible endpoint. Audio and transcript data go to the transcription or cleanup route you choose in the app.</p>
@@ -62,7 +63,7 @@
           <p>The bridge reliability work linked from the landing page is future-facing. This site treats it as ongoing reliability work, not a current product capability.</p>
 
           <h2>Contact and updates</h2>
-          <p>For questions or corrections, open an issue in the <a href="https://github.com/usefoil/foil">Foil GitHub repository</a>. Privacy-impacting service changes should update this page and the analytics documentation before launch.</p>
+          <p>For questions or corrections, open an issue in the <a href="https://github.com/usefoil/foil">Foil GitHub repository</a>. Privacy-impacting service changes should update this page, the analytics documentation, and the observability documentation before launch.</p>
         </div>
       </article>
     </main>

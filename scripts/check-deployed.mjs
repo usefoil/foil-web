@@ -1,6 +1,7 @@
 const smokeUrl = normalizeBaseUrl(process.env.SMOKE_URL || process.env.VERCEL_URL || "");
 const expectedCanonical = normalizeBaseUrl(process.env.SITE_URL || "https://sayfoil.com");
 const expectPostHog = process.env.EXPECT_POSTHOG === "1";
+const expectSentry = process.env.EXPECT_SENTRY === "1";
 const expectedPostHogHost = normalizeBaseUrl(process.env.POSTHOG_HOST || "https://us.i.posthog.com");
 const expectedAnalyticsEnv = process.env.EXPECTED_ANALYTICS_ENV || "";
 const failures = [];
@@ -32,8 +33,16 @@ for (const page of pages) {
   }
 }
 
-if (expectPostHog) {
-  await checkPostHogConfig();
+if (expectPostHog || expectSentry) {
+  const config = await readAnalyticsConfig();
+
+  if (expectPostHog) {
+    checkPostHogConfig(config);
+  }
+
+  if (expectSentry) {
+    checkSentryConfig(config);
+  }
 }
 
 if (failures.length) {
@@ -41,9 +50,9 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`Deployed smoke check passed for ${smokeUrl}${expectPostHog ? " with PostHog config" : ""}`);
+console.log(`Deployed smoke check passed for ${smokeUrl}${expectPostHog ? " with PostHog config" : ""}${expectSentry ? " with Sentry config" : ""}`);
 
-async function checkPostHogConfig() {
+async function readAnalyticsConfig() {
   const url = new URL("/analytics-config.js", `${smokeUrl}/`);
   const response = await fetch(url, { redirect: "follow" });
   const body = await response.text();
@@ -57,15 +66,15 @@ async function checkPostHogConfig() {
     return;
   }
 
-  let config;
-
   try {
-    config = JSON.parse(match[1]);
+    return JSON.parse(match[1]);
   } catch (error) {
     assert(false, `${url.href} has unparsable analytics config JSON: ${error.message}`);
-    return;
+    return {};
   }
+}
 
+function checkPostHogConfig(config) {
   assert(typeof config.posthogKey === "string" && config.posthogKey.startsWith("phc_"), "PostHog key is missing from deployed analytics config");
   assert(normalizeBaseUrl(config.posthogHost) === expectedPostHogHost, `PostHog host must be ${expectedPostHogHost}`);
   assert(normalizeBaseUrl(config.siteUrl) === expectedCanonical, `analytics siteUrl must be ${expectedCanonical}`);
@@ -73,6 +82,12 @@ async function checkPostHogConfig() {
   if (expectedAnalyticsEnv) {
     assert(config.environment === expectedAnalyticsEnv, `analytics environment must be ${expectedAnalyticsEnv}`);
   }
+}
+
+function checkSentryConfig(config) {
+  assert(typeof config.sentryDsn === "string" && /^https:\/\/[^@]+@[^/]+\/\d+/.test(config.sentryDsn), "Sentry DSN is missing from deployed analytics config");
+  assert(typeof config.sentryEnvironment === "string" && config.sentryEnvironment.length > 0, "Sentry environment is missing from deployed analytics config");
+  assert(typeof config.sentryRelease === "string" && config.sentryRelease.length > 0, "Sentry release is missing from deployed analytics config");
 }
 
 function normalizeBaseUrl(value) {
