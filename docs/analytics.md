@@ -11,8 +11,8 @@ Foil web analytics are intentionally narrow. The landing page should measure con
 
 Production is wired to the shared PostHog project `BugDrop + Foil` (`422537`)
 because the PostHog organization is at its current project limit. Keep Foil
-traffic distinguishable by filtering on `siteUrl`, `page_path`, and the Foil
-conversion event names below. Do not commit `POSTHOG_KEY`; set it through
+traffic distinguishable by filtering on `product=foil`, `site_url`,
+`page_path`, and the Foil conversion event names below. Do not commit `POSTHOG_KEY`; set it through
 Vercel or local shell configuration.
 
 The PostHog client is initialized with manual capture only, no pageview capture, no pageleave capture, no dead-click capture, no session recording, text and element-attribute masking, and memory persistence.
@@ -21,12 +21,12 @@ The PostHog client is initialized with manual capture only, no pageview capture,
 
 | Event | Trigger | Key properties |
 | --- | --- | --- |
-| `install_click` | Hero install CTA and Homebrew copy button | `location`, `destination`, `page_path`, `environment` |
-| `dmg_click` | GitHub Releases DMG links | `location`, `destination`, `page_path`, `environment` |
-| `ios_preview_click` | iOS preview follow-up CTA | `location`, `destination`, `page_path`, `environment` |
-| `local_provider_guide_click` | Local whisper.cpp setup guide CTA | `location`, `destination`, `page_path`, `environment` |
-| `bridge_interest_click` | Future-facing bridge reliability interest CTA | `location`, `destination`, `page_path`, `environment` |
-| `blog_cta_click` | Blog preview, blog index, and article callout CTAs | `location`, `label`, `destination`, `page_path`, `environment` |
+| `install_click` | Hero install CTA and Homebrew copy button | `product`, `site_url`, `location`, `destination`, `page_path`, `environment` |
+| `dmg_click` | GitHub Releases DMG links | `product`, `site_url`, `location`, `destination`, `page_path`, `environment` |
+| `ios_preview_click` | iOS preview follow-up CTA | `product`, `site_url`, `location`, `destination`, `page_path`, `environment` |
+| `local_provider_guide_click` | Local whisper.cpp setup guide CTA | `product`, `site_url`, `location`, `destination`, `page_path`, `environment` |
+| `bridge_interest_click` | Future-facing bridge reliability interest CTA | `product`, `site_url`, `location`, `destination`, `page_path`, `environment` |
+| `blog_cta_click` | Blog preview, blog index, and article callout CTAs | `product`, `site_url`, `location`, `label`, `destination`, `page_path`, `environment` |
 
 Do not add event properties that include dictated text, clipboard contents, API keys, email addresses, or free-form user input.
 

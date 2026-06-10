@@ -13,7 +13,7 @@ const requiredEvents = [
   "bridge_interest_click",
   "blog_cta_click"
 ];
-const allowedProperties = new Set(["location", "label", "destination", "page_path", "environment"]);
+const allowedProperties = new Set(["product", "site_url", "location", "label", "destination", "page_path", "environment"]);
 const failures = [];
 
 function assertNoSdkLoadWithoutKey() {
@@ -28,6 +28,7 @@ function assertPrivacyConfigAndEventsWithKey() {
   const harness = createHarness({
     posthogKey: "ph_test_key",
     posthogHost: "https://us.i.posthog.com",
+    siteUrl: "https://sayfoil.com",
     environment: "preview"
   });
 
@@ -78,6 +79,8 @@ function assertPrivacyConfigAndEventsWithKey() {
   for (const capture of captures) {
     const propertyNames = Object.keys(capture.properties);
     assert(propertyNames.every((propertyName) => allowedProperties.has(propertyName)), `${capture.eventName} includes unexpected property`);
+    assert(capture.properties.product === "foil", `${capture.eventName} must include product identifier`);
+    assert(capture.properties.site_url === "https://sayfoil.com", `${capture.eventName} must include configured site_url`);
     assert(capture.properties.page_path === "/launch-test", `${capture.eventName} must include page_path`);
     assert(capture.properties.environment === "preview", `${capture.eventName} must include configured environment`);
     assert(!JSON.stringify(capture.properties).match(/transcript|clipboard|api[_ -]?key|email|password/i), `${capture.eventName} includes sensitive-looking data`);
