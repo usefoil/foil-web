@@ -9,6 +9,12 @@ Foil web analytics are intentionally narrow. The landing page should measure con
 - `SITE_URL`: canonical production URL, defaults to `https://sayfoil.com`.
 - `FOIL_ANALYTICS_ENV`: optional event environment label.
 
+Production is wired to the shared PostHog project `BugDrop + Foil` (`422537`)
+because the PostHog organization is at its current project limit. Keep Foil
+traffic distinguishable by filtering on `siteUrl`, `page_path`, and the Foil
+conversion event names below. Do not commit `POSTHOG_KEY`; set it through
+Vercel or local shell configuration.
+
 The PostHog client is initialized with manual capture only, no pageview capture, no pageleave capture, no dead-click capture, no session recording, text and element-attribute masking, and memory persistence.
 
 ## Conversion Events
@@ -27,3 +33,11 @@ Do not add event properties that include dictated text, clipboard contents, API 
 ## Verification
 
 Run `npm run check:analytics` to simulate the PostHog loader locally without sending events. The check proves that analytics stay disabled without `POSTHOG_KEY`, the SDK initializes with privacy-conscious options when configured, and the intended conversion events capture only the documented properties.
+
+Production wiring receipt from June 10, 2026:
+
+- PostHog project display name: `BugDrop + Foil`.
+- PostHog project ID: `422537`.
+- Vercel production env includes `POSTHOG_KEY`, `POSTHOG_HOST`, `SITE_URL`, and `FOIL_ANALYTICS_ENV`.
+- `https://sayfoil.com/analytics-config.js` served `posthogHost=https://us.i.posthog.com`, `siteUrl=https://sayfoil.com`, and `environment=production`.
+- `SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com npm run check:deployed` passed.

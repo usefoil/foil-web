@@ -30,13 +30,15 @@ SMOKE_URL=https://your-preview.example npm run check:deployed
 ## Deployment Notes
 
 - Intended host: Vercel
-- Analytics target: PostHog
+- Analytics target: PostHog project `BugDrop + Foil` (`422537`)
 - Production canonical default: `https://sayfoil.com`
 - Vercel build command: `npm run build`
 - Vercel output directory: `dist`
 - Set `SITE_URL` if production moves to another canonical domain.
 - Set `POSTHOG_KEY` and optional `POSTHOG_HOST` to enable analytics. When
   `POSTHOG_KEY` is unset, the analytics script exits without loading PostHog.
+  Production Vercel currently sets `POSTHOG_KEY`, `POSTHOG_HOST`,
+  `SITE_URL=https://sayfoil.com`, and `FOIL_ANALYTICS_ENV=production`.
 - Sentry is intentionally deferred for the static launch until project access
   and a production DSN are available. See `docs/observability.md`.
 - Blog conversion hygiene is covered by `npm run check:blog` and included in
