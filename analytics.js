@@ -39,6 +39,8 @@
     document.querySelectorAll("[data-analytics-event]").forEach((element) => {
       element.addEventListener("click", () => {
         posthog.capture(element.dataset.analyticsEvent, {
+          product: "foil",
+          site_url: config.siteUrl || "",
           location: element.dataset.analyticsLocation || "unknown",
           label: element.dataset.analyticsLabel || "",
           destination: getDestination(element),
