@@ -1,5 +1,5 @@
 const smokeUrl = normalizeBaseUrl(process.env.SMOKE_URL || process.env.VERCEL_URL || "");
-const expectedCanonical = normalizeBaseUrl(process.env.SITE_URL || "https://usefoil.com");
+const expectedCanonical = normalizeBaseUrl(process.env.SITE_URL || "https://sayfoil.com");
 const failures = [];
 
 if (!smokeUrl) {

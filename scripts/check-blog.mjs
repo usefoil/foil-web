@@ -14,10 +14,10 @@ for (const file of htmlFiles) {
   const html = await readFile(file, "utf8");
   const isIndex = relativePath === "blog/index.html";
 
-  assert(hasOne(html, /<link rel="canonical" href="https:\/\/usefoil\.com\/blog\/[^"]*">/g), `${relativePath} must have one blog canonical`);
+  assert(hasOne(html, /<link rel="canonical" href="https:\/\/sayfoil\.com\/blog\/[^"]*">/g), `${relativePath} must have one blog canonical`);
   assert(hasOne(html, /<meta property="og:title" content="[^"]+">/g), `${relativePath} must have one og:title`);
   assert(hasOne(html, /<meta property="og:description" content="[^"]+">/g), `${relativePath} must have one og:description`);
-  assert(hasOne(html, /<meta property="og:image" content="https:\/\/usefoil\.com\/assets\/[^"]+">/g), `${relativePath} must have one absolute og:image`);
+  assert(hasOne(html, /<meta property="og:image" content="https:\/\/sayfoil\.com\/assets\/[^"]+">/g), `${relativePath} must have one absolute og:image`);
   assert(html.includes('data-analytics-event="blog_cta_click"'), `${relativePath} must include a blog CTA analytics hook`);
   assert(html.includes("#install"), `${relativePath} must link to install`);
   assert(html.includes("#privacy"), `${relativePath} must link to privacy`);

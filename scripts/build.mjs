@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dist = join(root, "dist");
-const siteUrl = normalizeSiteUrl(process.env.SITE_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL || "https://usefoil.com");
+const siteUrl = normalizeSiteUrl(process.env.SITE_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL || "https://sayfoil.com");
 const posthogHost = normalizeSiteUrl(process.env.POSTHOG_HOST || "https://us.i.posthog.com");
 
 const excluded = new Set([".git", "dist", "node_modules"]);
@@ -38,7 +38,7 @@ async function replaceSiteUrl(path) {
   }
 
   const original = await readFile(path, "utf8");
-  const next = original.replaceAll("https://usefoil.com", siteUrl);
+  const next = original.replaceAll("https://sayfoil.com", siteUrl);
 
   if (next !== original) {
     await writeFile(path, next);
@@ -63,7 +63,7 @@ function normalizeSiteUrl(value) {
   const trimmed = String(value || "").trim();
 
   if (!trimmed) {
-    return "https://usefoil.com";
+    return "https://sayfoil.com";
   }
 
   const withProtocol = /^https?:\/\//.test(trimmed) ? trimmed : `https://${trimmed}`;
