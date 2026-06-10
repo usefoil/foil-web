@@ -27,6 +27,12 @@ To smoke test a deployed preview or production URL:
 SMOKE_URL=https://your-preview.example npm run check:deployed
 ```
 
+For production, include the analytics assertion:
+
+```sh
+EXPECT_POSTHOG=1 EXPECTED_ANALYTICS_ENV=production SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com npm run check:deployed
+```
+
 ## Deployment Notes
 
 - Intended host: Vercel
