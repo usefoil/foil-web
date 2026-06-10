@@ -47,6 +47,8 @@ EXPECT_POSTHOG=1 EXPECTED_ANALYTICS_ENV=production SMOKE_URL=https://sayfoil.com
   `SITE_URL=https://sayfoil.com`, and `FOIL_ANALYTICS_ENV=production`.
 - Sentry is intentionally deferred for the static launch until project access
   and a production DSN are available. See `docs/observability.md`.
+- Vercel deployment setup and production smoke receipts are documented in
+  `docs/deployment.md`.
 - Blog conversion hygiene is covered by `npm run check:blog` and included in
   `npm run check:launch`.
 - Supabase capture is deferred until there is an approved capture use case,

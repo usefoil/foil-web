@@ -1,0 +1,46 @@
+# Foil Web Deployment
+
+Foil web deploys to Vercel from the GitHub repository `usefoil/foil-web`.
+
+## Vercel Project
+
+- Vercel project: `jermwatts-projects/foil-web`
+- Production domains: `https://sayfoil.com` and `https://www.sayfoil.com`
+- Build command: `npm run build`
+- Output directory: `dist`
+- Git repository: `usefoil/foil-web`
+
+The project is connected to GitHub through the Vercel GitHub app with access to
+the `usefoil/foil-web` repository.
+
+Pull requests should receive Vercel preview deployments through the Git
+connection. If preview deployment protection is enabled, unauthenticated smoke
+checks against the preview URL can return HTTP 401 even when the Vercel status is
+ready. In that case, use the Vercel check status and build logs as the preview
+receipt, or configure an approved preview bypass before running external smoke.
+
+## Production Environment
+
+Production Vercel environment variables currently include:
+
+- `SITE_URL=https://sayfoil.com`
+- `FOIL_ANALYTICS_ENV=production`
+- `POSTHOG_HOST=https://us.i.posthog.com`
+- `POSTHOG_KEY`, set in Vercel and not committed to the repo
+
+## Verification
+
+Run local launch checks before merging:
+
+```sh
+npm run check:launch
+```
+
+Run strict production smoke after a production deploy:
+
+```sh
+EXPECT_POSTHOG=1 EXPECTED_ANALYTICS_ENV=production SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com npm run check:deployed
+```
+
+The strict production smoke proves the canonical URL, sitemap/robots basics,
+key pages, and deployed PostHog analytics config.
