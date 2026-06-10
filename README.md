@@ -49,6 +49,7 @@ EXPECT_POSTHOG=1 EXPECTED_ANALYTICS_ENV=production SMOKE_URL=https://sayfoil.com
   and a production DSN are available. See `docs/observability.md`.
 - Vercel deployment setup and production smoke receipts are documented in
   `docs/deployment.md`.
+- Search Console and indexing receipts are documented in `docs/seo.md`.
 - Blog conversion hygiene is covered by `npm run check:blog` and included in
   `npm run check:launch`.
 - Supabase capture is deferred until there is an approved capture use case,
