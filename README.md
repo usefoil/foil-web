@@ -31,7 +31,7 @@ SMOKE_URL=https://your-preview.example npm run check:deployed
 
 - Intended host: Vercel
 - Analytics target: PostHog
-- Production canonical default: `https://usefoil.com`
+- Production canonical default: `https://sayfoil.com`
 - Vercel build command: `npm run build`
 - Vercel output directory: `dist`
 - Set `SITE_URL` if production moves to another canonical domain.

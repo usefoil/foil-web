@@ -6,7 +6,7 @@ Foil web analytics are intentionally narrow. The landing page should measure con
 
 - `POSTHOG_KEY`: required to enable PostHog. When unset, `analytics.js` exits without loading the SDK.
 - `POSTHOG_HOST`: optional, defaults to `https://us.i.posthog.com`.
-- `SITE_URL`: canonical production URL, defaults to `https://usefoil.com`.
+- `SITE_URL`: canonical production URL, defaults to `https://sayfoil.com`.
 - `FOIL_ANALYTICS_ENV`: optional event environment label.
 
 The PostHog client is initialized with manual capture only, no pageview capture, no pageleave capture, no dead-click capture, no session recording, text and element-attribute masking, and memory persistence.

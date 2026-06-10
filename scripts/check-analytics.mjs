@@ -98,7 +98,7 @@ function createHarness(config) {
         analyticsLocation: location,
         analyticsLabel: `label-${index}`
       },
-      `https://usefoil.com/test-${index}`
+      `https://sayfoil.com/test-${index}`
     );
   });
 
