@@ -60,3 +60,9 @@ and `content-length: 2436639`.
 
 Run `npm run check:install` for the install/download source scan. It is also
 included in `npm run check:launch`.
+
+Run `npm run check:release` when preparing or auditing a Foil app release. This
+networked check compares the pinned website release metadata against GitHub's
+latest `usefoil/foil` release, the published `.sha256` asset, and the Homebrew
+cask version/SHA/URL. Keep it separate from normal launch CI so transient
+GitHub or Homebrew network issues do not make offline launch checks flaky.
