@@ -1,0 +1,170 @@
+version: 2
+
+goal:
+  title: "Sentry Production Activation"
+  slug: "sentry-production-activation"
+  kind: existing_plan
+  tranche: "Sentry browser error monitoring is either activated with proof or remains blocked only on project/DSN access with all local work complete."
+  status: complete
+  oracle:
+    signal: "A Sentry project exists, Vercel has the intended DSN/environment/release config, a controlled preview error appears in the expected Sentry project with sanitized payload, and deployed smoke passes with EXPECT_SENTRY=1; or access blockers are documented after all safe local work is complete."
+    cadence: "after Scout findings, after each Worker package, and at final audit"
+    final_proof: "A Sentry project exists, Vercel has the intended DSN/environment/release config, a controlled preview error appears in the expected Sentry project with sanitized payload, and deployed smoke passes with EXPECT_SENTRY=1; or access blockers are documented after all safe local work is complete."
+  intake:
+    original_request: "Plan the next conveyor of GoalBuddy prep boards for Foil web launch follow-up work."
+    interpreted_outcome: "Sentry browser error monitoring is either activated with proof or remains blocked only on project/DSN access with all local work complete."
+    input_shape: existing_plan
+    audience: "Foil maintainers continuing the web launch conveyor."
+    authority: approved
+    proof_type: test
+    completion_proof: "A Sentry project exists, Vercel has the intended DSN/environment/release config, a controlled preview error appears in the expected Sentry project with sanitized payload, and deployed smoke passes with EXPECT_SENTRY=1; or access blockers are documented after all safe local work is complete."
+    likely_misfire: "Setting a DSN without proving events arrive in the right project/environment or without confirming scrubbed payloads."
+    blind_spots_considered:
+      - "Project creation previously failed with HTTP 403."
+      - "Controlled test errors should not leak user data or secrets."
+      - "Preview and production envs may need different DSN/environment settings."
+    existing_plan_facts:
+      - "Vercel, PostHog, SEO, install/download trust, Sentry foundation, privacy/legal, and blog conversion foundations have recent merged receipts."
+      - "Sentry production activation remains blocked on project-write/DSN access unless credentials are granted."
+      - "Supabase capture remains deferred unless a concrete approved capture use case appears."
+      - "Use local live GoalBuddy boards and recommended defaults."
+      - "Do not start /goal runs during prep."
+
+rules:
+  pm_owns_state: true
+  one_active_task: true
+  max_write_workers: 1
+  no_implementation_without_worker_or_pm_task: true
+  no_completion_without_judge_or_pm_audit: true
+  planning_is_not_completion: true
+  queued_required_worker_blocks_completion: true
+  continuous_until_full_outcome: true
+  missing_input_or_credentials_do_not_stop_goal: true
+  preserve_and_validate_existing_plan: true
+  intake_misfire_must_be_audited: true
+  goal_pressure_requires_oracle: true
+  no_completion_on_weak_proof: true
+  slice_policy:
+    max_consecutive_tiny_tasks: 2
+    prefer_vertical_slices: true
+    judge_picks_largest_safe_slice: true
+    worker_completes_whole_slice: true
+
+agents:
+  scout: installed
+  worker: installed
+  judge: installed
+
+visual_board:
+  selected: local
+  local:
+    status: live
+    url: "http://goalbuddy.localhost:41737/sentry-production-activation/"
+    command: "npx goalbuddy board docs/goals/sentry-production-activation"
+
+active_task: null
+
+tasks:
+  - id: T001
+    type: scout
+    assignee: Scout
+    status: done
+    reasoning_hint: medium
+    objective: "Inventory Sentry org/project/DSN/Vercel status, local env availability, and existing observability safeguards without exposing secrets."
+    inputs:
+      - "docs/goals/sentry-production-activation/goal.md"
+      - "Current repository files relevant to this launch area"
+      - "Recent merged PRs and docs when useful"
+    constraints:
+      - "Read-only."
+      - "Do not edit implementation files."
+      - "Prefer concrete file paths, commands, URLs, service settings, or source-backed receipts over generic advice."
+      - "Do not collect or expose secrets."
+      - "Do not make public copy claim the bridge is shipped yet."
+    expected_output:
+      - "Evidence map"
+      - "Credential, production-access, legal, or destructive-permission blockers"
+      - "Largest safe useful next slice"
+      - "Candidate Worker package with allowed_files, verify commands, and stop_if conditions"
+    receipts:
+      - "docs/goals/sentry-production-activation/notes/t001-scout.md"
+  - id: T002
+    type: judge
+    assignee: Judge
+    status: done
+    reasoning_hint: high
+    objective: "Choose the largest safe activation slice: service setup guidance, Vercel env wiring, controlled preview proof, or blocked receipt."
+    inputs:
+      - "T001 receipt"
+      - "docs/goals/sentry-production-activation/goal.md"
+      - "Current repo status"
+    constraints:
+      - "Read-only."
+      - "Do not implement."
+      - "Reject weak proof or plans that only document intent."
+      - "Require allowed_files, verify commands, and stop_if conditions for the Worker package."
+    expected_output:
+      - "approved | revise | blocked"
+      - "Exact Worker objective"
+      - "allowed_files"
+      - "verify"
+      - "stop_if"
+      - "Deferred or blocked follow-ups"
+    receipts:
+      - "docs/goals/sentry-production-activation/notes/t002-judge.md"
+  - id: T003
+    type: worker
+    assignee: Worker
+    status: done
+    reasoning_hint: medium
+    objective: "Update the Sentry activation receipt with current production smoke/config evidence and blocked operator action, preserving privacy safeguards and avoiding secret exposure."
+    allowed_files:
+      - "docs/observability.md"
+      - "docs/goals/sentry-production-activation/state.yaml"
+      - "docs/goals/sentry-production-activation/notes/"
+    verify:
+      - "npm run check:observability"
+      - "npm run check:launch"
+      - "EXPECT_SENTRY=1 SMOKE_URL=<verified-url> SITE_URL=https://sayfoil.com npm run check:deployed"
+    stop_if:
+      - "Need files outside allowed_files."
+      - "Need credentials, production access, destructive permission, or legal approval that the operator has not granted."
+      - "The selected behavior or public claim is ambiguous."
+      - "Verification fails twice with the same unexplained failure."
+    receipts:
+      - "docs/goals/sentry-production-activation/notes/t003-worker.md"
+  - id: T999
+    type: judge
+    assignee: Judge
+    status: done
+    reasoning_hint: high
+    objective: "Audit whether Sentry activation satisfies the oracle or is explicitly blocked with safe local work complete."
+    inputs:
+      - "All done task receipts"
+      - "Last verification"
+      - "Current dirty diff"
+      - "Goal oracle"
+    constraints:
+      - "Read-only."
+      - "Reject completion if required Worker work is still queued or active."
+      - "Reject completion if safe local follow-up slices remain."
+      - "Reject completion on weak proof, missing service receipts, stale URLs, broken assets, or unsupported bridge claims."
+    expected_output:
+      - "complete | not_complete"
+      - "full_outcome_complete: true | false"
+      - "missing evidence"
+      - "next task if not complete"
+    receipts:
+      - "docs/goals/sentry-production-activation/notes/t999-final-audit.md"
+
+checks:
+  dirty_fingerprint: "Sentry activation blocker documented on codex/sentry-production-activation"
+  last_verification:
+    result: blocked_on_access
+    task: T003
+    commands:
+      - "npm run check:observability"
+      - "npm run check:launch"
+      - "SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com EXPECT_POSTHOG=1 EXPECTED_ANALYTICS_ENV=production npm run check:deployed"
+      - "SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com EXPECT_POSTHOG=1 EXPECT_SENTRY=1 EXPECTED_ANALYTICS_ENV=production npm run check:deployed (failed: Sentry DSN is missing from deployed analytics config)"
+  full_outcome_complete: true

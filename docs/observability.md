@@ -65,6 +65,26 @@ Checked Sentry API access on June 10, 2026:
 - Next operator action: create or grant access to the Sentry project, then set
   `SENTRY_DSN` and `SENTRY_ENVIRONMENT` in Vercel.
 
+Rechecked production activation on June 11, 2026:
+
+- `npm run check:observability` passed, proving the local env-gated Sentry
+  foundation and scrubber still work.
+- Strict production smoke without Sentry expectation passed for
+  `https://sayfoil.com` with PostHog config.
+- Strict production smoke with `EXPECT_SENTRY=1` failed only because the
+  deployed analytics config does not include a Sentry DSN.
+- The deployed public config reports production environment metadata, but no
+  Sentry DSN. Do not paste or commit DSNs; configure the value in Vercel after
+  the Sentry project is created or access is granted.
+- The Vercel CLI was not installed in the local workspace for this recheck, so
+  service-side env names were not inspected from the CLI.
+
+Current blocker: production Sentry activation still needs operator project/DSN
+access. After the Sentry project and Vercel env are configured, send one
+controlled preview error, confirm it lands in the expected project with the
+expected environment/release and scrubbed payload, then run deployed smoke with
+`EXPECT_SENTRY=1`.
+
 ## Verification
 
 Run `npm run check:observability` to prove the repo stays in the documented
