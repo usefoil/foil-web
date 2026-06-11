@@ -149,8 +149,12 @@ function checkLaunchSurface(allHtml) {
   assert(allHtml.includes("Foil downloads are hosted on GitHub Releases"), "deployed privacy page must disclose GitHub Releases downloads");
   assert(allHtml.includes("PostHog analytics are intentionally narrow"), "deployed privacy page must disclose narrow PostHog analytics");
   assert(allHtml.includes("Supabase capture is not used by this static site"), "deployed privacy page must disclose current Supabase capture status");
-  assert(allHtml.includes("Sentry browser error monitoring is prepared behind production configuration"), "deployed privacy page must disclose env-gated Sentry status");
   assert(allHtml.includes("session recording") && allHtml.includes("disabled"), "deployed privacy surface must disclose disabled session recording");
+
+  if (expectSentry) {
+    assert(allHtml.includes("Sentry browser error monitoring"), "deployed privacy page must disclose Sentry status when EXPECT_SENTRY=1");
+    assert(allHtml.includes("browser errors, not session replay"), "deployed privacy page must disclose Sentry browser-error scope when EXPECT_SENTRY=1");
+  }
 }
 
 async function readAnalyticsConfig() {

@@ -9,7 +9,7 @@ unless `SENTRY_DSN` is configured at build time in a future deployment.
 - The web repo is a static landing site with no API routes, authentication flow,
   checkout flow, or user-generated form submissions.
 - `observability.js` loads the Sentry errors-only browser SDK only when the
-  generated config includes `sentryDsn`.
+  generated config includes `sentryDsn`; current production does not set one.
 - Session replay and tracing are disabled with zero sample rates, and the site
   does not load a replay or tracing Sentry bundle.
 - The client sets `sendDefaultPii=false`, drops breadcrumbs, removes `user`, and
@@ -23,9 +23,10 @@ unless `SENTRY_DSN` is configured at build time in a future deployment.
 - CodeQL runs on pull requests and `npm run check:launch` covers build, SEO,
   privacy, analytics, install-trust, observability, and unsupported-claim checks.
 
-## Configuration
+## Future Configuration
 
-Sentry setup needs operator-provided service access and project choices:
+If Sentry is enabled later, setup needs operator-provided service access and
+project choices:
 
 - `SENTRY_AUTH_TOKEN` with read-only scopes such as `org:read`, `project:read`,
   and `event:read` for health inspection.
@@ -41,9 +42,9 @@ local shell, Sentry, or Vercel environment configuration. The DSN is a public
 client-side value, but it should still be managed through Vercel env so preview
 and production can be controlled independently.
 
-## Enablement Checklist
+## Future Enablement Checklist
 
-Before production collection is considered complete:
+Before future production collection is considered complete:
 
 1. Create or confirm the Sentry project and DSN.
 2. Set `SENTRY_DSN`, `SENTRY_ENVIRONMENT`, and `SENTRY_RELEASE` in the intended
@@ -67,15 +68,16 @@ Checked Sentry API access on June 10, 2026:
 
 Rechecked production activation on June 11, 2026:
 
-- `npm run check:observability` passed, proving the local env-gated Sentry
-  foundation and scrubber still work.
+- `npm run check:observability` passed, proving the local deferred/env-gated
+  hook and scrubber still work.
 - Strict production smoke without Sentry expectation passed for
   `https://sayfoil.com` with PostHog config.
 - Strict production smoke with `EXPECT_SENTRY=1` failed only because the
   deployed analytics config does not include a Sentry DSN.
 - The deployed public config reports production environment metadata, but no
-  Sentry DSN. Do not paste or commit DSNs; configure the value in Vercel after
-  the Sentry project is created or access is granted.
+  Sentry DSN. This is now the intended launch state. Do not paste or commit
+  DSNs; configure the value in Vercel only if Sentry is intentionally activated
+  later.
 - The Vercel CLI was not installed in the local workspace for this recheck, so
   service-side env names were not inspected from the CLI.
 
@@ -88,6 +90,6 @@ and scrubbed payload, then run deployed smoke with `EXPECT_SENTRY=1`.
 ## Verification
 
 Run `npm run check:observability` to prove the repo stays in the documented
-env-gated state. The check fails if product pages omit `observability.js`, if
-the SDK is not gated by `SENTRY_DSN`, if replay/tracing are enabled, or if the
-privacy page no longer matches the observability posture.
+deferred/env-gated state. The check fails if product pages omit
+`observability.js`, if the SDK is not gated by `SENTRY_DSN`, if replay/tracing
+are enabled, or if the privacy page no longer matches the observability posture.
