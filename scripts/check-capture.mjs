@@ -1,21 +1,29 @@
-import { readFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { readdir, readFile } from "node:fs/promises";
+import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const failures = [];
 const capture = await readText("docs/capture.md");
 const privacy = await readText("privacy/index.html");
-const productFiles = await Promise.all([
+const productFilePaths = [
   "index.html",
+  "privacy/index.html",
+  ...await findHtmlPages(join(root, "blog")),
   "analytics.js",
   "analytics-config.js",
   ".env.example"
-].map(readText));
+];
+const productFiles = await Promise.all(productFilePaths.map(async (relativePath) => ({
+  relativePath,
+  text: await readText(relativePath)
+})));
 
 for (const requiredText of [
   "Supabase capture is deferred for launch",
+  "Rechecked on June 11, 2026",
   "No launch-critical capture use case",
+  "no waitlist, newsletter, contact, support, install diagnostics, or",
   "Row Level Security",
   "RLS",
   "retention",
@@ -32,8 +40,13 @@ assert(
   "privacy page must match current Supabase capture decision"
 );
 
-for (const productText of productFiles) {
-  assert(!/createClient|supabase\.from|SUPABASE_URL|SUPABASE_ANON_KEY/.test(productText), "product code must not half-wire Supabase while deferred");
+for (const { relativePath, text } of productFiles) {
+  assert(!/createClient|supabase\.from|SUPABASE_URL|SUPABASE_ANON_KEY/.test(text), `${relativePath} must not half-wire Supabase while deferred`);
+
+  if (relativePath.endsWith(".html")) {
+    assert(!/<form\b/i.test(text), `${relativePath} must not add form-based capture while Supabase is deferred`);
+    assert(!/\b(?:type|name|id)=["']email["']/i.test(text), `${relativePath} must not add email capture while Supabase is deferred`);
+  }
 }
 
 if (failures.length) {
@@ -45,6 +58,26 @@ console.log("Capture check passed for deferred Supabase launch state.");
 
 async function readText(relativePath) {
   return readFile(join(root, relativePath), "utf8");
+}
+
+async function findHtmlPages(dir) {
+  const entries = await readdir(dir, { withFileTypes: true });
+  const pages = [];
+
+  for (const entry of entries) {
+    const path = join(dir, entry.name);
+
+    if (entry.isDirectory()) {
+      pages.push(...await findHtmlPages(path));
+      continue;
+    }
+
+    if (entry.name === "index.html") {
+      pages.push(relative(root, path));
+    }
+  }
+
+  return pages.sort();
 }
 
 function assert(condition, message) {

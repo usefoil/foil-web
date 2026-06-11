@@ -6,6 +6,12 @@ Supabase capture is deferred for launch.
 
 No launch-critical capture use case currently requires Supabase in the static web repo.
 
+Rechecked on June 11, 2026 after the Vercel, PostHog, privacy, install trust,
+blog conversion, Sentry foundation, and launch smoke follow-up work. The
+decision is unchanged: Supabase remains deferred because the current site still
+has no waitlist, newsletter, contact, support, install diagnostics, or
+identified bridge-interest capture flow.
+
 The current launch funnel uses:
 
 - GitHub Releases and Homebrew for install/download intent.
@@ -39,4 +45,7 @@ Revisit this decision when one of these becomes true:
 
 ## Verification
 
-Run `npm run check:capture` to prove the repo is still in the documented deferred state. The check fails if product code half-wires Supabase or if the privacy page no longer matches the decision.
+Run `npm run check:capture` to prove the repo is still in the documented
+deferred state. The check fails if static pages introduce form-based capture,
+if product code half-wires Supabase, or if the privacy page no longer matches
+the decision.

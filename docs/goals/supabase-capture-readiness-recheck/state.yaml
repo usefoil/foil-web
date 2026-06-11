@@ -1,0 +1,170 @@
+version: 2
+
+goal:
+  title: "Supabase Capture Readiness Recheck"
+  slug: "supabase-capture-readiness-recheck"
+  kind: existing_plan
+  tranche: "Supabase remains explicitly deferred, or a concrete approved capture use case becomes a minimal verified RLS-backed plan."
+  status: complete
+  oracle:
+    signal: "A fresh decision receipt says whether any launch/post-launch flow now needs Supabase; if yes, it defines minimal fields, RLS, retention, abuse controls, privacy copy, and tests; if no, defer rationale and revisit triggers remain verified."
+    cadence: "after Scout findings, after each Worker package, and at final audit"
+    final_proof: "A fresh decision receipt says whether any launch/post-launch flow now needs Supabase; if yes, it defines minimal fields, RLS, retention, abuse controls, privacy copy, and tests; if no, defer rationale and revisit triggers remain verified."
+  intake:
+    original_request: "Plan the next conveyor of GoalBuddy prep boards for Foil web launch follow-up work."
+    interpreted_outcome: "Supabase remains explicitly deferred, or a concrete approved capture use case becomes a minimal verified RLS-backed plan."
+    input_shape: existing_plan
+    audience: "Foil maintainers continuing the web launch conveyor."
+    authority: approved
+    proof_type: decision
+    completion_proof: "A fresh decision receipt says whether any launch/post-launch flow now needs Supabase; if yes, it defines minimal fields, RLS, retention, abuse controls, privacy copy, and tests; if no, defer rationale and revisit triggers remain verified."
+    likely_misfire: "Creating Supabase infrastructure because Supabase is selected, without an approved data collection purpose."
+    blind_spots_considered:
+      - "PostHog conversion intent may still be enough."
+      - "Identifiable capture would change privacy/legal scope."
+      - "Bridge interest may need opt-in contact later but currently only anonymous intent is tracked."
+    existing_plan_facts:
+      - "Vercel, PostHog, SEO, install/download trust, Sentry foundation, privacy/legal, and blog conversion foundations have recent merged receipts."
+      - "Sentry production activation remains blocked on project-write/DSN access unless credentials are granted."
+      - "Supabase capture remains deferred unless a concrete approved capture use case appears."
+      - "Use local live GoalBuddy boards and recommended defaults."
+      - "Do not start /goal runs during prep."
+
+rules:
+  pm_owns_state: true
+  one_active_task: true
+  max_write_workers: 1
+  no_implementation_without_worker_or_pm_task: true
+  no_completion_without_judge_or_pm_audit: true
+  planning_is_not_completion: true
+  queued_required_worker_blocks_completion: true
+  continuous_until_full_outcome: true
+  missing_input_or_credentials_do_not_stop_goal: true
+  preserve_and_validate_existing_plan: true
+  intake_misfire_must_be_audited: true
+  goal_pressure_requires_oracle: true
+  no_completion_on_weak_proof: true
+  slice_policy:
+    max_consecutive_tiny_tasks: 2
+    prefer_vertical_slices: true
+    judge_picks_largest_safe_slice: true
+    worker_completes_whole_slice: true
+
+agents:
+  scout: installed
+  worker: installed
+  judge: installed
+
+visual_board:
+  selected: local
+  local:
+    status: live
+    url: "http://goalbuddy.localhost:41737/supabase-capture-readiness-recheck/"
+    command: "npx goalbuddy board docs/goals/supabase-capture-readiness-recheck"
+
+active_task: null
+
+tasks:
+  - id: T001
+    type: scout
+    assignee: Scout
+    status: done
+    reasoning_hint: medium
+    objective: "Re-audit capture needs after PostHog, privacy, install, and blog conversion work; determine whether Supabase is still deferred or has a justified minimal use case."
+    inputs:
+      - "docs/goals/supabase-capture-readiness-recheck/goal.md"
+      - "Current repository files relevant to this launch area"
+      - "Recent merged PRs and docs when useful"
+    constraints:
+      - "Read-only."
+      - "Do not edit implementation files."
+      - "Prefer concrete file paths, commands, URLs, service settings, or source-backed receipts over generic advice."
+      - "Do not collect or expose secrets."
+      - "Do not make public copy claim the bridge is shipped yet."
+    expected_output:
+      - "Evidence map"
+      - "Credential, production-access, legal, or destructive-permission blockers"
+      - "Largest safe useful next slice"
+      - "Candidate Worker package with allowed_files, verify commands, and stop_if conditions"
+    receipts:
+      - "docs/goals/supabase-capture-readiness-recheck/notes/t001-scout.md"
+  - id: T002
+    type: judge
+    assignee: Judge
+    status: done
+    reasoning_hint: high
+    objective: "Review capture findings and select defer update, design-only plan, or minimal implementation slice."
+    inputs:
+      - "T001 receipt"
+      - "docs/goals/supabase-capture-readiness-recheck/goal.md"
+      - "Current repo status"
+    constraints:
+      - "Read-only."
+      - "Do not implement."
+      - "Reject weak proof or plans that only document intent."
+      - "Require allowed_files, verify commands, and stop_if conditions for the Worker package."
+    expected_output:
+      - "approved | revise | blocked"
+      - "Exact Worker objective"
+      - "allowed_files"
+      - "verify"
+      - "stop_if"
+      - "Deferred or blocked follow-ups"
+    receipts:
+      - "docs/goals/supabase-capture-readiness-recheck/notes/t002-judge.md"
+  - id: T003
+    type: worker
+    assignee: Worker
+    status: done
+    reasoning_hint: medium
+    objective: "Refresh the Supabase defer decision after the post-launch foundation work and strengthen check:capture so it proves the full static web surface has no Supabase client wiring, Supabase environment-variable half-wiring, or form-based capture surface."
+    allowed_files:
+      - "docs/capture.md"
+      - "scripts/check-capture.mjs"
+      - "docs/goals/supabase-capture-readiness-recheck/state.yaml"
+      - "docs/goals/supabase-capture-readiness-recheck/notes/"
+    verify:
+      - "npm run check:capture"
+      - "npm run check:privacy"
+      - "npm run check:launch"
+    stop_if:
+      - "Need files outside allowed_files."
+      - "Need credentials, production access, destructive permission, or legal approval that the operator has not granted."
+      - "The selected behavior or public claim is ambiguous."
+      - "Verification fails twice with the same unexplained failure."
+    receipts:
+      - "docs/goals/supabase-capture-readiness-recheck/notes/t003-worker.md"
+  - id: T999
+    type: judge
+    assignee: Judge
+    status: done
+    reasoning_hint: high
+    objective: "Audit whether Supabase capture readiness satisfies the oracle and privacy constraints."
+    inputs:
+      - "All done task receipts"
+      - "Last verification"
+      - "Current dirty diff"
+      - "Goal oracle"
+    constraints:
+      - "Read-only."
+      - "Reject completion if required Worker work is still queued or active."
+      - "Reject completion if safe local follow-up slices remain."
+      - "Reject completion on weak proof, missing service receipts, stale URLs, broken assets, or unsupported bridge claims."
+    expected_output:
+      - "complete | not_complete"
+      - "full_outcome_complete: true | false"
+      - "missing evidence"
+      - "next task if not complete"
+    receipts:
+      - "docs/goals/supabase-capture-readiness-recheck/notes/t999-final-audit.md"
+
+checks:
+  dirty_fingerprint: "Supabase defer decision refreshed on codex/supabase-capture-readiness-recheck"
+  last_verification:
+    result: pass
+    task: T003
+    commands:
+      - "npm run check:capture"
+      - "npm run check:privacy"
+      - "npm run check:launch"
+  full_outcome_complete: true
