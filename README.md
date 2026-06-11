@@ -59,6 +59,8 @@ EXPECT_POSTHOG=1 EXPECT_SENTRY=1 EXPECTED_ANALYTICS_ENV=production SMOKE_URL=htt
 - Search Console and indexing receipts are documented in `docs/seo.md`.
 - Public privacy disclosure hygiene is covered by `npm run check:privacy` and
   documented in `docs/privacy-launch.md`.
+- Install/download trust is covered by `npm run check:install` and documented
+  in `docs/install-download.md`.
 - Blog conversion hygiene is covered by `npm run check:blog` and included in
   `npm run check:launch`.
 - Supabase capture is deferred until there is an approved capture use case,
