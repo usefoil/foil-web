@@ -42,7 +42,7 @@
         <header class="article-hero">
           <p class="detail-kicker">Privacy</p>
           <h1>Foil privacy notes</h1>
-          <p>Last updated June 10, 2026. This page describes the current Foil website and macOS app privacy posture for launch.</p>
+          <p>Last updated June 11, 2026. This page describes the current Foil website and macOS app privacy posture for launch.</p>
         </header>
 
         <div class="article-body">
@@ -52,8 +52,8 @@
           <p>The website code does not intentionally send dictated text, typed text, transcript contents, clipboard contents, raw audio, API keys, email addresses, or free-form user input to PostHog.</p>
 
           <h2>Error monitoring</h2>
-          <p>Sentry browser error monitoring is prepared behind production configuration and only loads when a Sentry DSN is configured. If enabled, it is configured for browser errors, not session replay, performance tracing, or product analytics.</p>
-          <p>Sentry session replay, tracing, breadcrumbs, and default personally identifiable information are disabled or dropped in the site instrumentation. Error payloads are scrubbed before sending so transcript text, raw audio, clipboard contents, API keys, email addresses, cookies, request bodies, and free-form user input are not intended to be sent.</p>
+          <p>Sentry browser error monitoring is not enabled for launch. The site keeps an env-gated hook that exits unless a Sentry DSN is configured in a future deployment. If enabled later, it is configured for browser errors, not session replay, performance tracing, or product analytics.</p>
+          <p>Sentry session replay, tracing, breadcrumbs, and default personally identifiable information are disabled or dropped in the dormant site instrumentation. If Sentry is enabled later, error payloads are scrubbed before sending so transcript text, raw audio, clipboard contents, API keys, email addresses, cookies, request bodies, and free-form user input are not intended to be sent.</p>
 
           <h2>Downloads and third-party services</h2>
           <p>Foil downloads are hosted on GitHub Releases, and the Homebrew cask points to the same release artifact. Visiting GitHub or installing through Homebrew is subject to those services' own logs and policies.</p>

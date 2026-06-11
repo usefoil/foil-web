@@ -20,7 +20,8 @@ const htmlFiles = [
 const failures = [];
 
 for (const requiredText of [
-  "env-gated Sentry browser error-monitoring foundation",
+  "dormant, env-gated Sentry browser error-monitoring foundation",
+  "Sentry is not enabled for the current static launch",
   "SENTRY_AUTH_TOKEN",
   "SENTRY_ORG",
   "SENTRY_PROJECT",
@@ -41,8 +42,9 @@ for (const requiredText of [
 }
 
 assert(
-  privacy.includes("Sentry browser error monitoring is prepared behind production configuration"),
-  "privacy page must match current Sentry env-gated state"
+  privacy.includes("Sentry browser error monitoring is not enabled for launch") &&
+    privacy.includes("exits unless a Sentry DSN is configured"),
+  "privacy page must match current dormant Sentry env-gated state"
 );
 assert(
   privacy.includes("Sentry session replay, tracing, breadcrumbs") &&
@@ -67,7 +69,7 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("Observability check passed for env-gated Sentry launch state.");
+console.log("Observability check passed for dormant env-gated Sentry launch state.");
 
 async function readText(relativePath) {
   return readFile(join(root, relativePath), "utf8");

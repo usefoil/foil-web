@@ -14,7 +14,7 @@ const supportingDocs = await Promise.all([
 const publicText = normalizeText(privacy);
 
 for (const requiredText of [
-  "Last updated June 10, 2026",
+  "Last updated June 11, 2026",
   "static site hosted for launch on Vercel",
   "account signup",
   "checkout",
@@ -36,8 +36,9 @@ for (const requiredText of [
   "API keys",
   "email addresses",
   "free-form user input",
-  "Sentry browser error monitoring is prepared behind production configuration",
-  "only loads when a Sentry DSN is configured",
+  "Sentry browser error monitoring is not enabled for launch",
+  "exits unless a Sentry DSN is configured",
+  "If enabled later",
   "browser errors, not session replay",
   "performance tracing",
   "product analytics",
@@ -56,7 +57,7 @@ for (const requiredText of [
 for (const requiredText of [
   "Vercel hosts the static site",
   "PostHog is limited to manual conversion analytics",
-  "Sentry browser error monitoring is env-gated",
+  "Sentry browser error monitoring is not enabled for launch",
   "Supabase capture is not used",
   "Bridge reliability work is future-facing",
   "npm run check:privacy"
