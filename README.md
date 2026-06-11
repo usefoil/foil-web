@@ -33,6 +33,11 @@ For production, include the analytics assertion:
 EXPECT_POSTHOG=1 EXPECTED_ANALYTICS_ENV=production SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com npm run check:deployed
 ```
 
+The deployed smoke fetches the live launch page inventory, verifies
+sitemap/canonical parity and deployed local assets, checks the six conversion
+event hooks, scans for stale GitHub Pages canonicals and unsupported bridge
+availability claims, and optionally asserts public PostHog/Sentry config.
+
 Once production Sentry is configured, include the Sentry assertion too:
 
 ```sh

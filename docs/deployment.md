@@ -49,7 +49,19 @@ Run strict production smoke after a production deploy:
 EXPECT_POSTHOG=1 EXPECTED_ANALYTICS_ENV=production SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com npm run check:deployed
 ```
 
-The strict production smoke proves the canonical URL, sitemap/robots basics,
-key pages, and deployed PostHog analytics config. After Sentry is configured,
-add `EXPECT_SENTRY=1` to the same command to assert the deployed public Sentry
+The strict production smoke proves the live launch page inventory, canonical
+URLs, `og:url` values, sitemap/robots parity, local asset references,
+conversion event hooks, install/privacy/blog/Supabase/Sentry launch surfaces,
+the absence of stale GitHub Pages canonicals or unsupported bridge availability
+claims, and deployed PostHog analytics config. After Sentry is configured, add
+`EXPECT_SENTRY=1` to the same command to assert the deployed public Sentry
 config.
+
+The `Launch Smoke` GitHub Actions workflow also supports a manual dispatch for
+deployed smoke. Use:
+
+- `smoke_url=https://sayfoil.com`
+- `site_url=https://sayfoil.com`
+- `expect_posthog=true`
+- `expected_analytics_env=production`
+- `expect_sentry=false` until production Sentry is configured
