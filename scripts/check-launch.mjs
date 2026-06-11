@@ -82,6 +82,8 @@ for (const serviceName of ["Vercel", "PostHog", "GitHub", "Sentry", "Supabase"])
 }
 assert(allText.includes("session recording") && allText.includes("disabled"), "privacy surface must disclose disabled session recording");
 assert(allText.includes("Supabase capture is not used by this static site"), "privacy surface must disclose current Supabase capture status");
+assert(allText.includes("no launch waitlist"), "privacy surface must disclose absent launch capture forms");
+assert(allText.includes("browser errors, not session replay"), "privacy surface must disclose Sentry scope");
 assert(robots.includes(`Sitemap: ${siteUrl}/sitemap.xml`), "robots.txt sitemap must use SITE_URL");
 
 for (const [, loc] of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {

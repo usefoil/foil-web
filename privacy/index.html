@@ -42,28 +42,33 @@
         <header class="article-hero">
           <p class="detail-kicker">Privacy</p>
           <h1>Foil privacy notes</h1>
-          <p>Last updated June 9, 2026. This page describes the current Foil website and macOS app privacy posture for launch.</p>
+          <p>Last updated June 10, 2026. This page describes the current Foil website and macOS app privacy posture for launch.</p>
         </header>
 
         <div class="article-body">
           <h2>Website analytics</h2>
-          <p>The Foil website is a static site hosted for launch on Vercel. Analytics are intentionally narrow and only load when a PostHog project key is configured at build time.</p>
-          <p>PostHog is configured for manual conversion events only. Autocapture, pageview capture, pageleave capture, dead-click capture, heatmaps, and session recording are disabled. Event properties are limited to location, label, destination, page path, and environment.</p>
+          <p>The Foil website is a static site hosted for launch on Vercel. It does not have account signup, checkout, comments, contact forms, newsletter signup, or email capture.</p>
+          <p>PostHog analytics are intentionally narrow and only load when a PostHog project key is configured at build time. PostHog is configured for manual conversion events only. Autocapture, pageview capture, pageleave capture, dead-click capture, heatmaps, and session recording are disabled. Event properties are limited to product, site URL, location, label, destination, page path, and environment.</p>
+          <p>The website code does not intentionally send dictated text, typed text, transcript contents, clipboard contents, raw audio, API keys, email addresses, or free-form user input to PostHog.</p>
 
-          <h2>Downloads and external services</h2>
+          <h2>Error monitoring</h2>
+          <p>Sentry browser error monitoring is prepared behind production configuration and only loads when a Sentry DSN is configured. If enabled, it is configured for browser errors, not session replay, performance tracing, or product analytics.</p>
+          <p>Sentry session replay, tracing, breadcrumbs, and default personally identifiable information are disabled or dropped in the site instrumentation. Error payloads are scrubbed before sending so transcript text, raw audio, clipboard contents, API keys, email addresses, cookies, request bodies, and free-form user input are not intended to be sent.</p>
+
+          <h2>Downloads and third-party services</h2>
           <p>Foil downloads are hosted on GitHub Releases, and the Homebrew cask points to the same release artifact. Visiting GitHub or installing through Homebrew is subject to those services' own logs and policies.</p>
-          <p>Sentry browser error monitoring is prepared behind production configuration and only loads when a Sentry DSN is configured. Session replay, tracing, breadcrumbs, default personally identifiable information, transcript text, raw audio, clipboard contents, API keys, and free-form user input are not intended to be sent. Supabase capture is not used by this static site.</p>
+          <p>Supabase capture is not used by this static site. There is no launch waitlist, newsletter, or support form that writes to Supabase.</p>
 
           <h2>Mac app data</h2>
           <p>Foil can use local whisper.cpp, hosted transcription providers, or a custom OpenAI-compatible endpoint. Audio and transcript data go to the transcription or cleanup route you choose in the app.</p>
           <p>API keys are stored in macOS Keychain. Transcription history is local to the Mac and can be limited or turned off. Successful audio files are deleted after transcription; failed audio may be retained locally for retryable failures.</p>
-          <p>Diagnostics are intended to be redacted before writing and should not include API keys, transcript text, raw audio, or clipboard contents.</p>
+          <p>Local diagnostics are intended to be redacted before writing and should not include API keys, transcript text, raw audio, or clipboard contents.</p>
 
           <h2>Feature status</h2>
           <p>The bridge reliability work linked from the landing page is future-facing. This site treats it as ongoing reliability work, not a current product capability.</p>
 
           <h2>Contact and updates</h2>
-          <p>For questions or corrections, open an issue in the <a href="https://github.com/usefoil/foil">Foil GitHub repository</a>. Privacy-impacting service changes should update this page, the analytics documentation, and the observability documentation before launch.</p>
+          <p>For questions or corrections, open an issue in the <a href="https://github.com/usefoil/foil">Foil GitHub repository</a>. Privacy-impacting service changes should update this page, the analytics documentation, the observability documentation, and the capture decision before launch.</p>
         </div>
       </article>
     </main>

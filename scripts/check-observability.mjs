@@ -44,7 +44,13 @@ assert(
   privacy.includes("Sentry browser error monitoring is prepared behind production configuration"),
   "privacy page must match current Sentry env-gated state"
 );
-assert(privacy.includes("Session replay") && privacy.includes("raw audio") && privacy.includes("API keys"), "privacy page must disclose Sentry safeguards");
+assert(
+  privacy.includes("Sentry session replay, tracing, breadcrumbs") &&
+    privacy.includes("raw audio") &&
+    privacy.includes("API keys") &&
+    privacy.includes("request bodies"),
+  "privacy page must disclose Sentry safeguards"
+);
 
 for (const relativePath of htmlFiles) {
   const html = await readText(relativePath);
