@@ -11,7 +11,7 @@ const supportingDocs = await Promise.all([
   "docs/observability.md",
   "docs/capture.md"
 ].map(readText));
-const publicText = stripTags(privacy);
+const publicText = normalizeText(privacy);
 
 for (const requiredText of [
   "Last updated June 10, 2026",
@@ -83,13 +83,8 @@ async function readText(relativePath) {
   return readFile(join(root, relativePath), "utf8");
 }
 
-function stripTags(html) {
-  return html
-    .replace(/<script[\s\S]*?<\/script>/gi, "")
-    .replace(/<style[\s\S]*?<\/style>/gi, "")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+function normalizeText(text) {
+  return text.replace(/\s+/g, " ").trim();
 }
 
 function assert(condition, message) {
