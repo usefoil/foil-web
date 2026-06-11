@@ -1,0 +1,170 @@
+version: 2
+
+goal:
+  title: "Launch Smoke Automation Refresh"
+  slug: "launch-smoke-automation-refresh"
+  kind: existing_plan
+  tranche: "Launch smoke proof is updated after the new privacy, install, blog, Sentry, PostHog, and deployed-domain checks landed."
+  status: complete
+  oracle:
+    signal: "A single documented local and deployed smoke path proves build, canonical/sitemap/robots, local assets, conversion hooks, privacy, install trust, blog conversion, PostHog config, optional Sentry config, and unsupported-claim scans, with CI receipts or explicit blockers."
+    cadence: "after Scout findings, after each Worker package, and at final audit"
+    final_proof: "A single documented local and deployed smoke path proves build, canonical/sitemap/robots, local assets, conversion hooks, privacy, install trust, blog conversion, PostHog config, optional Sentry config, and unsupported-claim scans, with CI receipts or explicit blockers."
+  intake:
+    original_request: "Plan the next conveyor of GoalBuddy prep boards for Foil web launch follow-up work."
+    interpreted_outcome: "Launch smoke proof is updated after the new privacy, install, blog, Sentry, PostHog, and deployed-domain checks landed."
+    input_shape: existing_plan
+    audience: "Foil maintainers continuing the web launch conveyor."
+    authority: approved
+    proof_type: test
+    completion_proof: "A single documented local and deployed smoke path proves build, canonical/sitemap/robots, local assets, conversion hooks, privacy, install trust, blog conversion, PostHog config, optional Sentry config, and unsupported-claim scans, with CI receipts or explicit blockers."
+    likely_misfire: "Treating the existing launch smoke as complete while newer launch checks and live production receipts are not covered by one repeatable command."
+    blind_spots_considered:
+      - "CI may pass local checks while deployed smoke misses new optional service assertions."
+      - "Browser rendering and outbound links may still need explicit smoke receipts."
+      - "Preview protection can make preview smoke require Vercel-specific handling."
+    existing_plan_facts:
+      - "Vercel, PostHog, SEO, install/download trust, Sentry foundation, privacy/legal, and blog conversion foundations have recent merged receipts."
+      - "Sentry production activation remains blocked on project-write/DSN access unless credentials are granted."
+      - "Supabase capture remains deferred unless a concrete approved capture use case appears."
+      - "Use local live GoalBuddy boards and recommended defaults."
+      - "Do not start /goal runs during prep."
+
+rules:
+  pm_owns_state: true
+  one_active_task: true
+  max_write_workers: 1
+  no_implementation_without_worker_or_pm_task: true
+  no_completion_without_judge_or_pm_audit: true
+  planning_is_not_completion: true
+  queued_required_worker_blocks_completion: true
+  continuous_until_full_outcome: true
+  missing_input_or_credentials_do_not_stop_goal: true
+  preserve_and_validate_existing_plan: true
+  intake_misfire_must_be_audited: true
+  goal_pressure_requires_oracle: true
+  no_completion_on_weak_proof: true
+  slice_policy:
+    max_consecutive_tiny_tasks: 2
+    prefer_vertical_slices: true
+    judge_picks_largest_safe_slice: true
+    worker_completes_whole_slice: true
+
+agents:
+  scout: installed
+  worker: installed
+  judge: installed
+
+visual_board:
+  selected: local
+  local:
+    status: live
+    url: "http://goalbuddy.localhost:41737/launch-smoke-automation-refresh/"
+    command: "npx goalbuddy board docs/goals/launch-smoke-automation-refresh"
+
+active_task: null
+
+tasks:
+  - id: T001
+    type: scout
+    assignee: Scout
+    status: done
+    reasoning_hint: medium
+    objective: "Audit current launch smoke scripts, CI workflow, deployed smoke behavior, and docs after the recent launch-foundation PRs; identify the largest useful automation refresh."
+    inputs:
+      - "docs/goals/launch-smoke-automation-refresh/goal.md"
+      - "Current repository files relevant to this launch area"
+      - "Recent merged PRs and docs when useful"
+    constraints:
+      - "Read-only."
+      - "Do not edit implementation files."
+      - "Prefer concrete file paths, commands, URLs, service settings, or source-backed receipts over generic advice."
+      - "Do not collect or expose secrets."
+      - "Do not make public copy claim the bridge is shipped yet."
+    expected_output:
+      - "Evidence map"
+      - "Credential, production-access, legal, or destructive-permission blockers"
+      - "Largest safe useful next slice"
+      - "Candidate Worker package with allowed_files, verify commands, and stop_if conditions"
+    receipts:
+      - "docs/goals/launch-smoke-automation-refresh/notes/t001-scout.md"
+  - id: T002
+    type: judge
+    assignee: Judge
+    status: done
+    reasoning_hint: high
+    objective: "Review launch smoke findings and select the largest safe Worker package that improves repeatable launch proof."
+    inputs:
+      - "T001 receipt"
+      - "docs/goals/launch-smoke-automation-refresh/goal.md"
+      - "Current repo status"
+    constraints:
+      - "Read-only."
+      - "Do not implement."
+      - "Reject weak proof or plans that only document intent."
+      - "Require allowed_files, verify commands, and stop_if conditions for the Worker package."
+    expected_output:
+      - "approved | revise | blocked"
+      - "Exact Worker objective"
+      - "allowed_files"
+      - "verify"
+      - "stop_if"
+      - "Deferred or blocked follow-ups"
+    receipts:
+      - "docs/goals/launch-smoke-automation-refresh/notes/t002-judge.md"
+  - id: T003
+    type: worker
+    assignee: Worker
+    status: done
+    reasoning_hint: medium
+    objective: "Expand deployed launch smoke coverage and update workflow/docs so one repeatable deployed command proves live page inventory, sitemap/canonical parity, deployed asset availability, conversion hooks, privacy/install/blog/Supabase/Sentry launch surfaces, PostHog config, optional Sentry config, and unsupported bridge-claim absence."
+    allowed_files:
+      - "README.md"
+      - "scripts/check-deployed.mjs"
+      - ".github/workflows/launch-smoke.yml"
+      - "docs/deployment.md"
+      - "docs/goals/launch-smoke-automation-refresh/state.yaml"
+      - "docs/goals/launch-smoke-automation-refresh/notes/"
+    verify:
+      - "npm run check:launch"
+      - "SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com EXPECT_POSTHOG=1 EXPECTED_ANALYTICS_ENV=production npm run check:deployed"
+    stop_if:
+      - "Need files outside allowed_files."
+      - "Need credentials, production access, destructive permission, or legal approval that the operator has not granted."
+      - "The selected behavior or public claim is ambiguous."
+      - "Verification fails twice with the same unexplained failure."
+    receipts:
+      - "docs/goals/launch-smoke-automation-refresh/notes/t003-worker.md"
+  - id: T999
+    type: judge
+    assignee: Judge
+    status: done
+    reasoning_hint: high
+    objective: "Audit whether launch smoke automation refresh satisfies the oracle after implementation and verification."
+    inputs:
+      - "All done task receipts"
+      - "Last verification"
+      - "Current dirty diff"
+      - "Goal oracle"
+    constraints:
+      - "Read-only."
+      - "Reject completion if required Worker work is still queued or active."
+      - "Reject completion if safe local follow-up slices remain."
+      - "Reject completion on weak proof, missing service receipts, stale URLs, broken assets, or unsupported bridge claims."
+    expected_output:
+      - "complete | not_complete"
+      - "full_outcome_complete: true | false"
+      - "missing evidence"
+      - "next task if not complete"
+    receipts:
+      - "docs/goals/launch-smoke-automation-refresh/notes/t999-final-audit.md"
+
+checks:
+  dirty_fingerprint: "launch smoke automation refresh implemented on codex/launch-smoke-automation-refresh"
+  last_verification:
+    result: pass
+    task: T003
+    commands:
+      - "npm run check:launch"
+      - "SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com EXPECT_POSTHOG=1 EXPECTED_ANALYTICS_ENV=production npm run check:deployed"
+  full_outcome_complete: true
