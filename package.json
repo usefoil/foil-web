@@ -10,7 +10,8 @@
     "check:capture": "node scripts/check-capture.mjs",
     "check:deployed": "node scripts/check-deployed.mjs",
     "check:observability": "node scripts/check-observability.mjs",
-    "check:launch": "npm run build && node scripts/check-launch.mjs && npm run check:analytics && npm run check:blog && npm run check:capture && npm run check:observability",
+    "check:privacy": "node scripts/check-privacy.mjs",
+    "check:launch": "npm run build && node scripts/check-launch.mjs && npm run check:analytics && npm run check:blog && npm run check:capture && npm run check:observability && npm run check:privacy",
     "serve": "python3 -m http.server 4173"
   },
   "engines": {
