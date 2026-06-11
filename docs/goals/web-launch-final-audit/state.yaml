@@ -1,0 +1,174 @@
+version: 2
+
+goal:
+  title: "Web Launch Final Audit"
+  slug: "web-launch-final-audit"
+  kind: existing_plan
+  tranche: "A final launch audit maps every web launch foundation to current green checks, production receipts, and explicit blockers."
+  status: complete
+  full_outcome_complete: true
+  oracle:
+    signal: "A final audit receipt covers domain/DNS/Vercel, SEO/Search Console, PostHog, Sentry, privacy/legal, install trust, blog conversion, Supabase decision, release update process, and launch smoke, with green commands and live production receipts or explicit blockers."
+    cadence: "after Scout findings, after each Worker package, and at final audit"
+    final_proof: "A final audit receipt covers domain/DNS/Vercel, SEO/Search Console, PostHog, Sentry, privacy/legal, install trust, blog conversion, Supabase decision, release update process, and launch smoke, with green commands and live production receipts or explicit blockers."
+  intake:
+    original_request: "Plan the next conveyor of GoalBuddy prep boards for Foil web launch follow-up work."
+    interpreted_outcome: "A final launch audit maps every web launch foundation to current green checks, production receipts, and explicit blockers."
+    input_shape: existing_plan
+    audience: "Foil maintainers continuing the web launch conveyor."
+    authority: approved
+    proof_type: review
+    completion_proof: "A final audit receipt covers domain/DNS/Vercel, SEO/Search Console, PostHog, Sentry, privacy/legal, install trust, blog conversion, Supabase decision, release update process, and launch smoke, with green commands and live production receipts or explicit blockers."
+    likely_misfire: "Declaring launch ready from scattered PR summaries without one current source/build/deployed audit."
+    blind_spots_considered:
+      - "Some service state lives outside the repo."
+      - "Production config can drift after PRs merge."
+      - "Legal approval and Sentry project access may remain explicit blockers."
+    existing_plan_facts:
+      - "Vercel, PostHog, SEO, install/download trust, Sentry foundation, privacy/legal, and blog conversion foundations have recent merged receipts."
+      - "Sentry production activation remains blocked on project-write/DSN access unless credentials are granted."
+      - "Supabase capture remains deferred unless a concrete approved capture use case appears."
+      - "Use local live GoalBuddy boards and recommended defaults."
+      - "Do not start /goal runs during prep."
+
+rules:
+  pm_owns_state: true
+  one_active_task: true
+  max_write_workers: 1
+  no_implementation_without_worker_or_pm_task: true
+  no_completion_without_judge_or_pm_audit: true
+  planning_is_not_completion: true
+  queued_required_worker_blocks_completion: true
+  continuous_until_full_outcome: true
+  missing_input_or_credentials_do_not_stop_goal: true
+  preserve_and_validate_existing_plan: true
+  intake_misfire_must_be_audited: true
+  goal_pressure_requires_oracle: true
+  no_completion_on_weak_proof: true
+  slice_policy:
+    max_consecutive_tiny_tasks: 2
+    prefer_vertical_slices: true
+    judge_picks_largest_safe_slice: true
+    worker_completes_whole_slice: true
+
+agents:
+  scout: installed
+  worker: installed
+  judge: installed
+
+visual_board:
+  selected: local
+  local:
+    status: live
+    url: "http://goalbuddy.localhost:41737/web-launch-final-audit/"
+    command: "npx goalbuddy board docs/goals/web-launch-final-audit"
+
+active_task: null
+
+tasks:
+  - id: T001
+    type: scout
+    assignee: Scout
+    status: done
+    reasoning_hint: medium
+    objective: "Collect current repo docs/checks/production receipts and identify stale or missing launch-foundation evidence."
+    receipt: "docs/goals/web-launch-final-audit/notes/t001-scout.md"
+    inputs:
+      - "docs/goals/web-launch-final-audit/goal.md"
+      - "Current repository files relevant to this launch area"
+      - "Recent merged PRs and docs when useful"
+    constraints:
+      - "Read-only."
+      - "Do not edit implementation files."
+      - "Prefer concrete file paths, commands, URLs, service settings, or source-backed receipts over generic advice."
+      - "Do not collect or expose secrets."
+      - "Do not make public copy claim the bridge is shipped yet."
+    expected_output:
+      - "Evidence map"
+      - "Credential, production-access, legal, or destructive-permission blockers"
+      - "Largest safe useful next slice"
+      - "Candidate Worker package with allowed_files, verify commands, and stop_if conditions"
+  - id: T002
+    type: judge
+    assignee: Judge
+    status: done
+    reasoning_hint: high
+    objective: "Decide the final audit scope and whether any safe fix must run before readiness can be claimed."
+    receipt: "docs/goals/web-launch-final-audit/notes/t002-judge.md"
+    inputs:
+      - "T001 receipt"
+      - "docs/goals/web-launch-final-audit/goal.md"
+      - "Current repo status"
+    constraints:
+      - "Read-only."
+      - "Do not implement."
+      - "Reject weak proof or plans that only document intent."
+      - "Require allowed_files, verify commands, and stop_if conditions for the Worker package."
+    expected_output:
+      - "approved | revise | blocked"
+      - "Exact Worker objective"
+      - "allowed_files"
+      - "verify"
+      - "stop_if"
+      - "Deferred or blocked follow-ups"
+  - id: T003
+    type: worker
+    assignee: Worker
+    status: done
+    reasoning_hint: medium
+    objective: "Write the final launch audit receipt and make only approved small fixes needed for accurate launch readiness proof."
+    receipt: "docs/goals/web-launch-final-audit/notes/t003-worker.md"
+    allowed_files:
+      - "docs/goals/web-launch-final-audit/state.yaml"
+      - "docs/goals/web-launch-final-audit/notes/t003-worker.md"
+      - "docs/goals/web-launch-final-audit/notes/t999-final-audit.md"
+    verify:
+      - "npm run check:launch"
+      - "npm run check:release"
+      - "SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com EXPECT_POSTHOG=1 EXPECTED_ANALYTICS_ENV=production npm run check:deployed"
+      - "SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com EXPECT_POSTHOG=1 EXPECT_SENTRY=1 EXPECTED_ANALYTICS_ENV=production npm run check:deployed"
+    stop_if:
+      - "Need files outside allowed_files."
+      - "Need credentials, production access, destructive permission, or legal approval that the operator has not granted."
+      - "The selected behavior or public claim is ambiguous."
+      - "Verification fails twice with the same unexplained failure."
+  - id: T999
+    type: judge
+    assignee: Judge
+    status: done
+    reasoning_hint: high
+    objective: "Audit whether the web launch final audit satisfies the oracle and records full_outcome_complete truthfully."
+    receipt: "docs/goals/web-launch-final-audit/notes/t999-final-audit.md"
+    inputs:
+      - "All done task receipts"
+      - "Last verification"
+      - "Current dirty diff"
+      - "Goal oracle"
+    constraints:
+      - "Read-only."
+      - "Reject completion if required Worker work is still queued or active."
+      - "Reject completion if safe local follow-up slices remain."
+      - "Reject completion on weak proof, missing service receipts, stale URLs, broken assets, or unsupported bridge claims."
+    expected_output:
+      - "complete | not_complete"
+      - "full_outcome_complete: true | false"
+      - "missing evidence"
+      - "next task if not complete"
+
+checks:
+  dirty_fingerprint: "final audit receipts only; unrelated prep boards remain untracked"
+  last_verification:
+    result: pass_with_explicit_blockers
+    task: T999
+    commands:
+      - "npm run check:launch"
+      - "npm run check:release"
+      - "SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com EXPECT_POSTHOG=1 EXPECTED_ANALYTICS_ENV=production npm run check:deployed"
+      - "SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com EXPECT_POSTHOG=1 EXPECT_SENTRY=1 EXPECTED_ANALYTICS_ENV=production npm run check:deployed (expected failure: missing deployed Sentry DSN)"
+      - "live robots/sitemap/homepage/analytics-config check"
+      - "public-copy stale canonical and unsupported bridge claim scan"
+    blockers:
+      - "Sentry production activation needs DSN/project access and Vercel env configuration."
+      - "Authenticated Google Search Console inspection/submission proof needs operator access."
+      - "Formal legal approval, if required, remains outside local repo authority."
+      - "PostHog saved insight tiles should wait for real Foil conversion event volume."
