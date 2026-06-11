@@ -11,7 +11,8 @@ launch architecture. It is not a substitute for formal legal review.
 - PostHog is limited to manual conversion analytics when configured.
 - PostHog autocapture, pageviews, pageleave capture, dead-click capture,
   heatmaps, and session recording are disabled.
-- Sentry browser error monitoring is env-gated behind `SENTRY_DSN`.
+- Sentry browser error monitoring is not enabled for launch; the dormant hook is
+  env-gated behind `SENTRY_DSN`.
 - Sentry session replay, tracing, breadcrumbs, and default personally
   identifiable information are disabled or dropped.
 - GitHub Releases and Homebrew are used for install/download flows.

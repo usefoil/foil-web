@@ -1,8 +1,8 @@
 # Foil Web Observability
 
-Foil web has an env-gated Sentry browser error-monitoring foundation for the
-static launch. The SDK is not loaded unless `SENTRY_DSN` is configured at build
-time.
+Foil web has a dormant, env-gated Sentry browser error-monitoring foundation.
+Sentry is not enabled for the current static launch, and the SDK is not loaded
+unless `SENTRY_DSN` is configured at build time in a future deployment.
 
 ## Current State
 
@@ -16,8 +16,8 @@ time.
   strips request cookies, headers, body/data, query strings, transcript text,
   raw audio, clipboard contents, API keys, email addresses, and free-form user
   input before sending.
-- `privacy/index.html` discloses that Sentry browser error monitoring is
-  prepared behind production configuration.
+- `privacy/index.html` discloses that Sentry browser error monitoring is not
+  enabled for launch and remains behind future production configuration.
 - PostHog remains limited to manual conversion analytics and does not provide
   exception collection.
 - CodeQL runs on pull requests and `npm run check:launch` covers build, SEO,
@@ -79,11 +79,11 @@ Rechecked production activation on June 11, 2026:
 - The Vercel CLI was not installed in the local workspace for this recheck, so
   service-side env names were not inspected from the CLI.
 
-Current blocker: production Sentry activation still needs operator project/DSN
-access. After the Sentry project and Vercel env are configured, send one
-controlled preview error, confirm it lands in the expected project with the
-expected environment/release and scrubbed payload, then run deployed smoke with
-`EXPECT_SENTRY=1`.
+Current decision: Sentry is not needed for the web launch. If that changes,
+production Sentry activation still needs operator project/DSN access. After the
+Sentry project and Vercel env are configured, send one controlled preview error,
+confirm it lands in the expected project with the expected environment/release
+and scrubbed payload, then run deployed smoke with `EXPECT_SENTRY=1`.
 
 ## Verification
 
