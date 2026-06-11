@@ -62,9 +62,10 @@ EXPECT_POSTHOG=1 EXPECT_SENTRY=1 EXPECTED_ANALYTICS_ENV=production SMOKE_URL=htt
   `POSTHOG_KEY` is unset, the analytics script exits without loading PostHog.
   Production Vercel currently sets `POSTHOG_KEY`, `POSTHOG_HOST`,
   `SITE_URL=https://sayfoil.com`, and `FOIL_ANALYTICS_ENV=production`.
-- Set `SENTRY_DSN`, `SENTRY_ENVIRONMENT`, and `SENTRY_RELEASE` to enable
-  env-gated Sentry browser error monitoring. When `SENTRY_DSN` is unset, the
-  observability script exits without loading Sentry. See `docs/observability.md`.
+- Sentry is not enabled for the current web launch. Leave `SENTRY_DSN` unset
+  unless browser error monitoring is deliberately activated later; without a
+  DSN, the observability script exits without loading Sentry. See
+  `docs/observability.md`.
 - Vercel deployment setup and production smoke receipts are documented in
   `docs/deployment.md`.
 - Search Console and indexing receipts are documented in `docs/seo.md`.
