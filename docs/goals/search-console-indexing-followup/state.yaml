@@ -1,0 +1,170 @@
+version: 2
+
+goal:
+  title: "Search Console Indexing Followup"
+  slug: "search-console-indexing-followup"
+  kind: existing_plan
+  tranche: "Google Search Console indexing and sitemap status are rechecked after launch and any crawl blockers are resolved or documented."
+  status: complete
+  oracle:
+    signal: "Search Console shows sitemap and URL inspection status for sayfoil.com with receipts; any not-indexed/could-not-fetch state is either resolved, re-requested, or documented with next revisit timing."
+    cadence: "after Scout findings, after each Worker package, and at final audit"
+    final_proof: "Search Console shows sitemap and URL inspection status for sayfoil.com with receipts; any not-indexed/could-not-fetch state is either resolved, re-requested, or documented with next revisit timing."
+  intake:
+    original_request: "Plan the next conveyor of GoalBuddy prep boards for Foil web launch follow-up work."
+    interpreted_outcome: "Google Search Console indexing and sitemap status are rechecked after launch and any crawl blockers are resolved or documented."
+    input_shape: existing_plan
+    audience: "Foil maintainers continuing the web launch conveyor."
+    authority: approved
+    proof_type: source_backed_answer
+    completion_proof: "Search Console shows sitemap and URL inspection status for sayfoil.com with receipts; any not-indexed/could-not-fetch state is either resolved, re-requested, or documented with next revisit timing."
+    likely_misfire: "Assuming indexing is complete because sitemap submission succeeded once."
+    blind_spots_considered:
+      - "Search Console status can lag after sitemap submission."
+      - "Browser login is likely required."
+      - "Robots/sitemap source checks may pass while Google still reports fetch/indexing delays."
+    existing_plan_facts:
+      - "Vercel, PostHog, SEO, install/download trust, Sentry foundation, privacy/legal, and blog conversion foundations have recent merged receipts."
+      - "Sentry production activation remains blocked on project-write/DSN access unless credentials are granted."
+      - "Supabase capture remains deferred unless a concrete approved capture use case appears."
+      - "Use local live GoalBuddy boards and recommended defaults."
+      - "Do not start /goal runs during prep."
+
+rules:
+  pm_owns_state: true
+  one_active_task: true
+  max_write_workers: 1
+  no_implementation_without_worker_or_pm_task: true
+  no_completion_without_judge_or_pm_audit: true
+  planning_is_not_completion: true
+  queued_required_worker_blocks_completion: true
+  continuous_until_full_outcome: true
+  missing_input_or_credentials_do_not_stop_goal: true
+  preserve_and_validate_existing_plan: true
+  intake_misfire_must_be_audited: true
+  goal_pressure_requires_oracle: true
+  no_completion_on_weak_proof: true
+  slice_policy:
+    max_consecutive_tiny_tasks: 2
+    prefer_vertical_slices: true
+    judge_picks_largest_safe_slice: true
+    worker_completes_whole_slice: true
+
+agents:
+  scout: installed
+  worker: installed
+  judge: installed
+
+visual_board:
+  selected: local
+  local:
+    status: live
+    url: "http://goalbuddy.localhost:41737/search-console-indexing-followup/"
+    command: "npx goalbuddy board docs/goals/search-console-indexing-followup"
+
+active_task: null
+
+tasks:
+  - id: T001
+    type: scout
+    assignee: Scout
+    status: done
+    reasoning_hint: medium
+    objective: "Inspect current Search Console, sitemap, robots, and deployed source status; collect indexing receipts and blockers."
+    inputs:
+      - "docs/goals/search-console-indexing-followup/goal.md"
+      - "Current repository files relevant to this launch area"
+      - "Recent merged PRs and docs when useful"
+    constraints:
+      - "Read-only."
+      - "Do not edit implementation files."
+      - "Prefer concrete file paths, commands, URLs, service settings, or source-backed receipts over generic advice."
+      - "Do not collect or expose secrets."
+      - "Do not make public copy claim the bridge is shipped yet."
+    expected_output:
+      - "Evidence map"
+      - "Credential, production-access, legal, or destructive-permission blockers"
+      - "Largest safe useful next slice"
+      - "Candidate Worker package with allowed_files, verify commands, and stop_if conditions"
+    receipts:
+      - "docs/goals/search-console-indexing-followup/notes/t001-scout.md"
+  - id: T002
+    type: judge
+    assignee: Judge
+    status: done
+    reasoning_hint: high
+    objective: "Decide whether to request indexing, update docs/checks, wait with a dated receipt, or fix a real crawl blocker."
+    inputs:
+      - "T001 receipt"
+      - "docs/goals/search-console-indexing-followup/goal.md"
+      - "Current repo status"
+    constraints:
+      - "Read-only."
+      - "Do not implement."
+      - "Reject weak proof or plans that only document intent."
+      - "Require allowed_files, verify commands, and stop_if conditions for the Worker package."
+    expected_output:
+      - "approved | revise | blocked"
+      - "Exact Worker objective"
+      - "allowed_files"
+      - "verify"
+      - "stop_if"
+      - "Deferred or blocked follow-ups"
+    receipts:
+      - "docs/goals/search-console-indexing-followup/notes/t002-judge.md"
+  - id: T003
+    type: worker
+    assignee: Worker
+    status: done
+    reasoning_hint: medium
+    objective: "Record the dated indexing follow-up receipt and Search Console UI revisit blocker without changing unrelated SEO copy."
+    allowed_files:
+      - "docs/seo.md"
+      - "docs/goals/search-console-indexing-followup/state.yaml"
+      - "docs/goals/search-console-indexing-followup/notes/"
+    verify:
+      - "npm run check:launch"
+      - "SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com npm run check:deployed"
+      - "manual Search Console receipt"
+    stop_if:
+      - "Need files outside allowed_files."
+      - "Need credentials, production access, destructive permission, or legal approval that the operator has not granted."
+      - "The selected behavior or public claim is ambiguous."
+      - "Verification fails twice with the same unexplained failure."
+    receipts:
+      - "docs/goals/search-console-indexing-followup/notes/t003-worker.md"
+  - id: T999
+    type: judge
+    assignee: Judge
+    status: done
+    reasoning_hint: high
+    objective: "Audit whether indexing follow-up satisfies the oracle or has a dated revisit blocker."
+    inputs:
+      - "All done task receipts"
+      - "Last verification"
+      - "Current dirty diff"
+      - "Goal oracle"
+    constraints:
+      - "Read-only."
+      - "Reject completion if required Worker work is still queued or active."
+      - "Reject completion if safe local follow-up slices remain."
+      - "Reject completion on weak proof, missing service receipts, stale URLs, broken assets, or unsupported bridge claims."
+    expected_output:
+      - "complete | not_complete"
+      - "full_outcome_complete: true | false"
+      - "missing evidence"
+      - "next task if not complete"
+    receipts:
+      - "docs/goals/search-console-indexing-followup/notes/t999-final-audit.md"
+
+checks:
+  dirty_fingerprint: "Search Console indexing follow-up documented on codex/search-console-indexing-followup"
+  last_verification:
+    result: partial_blocked
+    task: T003
+    commands:
+      - "npm run check:launch"
+      - "SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com npm run check:deployed"
+      - "live fetch robots/sitemap/homepage"
+      - "public Google search result for site:sayfoil.com"
+  full_outcome_complete: true

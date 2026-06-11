@@ -48,3 +48,23 @@ Homepage inspection receipt from June 10, 2026:
 
 Do not repeatedly request indexing for the same URL; it does not change queue
 priority.
+
+Follow-up receipt from June 11, 2026:
+
+- Public Google search for `site:sayfoil.com Foil Mac dictation` returned
+  `https://sayfoil.com/`, so the homepage is publicly indexed.
+- `npm run check:launch` passed.
+- `SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com npm run check:deployed`
+  passed.
+- Live fetch checks returned HTTP 200 for `https://sayfoil.com/robots.txt`,
+  `https://sayfoil.com/sitemap.xml`, and `https://sayfoil.com/`.
+- Live `robots.txt` still points at `https://sayfoil.com/sitemap.xml`.
+- Live `sitemap.xml` contains 8 URL entries.
+- Live homepage still declares canonical `https://sayfoil.com/`.
+
+Search Console UI/API status was not rechecked in this workspace because no
+authenticated Search Console tool or browser session was available. Next
+operator revisit: open the `sayfoil.com` domain property in Search Console,
+confirm the sitemap table no longer shows `Couldn't fetch`, inspect
+`https://sayfoil.com/`, and record whether any remaining not-indexed state was
+resolved, re-requested, or scheduled for a later crawl-status check.
