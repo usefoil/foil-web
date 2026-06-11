@@ -1,0 +1,175 @@
+version: 2
+
+goal:
+  title: "Release Update Automation"
+  slug: "release-update-automation"
+  kind: existing_plan
+  tranche: "Future Foil releases can update or flag web install copy, checksum, Homebrew cask state, and docs through one repeatable check."
+  status: complete
+  oracle:
+    signal: "A repeatable command compares the latest GitHub release and Homebrew cask against website install copy/docs/checks, then passes when aligned or fails with actionable drift details."
+    cadence: "after Scout findings, after each Worker package, and at final audit"
+    final_proof: "A repeatable command compares the latest GitHub release and Homebrew cask against website install copy/docs/checks, then passes when aligned or fails with actionable drift details."
+  intake:
+    original_request: "Plan the next conveyor of GoalBuddy prep boards for Foil web launch follow-up work."
+    interpreted_outcome: "Future Foil releases can update or flag web install copy, checksum, Homebrew cask state, and docs through one repeatable check."
+    input_shape: existing_plan
+    audience: "Foil maintainers continuing the web launch conveyor."
+    authority: approved
+    proof_type: test
+    completion_proof: "A repeatable command compares the latest GitHub release and Homebrew cask against website install copy/docs/checks, then passes when aligned or fails with actionable drift details."
+    likely_misfire: "Only documenting today’s release while future release drift still requires manual memory."
+    blind_spots_considered:
+      - "Network-dependent checks need timeouts and graceful skips in CI."
+      - "Homebrew tap may redirect from legacy org URLs."
+      - "Release asset names and checksums must remain exact."
+    existing_plan_facts:
+      - "Vercel, PostHog, SEO, install/download trust, Sentry foundation, privacy/legal, and blog conversion foundations have recent merged receipts."
+      - "Sentry production activation remains blocked on project-write/DSN access unless credentials are granted."
+      - "Supabase capture remains deferred unless a concrete approved capture use case appears."
+      - "Use local live GoalBuddy boards and recommended defaults."
+      - "Do not start /goal runs during prep."
+
+rules:
+  pm_owns_state: true
+  one_active_task: true
+  max_write_workers: 1
+  no_implementation_without_worker_or_pm_task: true
+  no_completion_without_judge_or_pm_audit: true
+  planning_is_not_completion: true
+  queued_required_worker_blocks_completion: true
+  continuous_until_full_outcome: true
+  missing_input_or_credentials_do_not_stop_goal: true
+  preserve_and_validate_existing_plan: true
+  intake_misfire_must_be_audited: true
+  goal_pressure_requires_oracle: true
+  no_completion_on_weak_proof: true
+  slice_policy:
+    max_consecutive_tiny_tasks: 2
+    prefer_vertical_slices: true
+    judge_picks_largest_safe_slice: true
+    worker_completes_whole_slice: true
+
+agents:
+  scout: installed
+  worker: installed
+  judge: installed
+
+visual_board:
+  selected: local
+  local:
+    status: live
+    url: "http://goalbuddy.localhost:41737/release-update-automation/"
+    command: "npx goalbuddy board docs/goals/release-update-automation"
+
+active_task: null
+
+tasks:
+  - id: T001
+    type: scout
+    assignee: Scout
+    status: done
+    reasoning_hint: medium
+    objective: "Audit current install trust checks and determine the safest way to detect future release/Homebrew drift."
+    inputs:
+      - "docs/goals/release-update-automation/goal.md"
+      - "Current repository files relevant to this launch area"
+      - "Recent merged PRs and docs when useful"
+    constraints:
+      - "Read-only."
+      - "Do not edit implementation files."
+      - "Prefer concrete file paths, commands, URLs, service settings, or source-backed receipts over generic advice."
+      - "Do not collect or expose secrets."
+      - "Do not make public copy claim the bridge is shipped yet."
+    expected_output:
+      - "Evidence map"
+      - "Credential, production-access, legal, or destructive-permission blockers"
+      - "Largest safe useful next slice"
+      - "Candidate Worker package with allowed_files, verify commands, and stop_if conditions"
+    receipts:
+      - "docs/goals/release-update-automation/notes/t001-scout.md"
+  - id: T002
+    type: judge
+    assignee: Judge
+    status: done
+    reasoning_hint: high
+    objective: "Choose static-check refinement, optional network audit command, or docs-only process update as the largest safe slice."
+    inputs:
+      - "T001 receipt"
+      - "docs/goals/release-update-automation/goal.md"
+      - "Current repo status"
+    constraints:
+      - "Read-only."
+      - "Do not implement."
+      - "Reject weak proof or plans that only document intent."
+      - "Require allowed_files, verify commands, and stop_if conditions for the Worker package."
+    expected_output:
+      - "approved | revise | blocked"
+      - "Exact Worker objective"
+      - "allowed_files"
+      - "verify"
+      - "stop_if"
+      - "Deferred or blocked follow-ups"
+    receipts:
+      - "docs/goals/release-update-automation/notes/t002-judge.md"
+  - id: T003
+    type: worker
+    assignee: Worker
+    status: done
+    reasoning_hint: medium
+    objective: "Create a separate networked check:release command that compares current web install metadata against GitHub latest release, DMG/checksum assets, and Homebrew cask version/SHA/URL, while keeping normal launch checks offline and stable."
+    allowed_files:
+      - "package.json"
+      - "scripts/check-release-drift.mjs"
+      - "scripts/check-install.mjs"
+      - "docs/install-download.md"
+      - "README.md"
+      - "docs/goals/release-update-automation/state.yaml"
+      - "docs/goals/release-update-automation/notes/"
+    verify:
+      - "npm run check:release"
+      - "npm run check:install"
+      - "npm run check:launch"
+    stop_if:
+      - "Need files outside allowed_files."
+      - "Need credentials, production access, destructive permission, or legal approval that the operator has not granted."
+      - "The selected behavior or public claim is ambiguous."
+      - "Verification fails twice with the same unexplained failure."
+    receipts:
+      - "docs/goals/release-update-automation/notes/t003-worker.md"
+  - id: T999
+    type: judge
+    assignee: Judge
+    status: done
+    reasoning_hint: high
+    objective: "Audit whether release update automation satisfies the oracle and does not make CI flaky."
+    inputs:
+      - "All done task receipts"
+      - "Last verification"
+      - "Current dirty diff"
+      - "Goal oracle"
+    constraints:
+      - "Read-only."
+      - "Reject completion if required Worker work is still queued or active."
+      - "Reject completion if safe local follow-up slices remain."
+      - "Reject completion on weak proof, missing service receipts, stale URLs, broken assets, or unsupported bridge claims."
+    expected_output:
+      - "complete | not_complete"
+      - "full_outcome_complete: true | false"
+      - "missing evidence"
+      - "next task if not complete"
+    receipts:
+      - "docs/goals/release-update-automation/notes/t999-final-audit.md"
+
+checks:
+  dirty_fingerprint: "Release drift automation implemented on codex/release-update-automation"
+  last_verification:
+    result: pass
+    task: T003
+    commands:
+      - "gh api repos/usefoil/foil/releases/latest"
+      - "curl -fsSL https://raw.githubusercontent.com/mean-weasel/homebrew-foil/main/Casks/foil.rb"
+      - "npm run check:release"
+      - "npm run check:install"
+      - "npm run check:launch"
+  full_outcome_complete: true

@@ -13,6 +13,7 @@
     "check:observability": "node scripts/check-observability.mjs",
     "check:privacy": "node scripts/check-privacy.mjs",
     "check:launch": "npm run build && node scripts/check-launch.mjs && npm run check:analytics && npm run check:blog && npm run check:capture && npm run check:install && npm run check:observability && npm run check:privacy",
+    "check:release": "node scripts/check-release-drift.mjs",
     "serve": "python3 -m http.server 4173"
   },
   "engines": {

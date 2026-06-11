@@ -21,6 +21,12 @@ For the Vercel build output and launch checks:
 npm run check:launch
 ```
 
+To audit release drift before updating install copy:
+
+```sh
+npm run check:release
+```
+
 To smoke test a deployed preview or production URL:
 
 ```sh
