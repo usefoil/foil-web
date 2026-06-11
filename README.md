@@ -62,7 +62,8 @@ EXPECT_POSTHOG=1 EXPECT_SENTRY=1 EXPECTED_ANALYTICS_ENV=production SMOKE_URL=htt
 - Install/download trust is covered by `npm run check:install` and documented
   in `docs/install-download.md`.
 - Blog conversion hygiene is covered by `npm run check:blog` and included in
-  `npm run check:launch`.
+  `npm run check:launch`; the page inventory lives in
+  `docs/blog-conversion.md`.
 - Supabase capture is deferred until there is an approved capture use case,
   RLS design, retention plan, and privacy/legal approval. See `docs/capture.md`.
 - `.github/workflows/launch-smoke.yml` runs local launch checks on pull
