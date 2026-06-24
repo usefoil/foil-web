@@ -11,7 +11,6 @@ const canonicals = new Set();
 const requiredEvents = [
   "install_click",
   "dmg_click",
-  "ios_preview_click",
   "local_provider_guide_click",
   "bridge_interest_click",
   "blog_cta_click"
@@ -145,7 +144,9 @@ async function checkLocalReferences(pagePath, body) {
 function checkLaunchSurface(allHtml) {
   assert(!/mean-weasel\.github\.io\/foil|usefoil\.github\.io\/foil/i.test(allHtml), "deployed HTML contains a stale GitHub Pages canonical URL");
   assert(!/bridge[^.]{0,90}\b(shipped|released|available|download|install)\b/i.test(allHtml), "deployed HTML contains possible unsupported bridge availability claim");
-  assert(allHtml.includes("Foil 1.13.4"), "deployed install trust copy must mention current release Foil 1.13.4");
+  assert(allHtml.includes("Foil 1.13.5"), "deployed install trust copy must mention current release Foil 1.13.5");
+  assert(allHtml.includes("assets/audio-ux/recording-signifier.png"), "deployed home page must include current audio UX signifier proof");
+  assert(allHtml.includes("assets/audio-ux/receipt.json"), "deployed home page must link audio UX snapshot receipt");
   assert(allHtml.includes("Foil downloads are hosted on GitHub Releases"), "deployed privacy page must disclose GitHub Releases downloads");
   assert(allHtml.includes("PostHog analytics are intentionally narrow"), "deployed privacy page must disclose narrow PostHog analytics");
   assert(allHtml.includes("Supabase capture is not used by this static site"), "deployed privacy page must disclose current Supabase capture status");

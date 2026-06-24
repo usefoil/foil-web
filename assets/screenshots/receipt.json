@@ -1,0 +1,44 @@
+{
+  "artifacts" : [
+    {
+      "byteCount" : 33713,
+      "file" : "\/tmp\/foil-web-marketing-light\/foil-ready-control-center.png",
+      "name" : "foil-ready-control-center",
+      "pixelHeight" : 430,
+      "pixelWidth" : 528,
+      "sourceView" : "MenuBarView"
+    },
+    {
+      "byteCount" : 49077,
+      "file" : "\/tmp\/foil-web-marketing-light\/foil-settings-cleanup.png",
+      "name" : "foil-settings-cleanup",
+      "pixelHeight" : 620,
+      "pixelWidth" : 760,
+      "sourceView" : "SettingsView"
+    },
+    {
+      "byteCount" : 20514,
+      "file" : "\/tmp\/foil-web-marketing-light\/foil-onboarding-setup.png",
+      "name" : "foil-onboarding-setup",
+      "pixelHeight" : 390,
+      "pixelWidth" : 488,
+      "sourceView" : "OnboardingView"
+    },
+    {
+      "byteCount" : 56032,
+      "file" : "\/tmp\/foil-web-marketing-light\/foil-setup-needed.png",
+      "name" : "foil-setup-needed",
+      "pixelHeight" : 600,
+      "pixelWidth" : 572,
+      "sourceView" : "MenuBarView"
+    }
+  ],
+  "colorScheme" : "light",
+  "rendererBackend" : "NSHostingView.cacheDisplay.bitmapImageRep",
+  "schemaVersion" : 1,
+  "sourceViews" : [
+    "MenuBarView",
+    "SettingsView",
+    "OnboardingView"
+  ]
+}

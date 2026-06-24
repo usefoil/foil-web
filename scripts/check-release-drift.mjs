@@ -6,13 +6,13 @@ const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const timeoutMs = Number(process.env.RELEASE_DRIFT_TIMEOUT_MS || 10000);
 const failures = [];
 const release = {
-  version: "1.13.4",
-  tag: "v1.13.4",
-  name: "Foil 1.13.4",
-  publishedDate: "2026-05-31",
-  dmgName: "Foil-1.13.4-macos.dmg",
-  dmgSize: 2436639,
-  sha256: "1390e585aec6f50c2f779103ad0136fa974caa64acca91f0e787d4438bec5e1c",
+  version: "1.13.5",
+  tag: "v1.13.5",
+  name: "Foil 1.13.5",
+  publishedDate: "2026-06-12",
+  dmgName: "Foil-1.13.5-macos.dmg",
+  dmgSize: 2632125,
+  sha256: "20ee96db3f064ed204fa492e0a8971cc29c79bd12833d4fec9214de49757aa6f",
   releaseRepo: "https://github.com/usefoil/foil"
 };
 

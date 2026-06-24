@@ -1,0 +1,108 @@
+{
+  "artifacts" : [
+    {
+      "byteCount" : 8903,
+      "file" : "\/tmp\/foil-web-audio-ux-assets\/idle-signifier.png",
+      "pixelHeight" : 96,
+      "pixelWidth" : 320,
+      "scenario" : "idle",
+      "view" : "signifier"
+    },
+    {
+      "byteCount" : 30325,
+      "file" : "\/tmp\/foil-web-audio-ux-assets\/idle-floating-status.png",
+      "pixelHeight" : 192,
+      "pixelWidth" : 680,
+      "scenario" : "idle",
+      "view" : "floating-status"
+    },
+    {
+      "byteCount" : 15477,
+      "file" : "\/tmp\/foil-web-audio-ux-assets\/recording-signifier.png",
+      "pixelHeight" : 96,
+      "pixelWidth" : 320,
+      "scenario" : "recording",
+      "view" : "signifier"
+    },
+    {
+      "byteCount" : 33571,
+      "file" : "\/tmp\/foil-web-audio-ux-assets\/recording-floating-status.png",
+      "pixelHeight" : 192,
+      "pixelWidth" : 680,
+      "scenario" : "recording",
+      "view" : "floating-status"
+    },
+    {
+      "byteCount" : 12504,
+      "file" : "\/tmp\/foil-web-audio-ux-assets\/processing-signifier.png",
+      "pixelHeight" : 96,
+      "pixelWidth" : 320,
+      "scenario" : "processing",
+      "view" : "signifier"
+    },
+    {
+      "byteCount" : 32685,
+      "file" : "\/tmp\/foil-web-audio-ux-assets\/processing-floating-status.png",
+      "pixelHeight" : 192,
+      "pixelWidth" : 680,
+      "scenario" : "processing",
+      "view" : "floating-status"
+    },
+    {
+      "byteCount" : 12731,
+      "file" : "\/tmp\/foil-web-audio-ux-assets\/success-signifier.png",
+      "pixelHeight" : 96,
+      "pixelWidth" : 320,
+      "scenario" : "success",
+      "view" : "signifier"
+    },
+    {
+      "byteCount" : 40212,
+      "file" : "\/tmp\/foil-web-audio-ux-assets\/success-floating-status.png",
+      "pixelHeight" : 192,
+      "pixelWidth" : 680,
+      "scenario" : "success",
+      "view" : "floating-status"
+    },
+    {
+      "byteCount" : 8903,
+      "file" : "\/tmp\/foil-web-audio-ux-assets\/warning-signifier.png",
+      "pixelHeight" : 96,
+      "pixelWidth" : 320,
+      "scenario" : "warning",
+      "view" : "signifier"
+    },
+    {
+      "byteCount" : 40983,
+      "file" : "\/tmp\/foil-web-audio-ux-assets\/warning-floating-status.png",
+      "pixelHeight" : 192,
+      "pixelWidth" : 680,
+      "scenario" : "warning",
+      "view" : "floating-status"
+    },
+    {
+      "byteCount" : 11926,
+      "file" : "\/tmp\/foil-web-audio-ux-assets\/error-signifier.png",
+      "pixelHeight" : 96,
+      "pixelWidth" : 320,
+      "scenario" : "error",
+      "view" : "signifier"
+    },
+    {
+      "byteCount" : 32636,
+      "file" : "\/tmp\/foil-web-audio-ux-assets\/error-floating-status.png",
+      "pixelHeight" : 192,
+      "pixelWidth" : 680,
+      "scenario" : "error",
+      "view" : "floating-status"
+    }
+  ],
+  "forbiddenCaptureDependenciesUsed" : false,
+  "rendererBackend" : "NSHostingView.cacheDisplay.bitmapImageRep",
+  "schemaVersion" : 1,
+  "sourceViews" : [
+    "LiveAudioSignifierView",
+    "LiveAudioLevelBars",
+    "FloatingStatusView"
+  ]
+}

@@ -35,9 +35,9 @@ events. After real production traffic arrives, add these initial insights:
 
 | Insight | Query shape |
 | --- | --- |
-| Conversion clicks over time | Trend of `install_click`, `dmg_click`, `ios_preview_click`, `local_provider_guide_click`, `bridge_interest_click`, and `blog_cta_click` filtered to Foil production traffic |
+| Conversion clicks over time | Trend of `install_click`, `dmg_click`, `local_provider_guide_click`, `bridge_interest_click`, and `blog_cta_click` filtered to Foil production traffic |
 | Install/download intent | Trend of `install_click` and `dmg_click`, broken down by `location` and `destination` |
-| iOS and provider-guide interest | Trend of `ios_preview_click` and `local_provider_guide_click`, broken down by `page_path` |
+| Provider-guide interest | Trend of `local_provider_guide_click`, broken down by `page_path` |
 | Bridge interest | Trend of `bridge_interest_click`, broken down by `location`; this measures interest only and must not be described as shipped bridge usage |
 | Blog CTA conversion | Trend of `blog_cta_click`, broken down by `label`, `page_path`, and `destination` |
 
@@ -46,8 +46,7 @@ June 11, 2026 activation recheck:
 - PostHog connector context was switched to project `422537` before checking.
 - Dashboard `1696677` exists and has zero tiles.
 - The project event taxonomy does not yet include `install_click`, `dmg_click`,
-  `ios_preview_click`, `local_provider_guide_click`, `bridge_interest_click`,
-  or `blog_cta_click`.
+  `local_provider_guide_click`, `bridge_interest_click`, or `blog_cta_click`.
 - A last-30-days query filtered by `product=foil`,
   `site_url=https://sayfoil.com`, and `environment=production` returned zero
   Foil conversion rows.
@@ -61,7 +60,6 @@ June 11, 2026 activation recheck:
 | --- | --- | --- |
 | `install_click` | Hero install CTA and Homebrew copy button | `product`, `site_url`, `location`, `destination`, `page_path`, `environment` |
 | `dmg_click` | GitHub Releases DMG links | `product`, `site_url`, `location`, `destination`, `page_path`, `environment` |
-| `ios_preview_click` | iOS preview follow-up CTA | `product`, `site_url`, `location`, `destination`, `page_path`, `environment` |
 | `local_provider_guide_click` | Local whisper.cpp setup guide CTA | `product`, `site_url`, `location`, `destination`, `page_path`, `environment` |
 | `bridge_interest_click` | Future-facing bridge reliability interest CTA | `product`, `site_url`, `location`, `destination`, `page_path`, `environment` |
 | `blog_cta_click` | Blog preview, blog index, and article callout CTAs | `product`, `site_url`, `location`, `label`, `destination`, `page_path`, `environment` |

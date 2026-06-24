@@ -8,15 +8,14 @@ const siteUrl = normalizeSiteUrl(process.env.SITE_URL || "https://sayfoil.com");
 const requiredEvents = [
   "install_click",
   "dmg_click",
-  "ios_preview_click",
   "local_provider_guide_click",
   "bridge_interest_click",
   "blog_cta_click"
 ];
 const currentRelease = {
-  version: "1.13.4",
-  tag: "v1.13.4",
-  dmgSha256: "1390e585aec6f50c2f779103ad0136fa974caa64acca91f0e787d4438bec5e1c"
+  version: "1.13.5",
+  tag: "v1.13.5",
+  dmgSha256: "20ee96db3f064ed204fa492e0a8971cc29c79bd12833d4fec9214de49757aa6f"
 };
 
 const htmlFiles = [
@@ -75,6 +74,9 @@ assert(!/bridge[^.]{0,90}\b(shipped|released|available|download|install)\b/i.tes
 assert(allText.includes(`Foil ${currentRelease.version}`), `install trust copy must mention current release ${currentRelease.version}`);
 assert(allText.includes(`/releases/download/${currentRelease.tag}/Foil-${currentRelease.version}-macos.dmg.sha256`), "install trust copy must link the current DMG checksum");
 assert(allText.includes(`${currentRelease.dmgSha256.slice(0, 8)}...${currentRelease.dmgSha256.slice(-7)}`), "install trust copy must show the current DMG checksum fingerprint");
+assert(allText.includes("assets/screenshots/receipt.json"), "home page must link current screenshot render receipt");
+assert(allText.includes("assets/audio-ux/recording-signifier.png"), "home page must include current audio UX signifier proof");
+assert(allText.includes("assets/audio-ux/receipt.json"), "home page must link audio UX snapshot receipt");
 assert(htmlFiles.includes("privacy/index.html"), "privacy page must be part of launch checks");
 assert(allText.includes('href="privacy/"'), "home page must link the privacy page");
 for (const serviceName of ["Vercel", "PostHog", "GitHub", "Sentry", "Supabase"]) {
