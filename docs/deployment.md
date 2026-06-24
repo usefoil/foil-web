@@ -44,6 +44,20 @@ Run local launch checks before merging:
 npm run check:launch
 ```
 
+## Marketing Screenshot Refresh
+
+The homepage Mac app screenshots should be refreshed from the Foil app repo
+instead of hand-edited. From `usefoil/foil`, run:
+
+```sh
+SIGN_IDENTITY=- MARKETING_SCREENSHOT_OUTPUT_DIR=/tmp/foil-web-marketing-light make render-marketing-screenshots
+```
+
+Copy the generated PNGs and `receipt.json` from the output directory into
+`assets/screenshots/`, then update any changed `width` or `height` attributes in
+`index.html`. The receipt should report `colorScheme` as `light` and source
+views from production SwiftUI views.
+
 Run strict production smoke after a production deploy:
 
 ```sh

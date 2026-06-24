@@ -41,6 +41,7 @@ button {
 
 .site-header,
 .hero,
+.evidence-strip,
 .section-band,
 .providers,
 .site-footer {
@@ -210,10 +211,11 @@ button:focus-visible {
 }
 
 .proof-strip {
-  padding: 0 clamp(20px, 5vw, 72px) clamp(34px, 5vw, 58px);
+  padding: 0 clamp(20px, 5vw, 72px) 18px;
 }
 
-.proof-strip-inner {
+.proof-strip-inner,
+.evidence-strip-inner {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1px;
@@ -226,7 +228,8 @@ button:focus-visible {
   box-shadow: 0 14px 34px rgb(7 18 21 / 5%);
 }
 
-.proof-strip p {
+.proof-strip p,
+.evidence-strip p {
   display: grid;
   gap: 6px;
   min-height: 118px;
@@ -235,17 +238,32 @@ button:focus-visible {
   background: white;
 }
 
-.proof-strip strong {
+.proof-strip strong,
+.evidence-strip strong {
   color: var(--teal-deep);
   font-size: 1.02rem;
   line-height: 1.2;
 }
 
-.proof-strip span {
+.proof-strip span,
+.evidence-strip span {
   color: var(--muted);
   font-size: 0.94rem;
   line-height: 1.42;
   overflow-wrap: anywhere;
+}
+
+.evidence-strip {
+  padding-bottom: clamp(34px, 5vw, 58px);
+}
+
+.evidence-strip-inner {
+  border-color: rgb(15 91 82 / 22%);
+  background: rgb(15 91 82 / 22%);
+}
+
+.evidence-strip p {
+  background: #f7faf6;
 }
 
 .hero-visual {
@@ -674,98 +692,83 @@ kbd {
   object-fit: contain;
 }
 
-.iphone-preview {
+.audio-proof {
   background: var(--paper);
 }
 
-.iphone-preview-layout {
+.audio-proof-layout {
   display: grid;
-  grid-template-columns: minmax(260px, 0.36fr) minmax(0, 0.64fr);
+  grid-template-columns: minmax(260px, 0.34fr) minmax(0, 0.66fr);
   gap: clamp(28px, 6vw, 78px);
   align-items: center;
   max-width: var(--max);
   margin: 0 auto;
 }
 
-.iphone-shot {
+.audio-proof-signifier {
   margin: 0;
 }
 
-.iphone-shot img {
+.audio-proof-signifier img {
   display: block;
-  width: min(100%, 340px);
+  width: min(100%, 320px);
   height: auto;
   margin: 0 auto;
-  border: 1px solid rgb(110 119 116 / 32%);
+  border: 1px solid rgb(110 119 116 / 24%);
   border-radius: 8px;
-  background: white;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 86%), rgb(239 242 237 / 86%)),
+    #f7f8f4;
   box-shadow: var(--shadow);
 }
 
-.iphone-shot figcaption {
-  max-width: 340px;
+.audio-proof-signifier figcaption {
+  max-width: 320px;
   margin: 12px auto 0;
   color: #344043;
   font-size: 0.96rem;
   font-weight: 640;
 }
 
-.iphone-copy {
-  min-width: 0;
-}
-
-.iphone-copy h3 {
-  margin: 14px 0;
-  font-size: clamp(1.9rem, 4vw, 3rem);
-  line-height: 1.05;
-  letter-spacing: 0;
-}
-
-.iphone-copy p {
-  margin: 0;
-  color: #263437;
-  font-size: 1.06rem;
-}
-
-.iphone-proof-grid {
+.audio-proof-stack {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
-  margin: 24px 0;
-}
-
-.iphone-proof-grid article {
   min-width: 0;
-  padding: 22px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: white;
-  box-shadow: 0 14px 34px rgb(7 18 21 / 5%);
 }
 
-.iphone-proof-grid h4 {
-  margin: 0 0 12px;
-  color: var(--teal-deep);
-  font-size: 1.06rem;
-}
-
-.iphone-proof-grid ul {
+.audio-proof-stack figure {
   display: grid;
-  gap: 10px;
+  grid-template-columns: minmax(220px, 0.72fr) minmax(180px, 0.28fr);
+  gap: 18px;
+  align-items: center;
   margin: 0;
-  padding-left: 20px;
-  color: #263437;
 }
 
-.iphone-note {
-  padding: 18px 20px;
-  border: 1px solid rgb(15 91 82 / 22%);
+.audio-proof-stack img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid rgb(110 119 116 / 24%);
   border-radius: 8px;
-  background: rgb(15 91 82 / 7%);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 86%), rgb(239 242 237 / 86%)),
+    #f7f8f4;
+  box-shadow: 0 14px 34px rgb(7 18 21 / 6%);
 }
 
-.iphone-copy .button {
-  margin-top: 22px;
+.audio-proof-stack figcaption,
+.screenshot-receipt,
+.audio-proof-receipt {
+  color: #344043;
+  font-size: 0.96rem;
+  font-weight: 640;
+}
+
+.screenshot-receipt,
+.audio-proof-receipt {
+  max-width: var(--max);
+  margin: 28px auto 0;
+  text-align: center;
 }
 
 .feature-grid {
@@ -1291,9 +1294,11 @@ kbd {
   .workflow-layout,
     .detail-grid,
     .feature-grid,
+    .evidence-strip-inner,
     .privacy-grid,
     .blog-card-grid,
     .screenshot-feature,
+    .audio-proof-layout,
     .provider-grid,
     .install-grid {
     grid-template-columns: 1fr 1fr;
@@ -1421,12 +1426,14 @@ kbd {
   }
 
   .proof-strip-inner,
+  .evidence-strip-inner,
   .workflow-layout,
     .detail-grid,
     .feature-grid,
     .privacy-grid,
     .blog-card-grid,
     .screenshot-feature,
+    .audio-proof-layout,
     .provider-grid,
     .install-grid,
   .site-footer {
@@ -1438,6 +1445,10 @@ kbd {
   }
 
   .proof-strip p {
+    min-height: 0;
+  }
+
+  .evidence-strip p {
     min-height: 0;
   }
 
@@ -1476,17 +1487,8 @@ kbd {
     grid-template-columns: 1fr;
   }
 
-  .iphone-preview-layout,
-  .iphone-proof-grid {
+  .audio-proof-stack figure {
     grid-template-columns: 1fr;
-  }
-
-  .iphone-shot {
-    order: 2;
-  }
-
-  .iphone-copy {
-    order: 1;
   }
 
   .reliability-note {
@@ -1517,7 +1519,8 @@ kbd {
 @media (max-width: 500px) {
   .site-header,
   .hero,
-  .proof-strip {
+  .proof-strip,
+  .evidence-strip {
     width: min(100%, 390px);
     margin-inline: 0 auto;
     padding-inline: 20px;

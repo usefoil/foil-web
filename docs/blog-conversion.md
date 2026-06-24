@@ -24,8 +24,6 @@ readers toward either a deeper article or the install section.
 - Blog index cards and index-level CTAs must use `blog_cta_click` with stable
   labels.
 - Blog copy must not describe bridge reliability work as shipped.
-- Foil iOS copy must remain framed as a closed iPhone preview, not public iOS
-  availability.
 - Claims about other products should stay sourced in each article's sources
   section.
 

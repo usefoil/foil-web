@@ -15,7 +15,7 @@ identified bridge-interest capture flow.
 The current launch funnel uses:
 
 - GitHub Releases and Homebrew for install/download intent.
-- PostHog manual conversion events for install, DMG, iOS preview, local provider guide, bridge interest, and blog CTA intent.
+- PostHog manual conversion events for install, DMG, local provider guide, bridge interest, and blog CTA intent.
 - GitHub issues for public follow-up and product questions.
 
 Adding Supabase now would introduce database storage, abuse controls, retention obligations, and privacy/legal approval requirements without a concrete launch-critical capture flow.

@@ -30,14 +30,10 @@
       </a>
       <nav class="nav" aria-label="Primary">
         <a href="#workflow">Workflow</a>
-        <a href="#details">Details</a>
         <a href="#screenshots">Screenshots</a>
-        <a href="#iphone-preview">iPhone preview</a>
         <a href="#features">Features</a>
         <a href="#providers">Providers</a>
         <a href="#privacy">Privacy</a>
-        <a href="#faq">FAQ</a>
-        <a href="#blog">Blog</a>
         <a href="#install">Install</a>
         <a href="https://github.com/usefoil/foil">GitHub</a>
       </nav>
@@ -122,8 +118,17 @@
         <div class="proof-strip-inner">
           <p><strong>Hold-to-talk</strong><span>Capture thoughts without leaving your current app.</span></p>
           <p><strong>Release-to-paste</strong><span>Transcribe, then deliver text back to the cursor.</span></p>
-          <p><strong>Local or cloud</strong><span>Choose localhost, Groq, OpenAI, or custom endpoints.</span></p>
+          <p><strong>Live feedback</strong><span>Recording, cleanup, paste, and warning states stay visible.</span></p>
           <p><strong>History recovery</strong><span>Copy, paste, retry, edit, or export past transcripts.</span></p>
+        </div>
+      </section>
+
+      <section class="evidence-strip" aria-label="Foil proof points">
+        <div class="evidence-strip-inner">
+          <p><strong>Provider routes</strong><span>Local whisper.cpp, Groq, OpenAI Whisper, and custom OpenAI-compatible endpoints.</span></p>
+          <p><strong>Cleanup fallback</strong><span>Opt-in cleanup can fail without losing a successful raw transcript.</span></p>
+          <p><strong>Microphone QA</strong><span>Live microphone checks record input route, audio levels, screenshots, and source metadata.</span></p>
+          <p><strong>Release trust</strong><span>Foil 1.13.5 ships as a signed, notarized, Sparkle update-signed DMG.</span></p>
         </div>
       </section>
 
@@ -202,7 +207,8 @@
             <p>Cleanup is optional and explicit. If Whisper succeeds but cleanup fails, Foil keeps using the raw transcript instead of losing the result.</p>
             <ul>
               <li>Raw transcription is the default for local, OpenAI Whisper, and custom transcription routes.</li>
-              <li>Cleanup can use Groq chat models or a custom OpenAI-compatible chat endpoint.</li>
+              <li>Cleanup can use Groq, OpenAI, or a custom OpenAI-compatible chat endpoint.</li>
+              <li>Settings includes a dedicated Cleanup tab with model choice, prompt controls, and preferred terms.</li>
               <li>Transcript text only goes to the cleanup provider you select.</li>
             </ul>
           </article>
@@ -222,111 +228,101 @@
       <section class="screenshots section-band" id="screenshots" aria-labelledby="screenshots-title">
         <div class="section-heading">
           <h2 id="screenshots-title">The menu bar workflow, shown for real</h2>
-          <p>Verified Foil app states captured from deterministic UI tests, not invented marketing UI.</p>
+          <p>Current Foil app states rendered from production SwiftUI views in a consistent light theme, not invented marketing UI.</p>
         </div>
         <div class="screenshot-feature">
           <figure class="screenshot-primary">
             <img
-              src="assets/screenshots/foil-ready-control-center.png"
+              src="assets/screenshots/foil-ready-control-center.png?v=20260624-light"
               alt="Foil menu control center showing ready status, record controls, setup readiness, and last result"
               width="528"
-              height="720"
+              height="430"
             >
             <figcaption>Ready state with recording controls, setup status, and last-result recovery.</figcaption>
           </figure>
           <div class="screenshot-stack" aria-label="Additional Foil screenshots">
             <figure>
               <img
-                src="assets/screenshots/foil-settings-transcription.png"
-                alt="Foil Transcription settings with provider configuration and cleanup options"
-                width="628"
-                height="520"
+                src="assets/screenshots/foil-settings-cleanup.png?v=20260624-light"
+                alt="Foil Cleanup settings with cleanup formatting, provider, model, connection test, and prompt controls"
+                width="760"
+                height="620"
               >
-              <figcaption>Transcription settings make local, cloud, and custom endpoint choices explicit.</figcaption>
+              <figcaption>Cleanup settings make formatting, provider, model, connection test, and prompt controls explicit.</figcaption>
             </figure>
             <figure>
               <img
-                src="assets/screenshots/foil-onboarding-setup.png"
+                src="assets/screenshots/foil-onboarding-setup.png?v=20260624-light"
                 alt="Foil onboarding setup window with API key and permission steps"
                 width="488"
-                height="440"
+                height="390"
               >
               <figcaption>First-run setup walks through provider credentials and macOS permissions.</figcaption>
             </figure>
             <figure>
               <img
-                src="assets/screenshots/foil-setup-needed.png"
+                src="assets/screenshots/foil-setup-needed.png?v=20260624-light"
                 alt="Foil setup-needed menu state with recovery actions"
                 width="572"
-                height="764"
+                height="600"
               >
               <figcaption>Setup checks surface recovery actions before recording starts.</figcaption>
             </figure>
           </div>
         </div>
+        <p class="screenshot-receipt">
+          Screenshot receipt: <a class="text-link" href="assets/screenshots/receipt.json">production SwiftUI render metadata</a>.
+        </p>
       </section>
 
-      <section class="iphone-preview section-band" id="iphone-preview" aria-labelledby="iphone-preview-title">
+      <section class="audio-proof section-band" id="audio-proof" aria-labelledby="audio-proof-title">
         <div class="section-heading">
-          <h2 id="iphone-preview-title">iPhone preview, honestly framed</h2>
-          <p>Foil for iPhone is a closed internal beta that uses a custom keyboard, not a public iOS app yet.</p>
+          <h2 id="audio-proof-title">Recording feedback stays visible</h2>
+          <p>Foil shows recording, cleanup, and paste status while you keep working in the app that already has focus.</p>
         </div>
-        <div class="iphone-preview-layout">
-          <figure class="iphone-shot">
+        <div class="audio-proof-layout">
+          <figure class="audio-proof-signifier">
             <img
-              src="assets/screenshots/foil-ios-onboarding-preview.jpg"
-              alt="Foil iOS closed beta setup screen showing record controls and keyboard setup checklist"
-              width="368"
-              height="800"
+              src="assets/audio-ux/recording-signifier.png"
+              alt="Foil live audio signifier showing recording level bars"
+              width="320"
+              height="96"
             >
-            <figcaption>Current Foil iOS setup surface, now smoked on a physical preview iPhone.</figcaption>
+            <figcaption>Bottom-center live audio signifier, driven by recording level state.</figcaption>
           </figure>
-          <div class="iphone-copy">
-            <p class="detail-kicker">Closed beta preview</p>
-            <h3>A keyboard-mediated dictation loop</h3>
-            <p>
-              The iPhone version records in the Foil app, prepares the latest
-              transcript for Foil Keyboard, then inserts it from the keyboard
-              with <strong>Insert latest</strong>. That architecture requires
-              installing Foil Keyboard and enabling <strong>Allow Full Access</strong>.
-            </p>
-            <div class="iphone-proof-grid" aria-label="iPhone preview proof and caveats">
-              <article>
-                <h4>Verified so far</h4>
-                <ul>
-                  <li>Build 12 onboarding on a physical preview iPhone</li>
-                  <li>Safari normal text field insertion on build 12</li>
-                  <li>Safari secure-field rejection on build 12</li>
-                </ul>
-              </article>
-              <article>
-                <h4>Still caveated</h4>
-                <ul>
-                  <li>Notes needs a blank sterile editor for build 12 rerun</li>
-                  <li>Messages remains draft-only and needs a sterile compose surface</li>
-                  <li>Mail compose is deferred</li>
-                  <li>Keyboard cycling or field refocus may be needed</li>
-                </ul>
-              </article>
-            </div>
-            <p class="iphone-note">
-              This is not broad iPhone app support or public App Store availability.
-              Beta access should follow the verified host-app matrix and current
-              TestFlight instructions.
-            </p>
-            <a
-              class="button secondary"
-              href="https://github.com/usefoil/foil-ios"
-              data-analytics-event="ios_preview_click"
-              data-analytics-location="iphone_preview"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M9 19c-4 1.2-4-2-5-2.5m10 5v-3.2c0-.9.1-1.4-.4-2 2.8-.3 5.7-1.4 5.7-6A4.7 4.7 0 0 0 18 6.8c.1-.4.6-1.8-.2-3.6 0 0-1.1-.4-3.6 1.3a12.5 12.5 0 0 0-6.5 0C5.2 2.8 4.1 3.2 4.1 3.2c-.8 1.8-.3 3.2-.2 3.6A4.7 4.7 0 0 0 2.6 10c0 4.6 2.9 5.7 5.7 6-.5.5-.7 1.1-.7 2v3.5"/>
-              </svg>
-              Follow iOS preview work
-            </a>
+          <div class="audio-proof-stack" aria-label="Foil audio UX snapshot states">
+            <figure>
+              <img
+                src="assets/audio-ux/recording-floating-status.png"
+                alt="Foil floating status showing Recording, timer, target app, and release instruction"
+                width="680"
+                height="192"
+              >
+              <figcaption>Recording state keeps the target app and release action visible.</figcaption>
+            </figure>
+            <figure>
+              <img
+                src="assets/audio-ux/processing-floating-status.png"
+                alt="Foil floating status showing Cleaning up with model and raw transcript target detail"
+                width="680"
+                height="192"
+              >
+              <figcaption>Cleanup state is explicit about processing and the selected model path.</figcaption>
+            </figure>
+            <figure>
+              <img
+                src="assets/audio-ux/success-floating-status.png"
+                alt="Foil floating status showing paste command sent and clipboard restored"
+                width="680"
+                height="192"
+              >
+              <figcaption>Paste result state confirms delivery status and clipboard behavior.</figcaption>
+            </figure>
           </div>
         </div>
+        <p class="audio-proof-receipt">
+          Snapshot receipt: <a class="text-link" href="assets/audio-ux/receipt.json">production SwiftUI render metadata</a>.
+        </p>
       </section>
 
       <section class="features section-band" id="features" aria-labelledby="features-title">
@@ -367,7 +363,8 @@
             <p>Let Foil clean up dictated text when you want a little help, while preserving the raw transcript if cleanup fails.</p>
             <ul>
               <li>Optional cleanup and rewrite modes</li>
-              <li>Groq or custom OpenAI-compatible cleanup providers</li>
+              <li>Groq, OpenAI, or custom OpenAI-compatible cleanup providers</li>
+              <li>Custom prompts and preferred terms for cleanup formatting</li>
               <li>Raw transcript fallback after cleanup failures</li>
               <li>Provider choices kept explicit in settings</li>
             </ul>
@@ -448,7 +445,7 @@
             <ul>
               <li>Uses the whisper-1 transcription model</li>
               <li>Separate OpenAI key setup</li>
-              <li>Raw transcript by default</li>
+              <li>Raw transcript by default, with optional OpenAI cleanup</li>
             </ul>
           </article>
           <article>
@@ -460,7 +457,7 @@
             <ul>
               <li>Bring your own endpoint</li>
               <li>Optional API keys</li>
-              <li>Flexible model routing</li>
+              <li>Flexible transcription and cleanup routing</li>
             </ul>
           </article>
         </div>
@@ -507,7 +504,7 @@
           </details>
           <details>
             <summary>Where does cleanup text go?</summary>
-            <p>Cleanup is optional. It can use Groq chat models or a custom OpenAI-compatible chat endpoint, and transcript text goes only to the cleanup provider you select.</p>
+            <p>Cleanup is optional. It can use Groq, OpenAI, or a custom OpenAI-compatible chat endpoint, and transcript text goes only to the cleanup provider you select.</p>
           </details>
           <details>
             <summary>What happens to history and audio?</summary>
@@ -595,11 +592,11 @@
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h12v12H8zM4 16V4h12"/></svg>
               </button>
             </div>
-            <p>Uses the public tap and installs Foil 1.13.4 from the signed macOS DMG published on GitHub.</p>
+            <p>Uses the public tap and installs Foil 1.13.5 from the signed, notarized, Sparkle update-signed macOS DMG published on GitHub.</p>
           </article>
           <article class="download-card">
             <h3>Manual DMG</h3>
-            <p>Prefer downloading? Grab Foil 1.13.4, published May 31, 2026, from GitHub Releases.</p>
+            <p>Prefer downloading? Grab Foil 1.13.5, published June 12, 2026, from GitHub Releases.</p>
             <a
               class="button secondary"
               href="https://github.com/usefoil/foil/releases/latest"
@@ -612,7 +609,7 @@
               Download DMG
             </a>
             <p class="release-proof">
-              SHA-256: <a class="text-link" href="https://github.com/usefoil/foil/releases/download/v1.13.4/Foil-1.13.4-macos.dmg.sha256">1390e585...bec5e1c</a>
+              SHA-256: <a class="text-link" href="https://github.com/usefoil/foil/releases/download/v1.13.5/Foil-1.13.5-macos.dmg.sha256">20ee96db...757aa6f</a>
             </p>
             <a
               class="text-link"
@@ -635,9 +632,8 @@
       </div>
       <nav aria-label="Footer">
         <a href="#workflow">Workflow</a>
-        <a href="#details">Details</a>
         <a href="#screenshots">Screenshots</a>
-        <a href="#iphone-preview">iPhone preview</a>
+        <a href="#audio-proof">Audio UX</a>
         <a href="#features">Features</a>
         <a href="#providers">Providers</a>
         <a href="privacy/">Privacy</a>

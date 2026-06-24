@@ -8,7 +8,6 @@ const analyticsSource = await readFile(join(root, "analytics.js"), "utf8");
 const requiredEvents = [
   "install_click",
   "dmg_click",
-  "ios_preview_click",
   "local_provider_guide_click",
   "bridge_interest_click",
   "blog_cta_click"
