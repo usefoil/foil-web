@@ -5,20 +5,20 @@ people toward.
 
 ## Current Public Release
 
-Verified on June 24, 2026:
+Verified on July 7, 2026:
 
 - Release repo: `usefoil/foil`
-- Latest release: `v1.13.5`
-- Release name: `Foil 1.13.5`
-- Published: June 12, 2026
-- DMG asset: `Foil-1.13.5-macos.dmg`
-- DMG size from GitHub API: `2632125` bytes
-- DMG SHA-256: `20ee96db3f064ed204fa492e0a8971cc29c79bd12833d4fec9214de49757aa6f`
+- Latest release: `v1.13.11`
+- Release name: `Foil 1.13.11`
+- Published: July 6, 2026
+- DMG asset: `Foil-1.13.11-macos.dmg`
+- DMG size from GitHub API: `3336613` bytes
+- DMG SHA-256: `4805e6ca60d7bc8597673dbbee89289997363a8c4fe2e0b6c428c6d245fecd57`
 - Checksum asset:
-  `https://github.com/usefoil/foil/releases/download/v1.13.5/Foil-1.13.5-macos.dmg.sha256`
+  `https://github.com/usefoil/foil/releases/download/v1.13.11/Foil-1.13.11-macos.dmg.sha256`
 
 The landing page links users to GitHub Releases for manual downloads and shows
-the shortened SHA-256 fingerprint `20ee96db...757aa6f`.
+the shortened SHA-256 fingerprint `4805e6ca...5fecd57`.
 
 ## Homebrew Cask
 
@@ -33,15 +33,15 @@ brew tap mean-weasel/foil https://github.com/mean-weasel/homebrew-foil
 brew install --cask foil
 ```
 
-- Cask version: `1.13.5`
+- Cask version: `1.13.11`
 - Cask SHA-256:
-  `20ee96db3f064ed204fa492e0a8971cc29c79bd12833d4fec9214de49757aa6f`
+  `4805e6ca60d7bc8597673dbbee89289997363a8c4fe2e0b6c428c6d245fecd57`
 - Cask URL:
-  `https://github.com/usefoil/foil/releases/download/v1.13.5/Foil-1.13.5-macos.dmg`.
+  `https://github.com/usefoil/foil/releases/download/v1.13.11/Foil-1.13.11-macos.dmg`.
 
 The download was verified with `curl -ILs` and the final response returned
-HTTP 200 with `content-disposition: attachment; filename=Foil-1.13.5-macos.dmg`
-and `content-length: 2632125`.
+HTTP 200 with `content-disposition: attachment; filename=Foil-1.13.11-macos.dmg`
+and `content-length: 3336613`.
 
 ## Copy Guardrails
 

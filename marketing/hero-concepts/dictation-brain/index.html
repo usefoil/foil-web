@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=1600, height=900">
+    <title>Foil hero concept - dictation with a brain</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --paper: #fbfbf8;
+        --ink: #071215;
+        --muted: #4e5f62;
+        --line: #d7ddd8;
+        --teal: #0f5b52;
+        --teal-deep: #0a3f44;
+        --amber: #d79a3d;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        width: 1600px;
+        height: 900px;
+        overflow: hidden;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      #root {
+        position: relative;
+        width: 1600px;
+        height: 900px;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 50% 48%, rgb(215 154 61 / 10%), transparent 30%),
+          radial-gradient(circle at 72% 48%, rgb(15 91 82 / 9%), transparent 34%),
+          linear-gradient(180deg, #fbfbf8 0%, #f5f7f2 100%);
+      }
+
+      .scene {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+      }
+
+      .scene-1 { opacity: 1; }
+
+      h1, h2, p { margin: 0; letter-spacing: 0; }
+
+      .brand {
+        position: absolute;
+        top: 58px;
+        left: 76px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-size: 34px;
+        font-weight: 820;
+      }
+
+      .brand img {
+        width: 46px;
+        height: 46px;
+        border-radius: 10px;
+        box-shadow: 0 12px 28px rgb(7 18 21 / 12%);
+      }
+
+      .kicker {
+        color: var(--teal);
+        font-size: 23px;
+        font-weight: 840;
+        text-transform: uppercase;
+      }
+
+      .title-block {
+        position: absolute;
+        left: 76px;
+        top: 154px;
+        width: 640px;
+      }
+
+      .title-block h1 {
+        margin-top: 22px;
+        font-size: 84px;
+        line-height: 0.94;
+      }
+
+      .title-block p {
+        margin-top: 28px;
+        color: #263437;
+        font-size: 35px;
+        line-height: 1.16;
+      }
+
+      .brain-field {
+        position: absolute;
+        right: 148px;
+        top: 108px;
+        width: 650px;
+        height: 620px;
+      }
+
+      .brain {
+        position: absolute;
+        left: 90px;
+        top: 34px;
+        display: grid;
+        place-items: center;
+        width: 470px;
+        height: 470px;
+        border-radius: 50%;
+        background:
+          linear-gradient(180deg, rgb(255 255 255 / 94%), rgb(244 248 244 / 94%)),
+          var(--paper);
+        box-shadow:
+          inset 0 0 0 2px rgb(15 91 82 / 12%),
+          0 34px 100px rgb(7 18 21 / 14%);
+      }
+
+      .brain::before,
+      .brain::after {
+        content: "";
+        position: absolute;
+        border: 2px solid rgb(15 91 82 / 28%);
+        border-radius: 50%;
+      }
+
+      .brain::before {
+        inset: 42px;
+      }
+
+      .brain::after {
+        inset: 90px;
+        border-color: rgb(215 154 61 / 34%);
+      }
+
+      .brain img {
+        position: relative;
+        z-index: 2;
+        width: 96px;
+        height: 96px;
+        border-radius: 22px;
+        background: white;
+        box-shadow: 0 18px 48px rgb(7 18 21 / 14%);
+      }
+
+      .signal {
+        position: absolute;
+        min-width: 170px;
+        min-height: 48px;
+        padding: 10px 14px;
+        border: 1px solid rgb(15 91 82 / 18%);
+        border-radius: 13px;
+        background: white;
+        color: var(--teal-deep);
+        font-size: 20px;
+        font-weight: 780;
+        text-align: center;
+        box-shadow: 0 14px 36px rgb(7 18 21 / 10%);
+      }
+
+      .signal-audience { left: 0; top: 148px; }
+      .signal-app { right: 0; top: 326px; }
+      .signal-provider { left: 20px; top: 492px; }
+      .signal-recovery { right: 64px; top: 538px; }
+
+      .route-copy {
+        position: absolute;
+        left: 76px;
+        top: 112px;
+        width: 560px;
+      }
+
+      .route-copy h2 {
+        margin-top: 20px;
+        font-size: 76px;
+        line-height: 0.96;
+      }
+
+      .route-copy p {
+        margin-top: 24px;
+        color: #263437;
+        font-size: 33px;
+        line-height: 1.14;
+      }
+
+      .routing-board {
+        position: absolute;
+        right: 76px;
+        top: 104px;
+        width: 830px;
+        height: 620px;
+      }
+
+      .speech-card,
+      .route-output,
+      .route-hub-mini {
+        position: absolute;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: white;
+        box-shadow: 0 24px 64px rgb(7 18 21 / 12%);
+      }
+
+      .speech-card {
+        left: 180px;
+        top: 0;
+        width: 470px;
+        padding: 26px 28px;
+      }
+
+      .speech-card strong,
+      .route-output strong {
+        display: block;
+        color: var(--teal);
+        font-size: 20px;
+        font-weight: 840;
+        text-transform: uppercase;
+      }
+
+      .speech-card span {
+        display: block;
+        margin-top: 12px;
+        color: #10191b;
+        font-size: 31px;
+        font-weight: 760;
+        line-height: 1.12;
+      }
+
+      .route-hub-mini {
+        left: 334px;
+        top: 206px;
+        display: grid;
+        place-items: center;
+        width: 162px;
+        height: 162px;
+        border-radius: 50%;
+        background: var(--teal);
+        box-shadow: 0 28px 80px rgb(15 91 82 / 32%);
+      }
+
+      .route-hub-mini img {
+        width: 62px;
+        height: 62px;
+        border-radius: 14px;
+        background: white;
+      }
+
+      .route-line {
+        position: absolute;
+        left: 415px;
+        top: 287px;
+        width: 275px;
+        height: 2px;
+        background: linear-gradient(90deg, rgb(15 91 82 / 0%), rgb(15 91 82 / 80%), rgb(15 91 82 / 0%));
+        transform-origin: left center;
+      }
+
+      .line-people { transform: rotate(-128deg); }
+      .line-agent { transform: rotate(0deg); }
+      .line-docs { transform: rotate(128deg); }
+
+      .route-output {
+        width: 315px;
+        min-height: 136px;
+        padding: 20px 22px;
+      }
+
+      .route-output p {
+        margin-top: 10px;
+        color: #263437;
+        font-size: 24px;
+        line-height: 1.16;
+      }
+
+      .route-output.agent p {
+        font-family: ui-monospace, Menlo, monospace;
+        font-size: 22px;
+      }
+
+      .output-people { left: 0; top: 394px; }
+      .output-agent { right: 0; top: 219px; }
+      .output-docs { right: 58px; bottom: 0; }
+
+      .route-tags {
+        position: absolute;
+        left: 172px;
+        bottom: 8px;
+        display: flex;
+        gap: 12px;
+      }
+
+      .route-tags span {
+        padding: 10px 14px;
+        border: 1px solid rgb(15 91 82 / 16%);
+        border-radius: 10px;
+        background: rgb(255 255 255 / 92%);
+        color: var(--teal-deep);
+        font-size: 19px;
+        font-weight: 760;
+      }
+
+      .proof-stack {
+        position: absolute;
+        left: 76px;
+        bottom: 92px;
+        display: grid;
+        gap: 13px;
+        width: 565px;
+      }
+
+      .surface-copy {
+        position: absolute;
+        left: 76px;
+        top: 160px;
+        width: 575px;
+      }
+
+      .surface-copy h2 {
+        margin-top: 22px;
+        font-size: 76px;
+        line-height: 0.96;
+      }
+
+      .surface-copy p {
+        margin-top: 26px;
+        color: #263437;
+        font-size: 34px;
+        line-height: 1.16;
+      }
+
+      .surface-window {
+        position: absolute;
+        right: 76px;
+        top: 118px;
+        width: 820px;
+        height: 582px;
+        overflow: hidden;
+        border: 2px solid rgb(110 119 116 / 28%);
+        border-radius: 17px;
+        background: white;
+        box-shadow: 0 30px 92px rgb(7 18 21 / 18%);
+      }
+
+      .surface-window img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .decision-stack {
+        position: absolute;
+        left: 76px;
+        bottom: 92px;
+        display: grid;
+        gap: 13px;
+        width: 565px;
+      }
+
+      .decision {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        align-items: center;
+        min-height: 62px;
+        padding: 12px 18px;
+        border: 1px solid rgb(15 91 82 / 18%);
+        border-radius: 14px;
+        background: white;
+        box-shadow: 0 12px 30px rgb(7 18 21 / 8%);
+      }
+
+      .decision strong {
+        color: var(--teal-deep);
+        font-size: 20px;
+      }
+
+      .decision span {
+        color: #263437;
+        font-size: 22px;
+      }
+
+      .end-card {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        text-align: center;
+      }
+
+      .end-card-inner {
+        width: 1040px;
+      }
+
+      .end-card h1 {
+        margin-top: 24px;
+        font-size: 96px;
+        line-height: 0.94;
+      }
+
+      .end-card p {
+        margin: 34px auto 0;
+        max-width: 830px;
+        color: #263437;
+        font-size: 36px;
+        line-height: 1.16;
+      }
+
+      .end-pills {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 14px;
+        margin-top: 40px;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 0 16px;
+        border: 1px solid rgb(15 91 82 / 18%);
+        border-radius: 11px;
+        background: white;
+        color: var(--teal-deep);
+        font-size: 21px;
+        font-weight: 780;
+        box-shadow: 0 12px 30px rgb(7 18 21 / 8%);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="dictation-brain" data-start="0" data-duration="12" data-width="1600" data-height="900">
+      <section id="brain-open" class="scene scene-1 clip" data-start="0" data-duration="3" data-track-index="1">
+        <div class="brand"><img src="assets/brand/foil-mark-brand.svg" alt=""><span>Foil</span></div>
+        <div class="title-block">
+          <div class="kicker">Open-source Mac dictation</div>
+          <h1>One recording. The right route.</h1>
+          <p>Foil shapes text for people, agents, apps, and providers.</p>
+        </div>
+        <div class="brain-field">
+          <div class="brain">
+            <img src="assets/brand/foil-mark-brain.svg" alt="">
+          </div>
+          <span class="signal signal-audience">People</span>
+          <span class="signal signal-app">Apps</span>
+          <span class="signal signal-provider">Providers</span>
+          <span class="signal signal-recovery">Agents</span>
+        </div>
+      </section>
+
+      <section id="brain-questions" class="scene scene-2 clip" data-start="3" data-duration="3" data-track-index="2">
+        <div class="route-copy">
+          <div class="kicker">One thought, different destinations</div>
+          <h2>Foil routes the text before it lands.</h2>
+          <p>The same recording can become polished prose, raw agent intent, or structured notes.</p>
+        </div>
+        <div class="routing-board">
+          <div class="speech-card"><strong>You say</strong><span>Move the sync to 3 and send the notes after.</span></div>
+          <div class="route-line line-people"></div>
+          <div class="route-line line-agent"></div>
+          <div class="route-line line-docs"></div>
+          <div class="route-hub-mini"><img src="assets/brand/foil-mark-route.svg" alt=""></div>
+          <article class="route-output output-people">
+            <strong>Person</strong>
+            <p>Could we move our sync to 3 PM?</p>
+          </article>
+          <article class="route-output agent output-agent">
+            <strong>Agent prompt</strong>
+            <p>move sync 3pm; send notes after</p>
+          </article>
+          <article class="route-output output-docs">
+            <strong>Notes</strong>
+            <p>Follow-up notes, ready to paste.</p>
+          </article>
+          <div class="route-tags">
+            <span>polish</span>
+            <span>raw intent</span>
+            <span>structure</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="brain-controls" class="scene scene-3 clip" data-start="6" data-duration="3" data-track-index="3">
+        <div class="surface-copy">
+          <div class="kicker">Open source, controlled routes</div>
+          <h2>Run it locally or point it at your own endpoint.</h2>
+          <p>Provider settings keep the route visible instead of hidden in the background.</p>
+        </div>
+        <div class="proof-stack">
+          <div class="decision"><strong>Local</strong><span>whisper.cpp on device</span></div>
+          <div class="decision"><strong>Self-hosted</strong><span>OpenAI-compatible endpoints</span></div>
+          <div class="decision"><strong>Cleanup</strong><span>only where it helps</span></div>
+        </div>
+        <div class="surface-window"><img src="assets/screenshots/foil-app-transcription-provider.png" alt=""></div>
+      </section>
+
+      <section id="brain-end" class="scene scene-4 clip" data-start="9" data-duration="3" data-track-index="4">
+        <div class="end-card">
+          <div class="end-card-inner">
+            <div class="kicker">Foil</div>
+            <h1>A dictation app that understands where your words are going.</h1>
+            <p>Open-source Mac dictation with local and self-hosted options.</p>
+            <div class="end-pills">
+              <span class="pill">Polish for people</span>
+              <span class="pill">Raw intent for agents</span>
+              <span class="pill">Local routes</span>
+              <span class="pill">Self-hosted endpoints</span>
+              <span class="pill">History</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.from(".brain", { opacity: 0, scale: 0.92, duration: 0.7, ease: "power2.out" }, 0.25);
+      tl.from(".signal", { opacity: 0, y: 20, duration: 0.34, stagger: 0.1, ease: "power2.out" }, 0.85);
+      tl.to(".brain", { scale: 1.025, duration: 0.55, yoyo: true, repeat: 2, ease: "sine.inOut" }, 1.35);
+      tl.to(".scene-1", { opacity: 0, duration: 0.35, ease: "power2.inOut" }, 2.65);
+      tl.set(".scene-1", { opacity: 0 }, 3.0);
+      tl.fromTo(".scene-2", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 3.0);
+      tl.from(".speech-card", { opacity: 0, y: -24, duration: 0.42, ease: "power2.out" }, 3.25);
+      tl.from(".route-hub-mini", { opacity: 0, scale: 0.82, duration: 0.42, ease: "back.out(1.7)" }, 3.55);
+      tl.from(".route-line", { scaleX: 0, duration: 0.42, stagger: 0.08, ease: "power2.out" }, 3.9);
+      tl.from(".route-output", { opacity: 0, y: 26, scale: 0.97, duration: 0.38, stagger: 0.1, ease: "power2.out" }, 4.25);
+      tl.from(".route-tags span", { opacity: 0, y: 14, duration: 0.24, stagger: 0.06, ease: "power2.out" }, 4.85);
+      tl.to(".scene-2", { opacity: 0, duration: 0.35, ease: "power2.inOut" }, 5.65);
+      tl.set(".scene-2", { opacity: 0 }, 6.0);
+      tl.fromTo(".scene-3", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 6.0);
+      tl.from(".surface-window", { opacity: 0, x: 34, scale: 0.96, duration: 0.55, ease: "power2.out" }, 6.25);
+      tl.from(".decision", { opacity: 0, x: -24, duration: 0.34, stagger: 0.12, ease: "power2.out" }, 6.7);
+      tl.to(".scene-3", { opacity: 0, duration: 0.35, ease: "power2.inOut" }, 8.65);
+      tl.set(".scene-3", { opacity: 0 }, 9.0);
+      tl.fromTo(".scene-4", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 9.0);
+      tl.from(".pill", { opacity: 0, y: 18, duration: 0.3, stagger: 0.08, ease: "power2.out" }, 9.7);
+      tl.to({}, { duration: 1.2 });
+      window.__timelines["dictation-brain"] = tl;
+    </script>
+  </body>
+</html>

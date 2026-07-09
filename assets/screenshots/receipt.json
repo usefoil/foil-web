@@ -1,44 +1,65 @@
 {
-  "artifacts" : [
+  "schemaVersion": 2,
+  "captureType": "installed-app-ui-test-window-crop",
+  "sourceApp": {
+    "path": "/Applications/Foil.app",
+    "bundleIdentifier": "com.neonwatty.Foil",
+    "version": "1.13.11",
+    "build": "46"
+  },
+  "sourceState": {
+    "arguments": [
+      "--ui-testing",
+      "--reset-defaults",
+      "--seed-history",
+      "--seed-usage-events",
+      "--show-app-shell"
+    ],
+    "notes": "Window captures were seeded UI-test states from the installed production app, then cropped to the Foil app window at 1880x1336. The Cleanup Profile capture was launched with cleanup formatting enabled and navigated to the Cleanup app-shell section before capture."
+  },
+  "artifacts": [
     {
-      "byteCount" : 33713,
-      "file" : "\/tmp\/foil-web-marketing-light\/foil-ready-control-center.png",
-      "name" : "foil-ready-control-center",
-      "pixelHeight" : 430,
-      "pixelWidth" : 528,
-      "sourceView" : "MenuBarView"
+      "name": "foil-app-home",
+      "file": "assets/screenshots/foil-app-home.png",
+      "pixelWidth": 1880,
+      "pixelHeight": 1336,
+      "sha256": "5235d27b9e5cfd51cfd38383fe55497b067cb7219c7e95c5d5edb712c15032b8",
+      "sourceView": "FoilAppShellView.Home"
     },
     {
-      "byteCount" : 49077,
-      "file" : "\/tmp\/foil-web-marketing-light\/foil-settings-cleanup.png",
-      "name" : "foil-settings-cleanup",
-      "pixelHeight" : 620,
-      "pixelWidth" : 760,
-      "sourceView" : "SettingsView"
+      "name": "foil-app-insights",
+      "file": "assets/screenshots/foil-app-insights.png",
+      "pixelWidth": 1880,
+      "pixelHeight": 1336,
+      "sha256": "9a6807df5b68479cafc259c2ce138a1803586775240ed5767fc946703be64980",
+      "sourceView": "FoilAppShellView.Insights"
     },
     {
-      "byteCount" : 20514,
-      "file" : "\/tmp\/foil-web-marketing-light\/foil-onboarding-setup.png",
-      "name" : "foil-onboarding-setup",
-      "pixelHeight" : 390,
-      "pixelWidth" : 488,
-      "sourceView" : "OnboardingView"
+      "name": "foil-app-cleanup-groups",
+      "file": "assets/screenshots/foil-app-cleanup-groups.png",
+      "pixelWidth": 1880,
+      "pixelHeight": 1336,
+      "sha256": "02c17d04531ea142bee278cbebeb4c7fc2002485eae1a8f31419ee016be4e1bc",
+      "sourceView": "FoilAppShellView.Cleanup"
     },
     {
-      "byteCount" : 56032,
-      "file" : "\/tmp\/foil-web-marketing-light\/foil-setup-needed.png",
-      "name" : "foil-setup-needed",
-      "pixelHeight" : 600,
-      "pixelWidth" : 572,
-      "sourceView" : "MenuBarView"
+      "name": "foil-app-transcription-provider",
+      "file": "assets/screenshots/foil-app-transcription-provider.png",
+      "pixelWidth": 1880,
+      "pixelHeight": 1336,
+      "sha256": "e4f3ae87628b12ac6ce303cdd54805d19259aa9ff95fa407348daaee4c3380e2",
+      "sourceView": "FoilAppShellView.Transcription"
+    },
+    {
+      "name": "foil-app-cleanup-profile",
+      "file": "assets/screenshots/foil-app-cleanup-profile.png",
+      "pixelWidth": 1880,
+      "pixelHeight": 1336,
+      "sha256": "b05ac7d042530b8f56a52fd43bde769a94bfe4541f6e1d030f34682a777d2122",
+      "sourceView": "FoilAppShellView.Cleanup",
+      "additionalArguments": [
+        "--seed-cleanup-formatting-enabled"
+      ]
     }
-  ],
-  "colorScheme" : "light",
-  "rendererBackend" : "NSHostingView.cacheDisplay.bitmapImageRep",
-  "schemaVersion" : 1,
-  "sourceViews" : [
-    "MenuBarView",
-    "SettingsView",
-    "OnboardingView"
   ]
 }

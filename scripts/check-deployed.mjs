@@ -16,7 +16,7 @@ const requiredEvents = [
   "blog_cta_click"
 ];
 const requiredPages = [
-  { path: "/", content: "Install Foil" },
+  { path: "/", content: "A deeper dictation toolkit" },
   { path: "/privacy/", content: "Foil privacy notes" },
   { path: "/blog/", content: "Mac dictation notes" },
   { path: "/blog/superwhisper-alternative-for-mac/", content: "Superwhisper alternative" },
@@ -43,6 +43,7 @@ for (const page of requiredPages) {
 
 await checkRobots();
 await checkSitemap();
+await checkRequiredAssets(["/assets/videos/foil-dictation-brain-receipt.json"]);
 checkLaunchSurface(pageBodies.join("\n"));
 
 for (const eventName of requiredEvents) {
@@ -85,6 +86,14 @@ async function checkSitemap() {
 
   for (const canonical of canonicals) {
     assert(body.includes(`<loc>${canonical}</loc>`), `deployed sitemap missing canonical: ${canonical}`);
+  }
+}
+
+async function checkRequiredAssets(paths) {
+  for (const path of paths) {
+    const target = new URL(path, `${smokeUrl}/`);
+    const response = await fetch(target, { redirect: "follow" });
+    assert(response.ok, `${target.href} returned HTTP ${response.status}`);
   }
 }
 
@@ -144,9 +153,11 @@ async function checkLocalReferences(pagePath, body) {
 function checkLaunchSurface(allHtml) {
   assert(!/mean-weasel\.github\.io\/foil|usefoil\.github\.io\/foil/i.test(allHtml), "deployed HTML contains a stale GitHub Pages canonical URL");
   assert(!/bridge[^.]{0,90}\b(shipped|released|available|download|install)\b/i.test(allHtml), "deployed HTML contains possible unsupported bridge availability claim");
-  assert(allHtml.includes("Foil 1.13.5"), "deployed install trust copy must mention current release Foil 1.13.5");
-  assert(allHtml.includes("assets/audio-ux/recording-signifier.png"), "deployed home page must include current audio UX signifier proof");
-  assert(allHtml.includes("assets/audio-ux/receipt.json"), "deployed home page must link audio UX snapshot receipt");
+  assert(allHtml.includes("Foil 1.13.11"), "deployed install trust copy must mention current release Foil 1.13.11");
+  assert(allHtml.includes("assets/screenshots/foil-app-transcription-provider.png"), "deployed home page must include current Transcription provider app shell screenshot");
+  assert(allHtml.includes("assets/videos/foil-dictation-brain.mp4"), "deployed home page must include the Foil hero walkthrough MP4");
+  assert(allHtml.includes("assets/videos/foil-dictation-brain.webm"), "deployed home page must include the Foil hero walkthrough WebM");
+  assert(allHtml.includes("assets/videos/foil-dictation-brain-poster.png"), "deployed home page must include the Foil hero walkthrough poster");
   assert(allHtml.includes("Foil downloads are hosted on GitHub Releases"), "deployed privacy page must disclose GitHub Releases downloads");
   assert(allHtml.includes("PostHog analytics are intentionally narrow"), "deployed privacy page must disclose narrow PostHog analytics");
   assert(allHtml.includes("Supabase capture is not used by this static site"), "deployed privacy page must disclose current Supabase capture status");

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=1600, height=900">
+    <title>Foil hero walkthrough</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --paper: #fbfbf8;
+        --ink: #071215;
+        --muted: #506064;
+        --line: #d7ddd8;
+        --teal: #0f5b52;
+        --teal-deep: #0a3f44;
+        --foil: #d79a3d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        width: 1600px;
+        height: 900px;
+        overflow: hidden;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      #root {
+        position: relative;
+        width: 1600px;
+        height: 900px;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 50% 42%, rgb(15 91 82 / 8%), transparent 34%),
+          linear-gradient(180deg, #fbfbf8 0%, #f6f7f2 100%);
+      }
+
+      .brand-badge {
+        position: absolute;
+        top: 42px;
+        left: 44px;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 42px;
+        padding: 6px 12px 6px 8px;
+        border: 1px solid rgb(15 91 82 / 14%);
+        border-radius: 12px;
+        background: rgb(255 255 255 / 82%);
+        color: var(--teal-deep);
+        font-size: 18px;
+        font-weight: 820;
+        box-shadow: 0 16px 44px rgb(7 18 21 / 8%);
+      }
+
+      .brand-badge img {
+        width: 30px;
+        height: 30px;
+        border-radius: 7px;
+      }
+
+      .scene {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+      }
+
+      .scene-1 {
+        opacity: 1;
+      }
+
+      .scene-card {
+        position: absolute;
+        left: 64px;
+        bottom: 70px;
+        z-index: 5;
+        width: 420px;
+        padding: 24px 26px;
+        border: 1px solid rgb(15 91 82 / 16%);
+        border-radius: 16px;
+        background: rgb(255 255 255 / 88%);
+        box-shadow: 0 24px 70px rgb(7 18 21 / 12%);
+      }
+
+      .kicker {
+        margin-bottom: 10px;
+        color: var(--teal);
+        font-size: 16px;
+        font-weight: 840;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 34px;
+        line-height: 1.03;
+        letter-spacing: 0;
+      }
+
+      .scene-card p {
+        margin: 12px 0 0;
+        color: #263437;
+        font-size: 20px;
+        line-height: 1.28;
+      }
+
+      .scene-2 .scene-card {
+        top: auto;
+        left: 64px;
+        bottom: 70px;
+        width: 420px;
+        padding: 24px 26px;
+      }
+
+      .scene-2 .scene-card h2 {
+        font-size: 34px;
+      }
+
+      .scene-2 .scene-card p {
+        margin-top: 12px;
+        font-size: 20px;
+      }
+
+      .appshot,
+      .surface,
+      .floating {
+        position: absolute;
+        overflow: hidden;
+        border: 2px solid rgb(110 119 116 / 28%);
+        border-radius: 16px;
+        background: white;
+        box-shadow: 0 30px 90px rgb(7 18 21 / 18%);
+      }
+
+      .appshot img,
+      .surface img,
+      .floating img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .hero-window {
+        top: 118px;
+        left: 540px;
+        width: 900px;
+        height: 732px;
+      }
+
+      .hero-window.home img {
+        object-position: 50% 50%;
+      }
+
+      .hero-window.cleanup img {
+        object-position: 50% 55%;
+      }
+
+      .hero-window.insights img {
+        object-position: 50% 50%;
+      }
+
+      .recording-status {
+        top: 124px;
+        left: 652px;
+        width: 590px;
+        height: 166px;
+      }
+
+      .route-board {
+        position: absolute;
+        left: 540px;
+        top: 118px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+        width: 900px;
+      }
+
+      .route-panel {
+        position: relative;
+        min-height: 626px;
+        overflow: hidden;
+        border: 1px solid rgb(15 91 82 / 16%);
+        border-radius: 18px;
+        background: rgb(255 255 255 / 74%);
+        box-shadow: 0 28px 80px rgb(7 18 21 / 12%);
+      }
+
+      .route-panel h3 {
+        position: absolute;
+        left: 28px;
+        top: 26px;
+        z-index: 3;
+        margin: 0;
+        padding: 7px 12px;
+        border: 1px solid rgb(15 91 82 / 16%);
+        border-radius: 10px;
+        background: rgb(255 255 255 / 90%);
+        color: var(--teal-deep);
+        font-size: 22px;
+      }
+
+      .route-panel .surface {
+        left: 34px;
+        right: 34px;
+        top: 88px;
+        height: 340px;
+      }
+
+      .route-panel.transcription .surface img {
+        object-position: 50% 40%;
+      }
+
+      .route-panel.cleanup .surface img {
+        object-position: 50% 58%;
+      }
+
+      .route-chips {
+        position: absolute;
+        left: 34px;
+        right: 34px;
+        bottom: 34px;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .chip,
+      .action-chip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 42px;
+        padding: 0 14px;
+        border: 1px solid rgb(15 91 82 / 18%);
+        border-radius: 10px;
+        background: white;
+        color: var(--teal-deep);
+        font-size: 19px;
+        font-weight: 800;
+        box-shadow: 0 12px 28px rgb(7 18 21 / 8%);
+      }
+
+      .output-pair {
+        position: absolute;
+        right: 76px;
+        bottom: 74px;
+        z-index: 6;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        width: 760px;
+      }
+
+      .output-card {
+        min-height: 168px;
+        padding: 22px 24px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: rgb(255 255 255 / 94%);
+        box-shadow: 0 24px 60px rgb(7 18 21 / 14%);
+      }
+
+      .output-card strong {
+        display: block;
+        margin-bottom: 10px;
+        color: var(--teal-deep);
+        font-size: 20px;
+      }
+
+      .output-card p {
+        margin: 0;
+        color: #263437;
+        font-size: 24px;
+        line-height: 1.2;
+      }
+
+      .output-card.raw p {
+        font-family: ui-monospace, monospace;
+        font-size: 21px;
+      }
+
+      .actions,
+      .metrics {
+        position: absolute;
+        left: 64px;
+        top: 170px;
+        z-index: 6;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        width: 420px;
+      }
+
+      .scene-4 .actions {
+        top: auto;
+        bottom: 262px;
+      }
+
+      .scene-5 .metrics {
+        top: auto;
+        bottom: 262px;
+      }
+
+      .pulse {
+        transform-origin: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-ycr3" id="root" data-composition-id="foil-hero" data-start="0" data-duration="27" data-width="1600" data-height="900">
+      <div data-hf-id="hf-71se" class="brand-badge" aria-hidden="true">
+        <img data-hf-id="hf-ggay" src="assets/brand/foil-mark.svg" alt="">
+        <span data-hf-id="hf-5iqj">Foil</span>
+      </div>
+
+      <section data-hf-id="hf-nv6t" id="scene-capture" class="scene scene-1 clip" data-start="0" data-duration="4.5" data-track-index="1">
+        <div data-hf-id="hf-eme1" class="appshot hero-window home">
+          <img data-hf-id="hf-f4st" src="assets/screenshots/foil-app-home-recovery.png" alt="">
+        </div>
+        <div data-hf-id="hf-7wvt" class="floating recording-status pulse">
+          <img data-hf-id="hf-tfeh" src="assets/audio-ux/recording-floating-status.png" alt="">
+        </div>
+        <div data-hf-id="hf-ltv7" class="scene-card">
+          <div data-hf-id="hf-u840" class="kicker">Basics</div>
+          <h2 data-hf-id="hf-4uy7">Everything you need</h2>
+          <p data-hf-id="hf-1wvp">Record, paste, copy, retry, and recover from history.</p>
+        </div>
+      </section>
+
+      <section data-hf-id="hf-hh4k" id="scene-provider-routes" class="scene scene-2 clip" data-start="4.5" data-duration="6" data-track-index="2">
+        <div data-hf-id="hf-z03k" class="route-board">
+          <article data-hf-id="hf-tea9" class="route-panel transcription">
+            <h3 data-hf-id="hf-jdq8">Transcription</h3>
+            <div data-hf-id="hf-9rgx" class="surface">
+              <img data-hf-id="hf-s3sy" src="assets/screenshots/foil-app-transcription-provider.png" alt="">
+            </div>
+            <div data-hf-id="hf-tb1y" class="route-chips" aria-hidden="true">
+              <span data-hf-id="hf-ezin" class="chip">Local whisper.cpp</span>
+              <span data-hf-id="hf-2rho" class="chip">Groq Whisper</span>
+              <span data-hf-id="hf-hbm7" class="chip">OpenAI Whisper</span>
+              <span data-hf-id="hf-rjkt" class="chip">Custom endpoint</span>
+            </div>
+          </article>
+          <article data-hf-id="hf-vyyt" class="route-panel cleanup">
+            <h3 data-hf-id="hf-h9fs">Cleanup</h3>
+            <div data-hf-id="hf-w8g5" class="surface">
+              <img data-hf-id="hf-utbi" src="assets/screenshots/foil-app-cleanup-profile.png" alt="">
+            </div>
+            <div data-hf-id="hf-1eoq" class="route-chips" aria-hidden="true">
+              <span data-hf-id="hf-3vx0" class="chip">Groq chat</span>
+              <span data-hf-id="hf-pqwx" class="chip">OpenAI chat</span>
+              <span data-hf-id="hf-bz2r" class="chip">Self-hosted chat</span>
+              <span data-hf-id="hf-wh8r" class="chip">Raw fallback</span>
+            </div>
+          </article>
+        </div>
+        <div data-hf-id="hf-9wb7" class="scene-card">
+          <div data-hf-id="hf-sgv8" class="kicker">Provider routes</div>
+          <h2 data-hf-id="hf-2te7">Your models, your keys</h2>
+          <p data-hf-id="hf-s37e">Bring your own API key, use hosted providers, or self-host transcription and cleanup.</p>
+        </div>
+      </section>
+
+      <section data-hf-id="hf-jw9n" id="scene-app-behavior" class="scene scene-3 clip" data-start="10.5" data-duration="6" data-track-index="3">
+        <div data-hf-id="hf-t12g" class="appshot hero-window cleanup">
+          <img data-hf-id="hf-mda5" src="assets/screenshots/foil-app-cleanup-groups.png" alt="">
+        </div>
+        <div data-hf-id="hf-kczg" class="output-pair">
+          <article data-hf-id="hf-pf1h" class="output-card">
+            <strong data-hf-id="hf-y0ae">Message app</strong>
+            <p data-hf-id="hf-a0v2">Could we move our sync to 3 PM?</p>
+          </article>
+          <article data-hf-id="hf-xvrn" class="output-card raw">
+            <strong data-hf-id="hf-j7hi">Prompt-driven app</strong>
+            <p data-hf-id="hf-fmuz">move sync 3pm; send notes</p>
+          </article>
+        </div>
+        <div data-hf-id="hf-9i06" class="scene-card">
+          <div data-hf-id="hf-u3b8" class="kicker">App behavior</div>
+          <h2 data-hf-id="hf-i5iw">Each app, its own style</h2>
+          <p data-hf-id="hf-k5cc">Set cleanup, tone, vocabulary, and raw output rules per app.</p>
+        </div>
+      </section>
+
+      <section data-hf-id="hf-0b61" id="scene-recovery" class="scene scene-4 clip" data-start="16.5" data-duration="6" data-track-index="4">
+        <div data-hf-id="hf-p7zh" class="appshot hero-window home">
+          <img data-hf-id="hf-k85l" src="assets/screenshots/foil-app-home.png" alt="">
+        </div>
+        <div data-hf-id="hf-yugi" class="actions" aria-hidden="true">
+          <span data-hf-id="hf-wj63" class="action-chip">Paste Last</span>
+          <span data-hf-id="hf-3jsz" class="action-chip">Copy</span>
+          <span data-hf-id="hf-ntyq" class="action-chip">Edit</span>
+          <span data-hf-id="hf-s9kk" class="action-chip">Retry</span>
+          <span data-hf-id="hf-y6hg" class="action-chip">Export</span>
+        </div>
+        <div data-hf-id="hf-93p5" class="scene-card">
+          <div data-hf-id="hf-4lw8" class="kicker">Recovery</div>
+          <h2 data-hf-id="hf-lyp2">History, always there</h2>
+          <p data-hf-id="hf-epj4">Find, edit, retry, copy, or export past dictations.</p>
+        </div>
+      </section>
+
+      <section data-hf-id="hf-525j" id="scene-insights" class="scene scene-5 clip" data-start="22.5" data-duration="4.5" data-track-index="5">
+        <div data-hf-id="hf-ftg3" class="appshot hero-window insights">
+          <img data-hf-id="hf-21h7" src="assets/screenshots/foil-app-insights.png" alt="">
+        </div>
+        <div data-hf-id="hf-m9os" class="metrics" aria-hidden="true">
+          <span data-hf-id="hf-sa9n" class="action-chip">Words</span>
+          <span data-hf-id="hf-07c3" class="action-chip">Sessions</span>
+          <span data-hf-id="hf-j6nr" class="action-chip">Top apps</span>
+        </div>
+        <div data-hf-id="hf-8pe4" class="scene-card">
+          <div data-hf-id="hf-1c7y" class="kicker">Insights</div>
+          <h2 data-hf-id="hf-n8o4">Usage, fully visible</h2>
+          <p data-hf-id="hf-txd1">Understand which apps, sessions, and workflows use dictation most.</p>
+        </div>
+      </section>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      tl.set(".scene-1 .hero-window, .scene-1 .recording-status, .scene-1 .scene-card", { opacity: 1, x: 0, y: 0, scale: 1 }, 0);
+      tl.to(".scene-1 .pulse", { scale: 1.025, duration: 0.45, yoyo: true, repeat: 3, ease: "sine.inOut" }, 0.15);
+      tl.to(".scene-1", { opacity: 0, duration: 0.35, ease: "power2.inOut" }, 4.15);
+      tl.set(".scene-1", { opacity: 0 }, 4.5);
+
+      tl.fromTo(".scene-2", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 4.5);
+      tl.from(".scene-2 .route-panel", { opacity: 0, y: 34, scale: 0.98, duration: 0.5, stagger: 0.12, ease: "power2.out" }, 4.75);
+      tl.from(".scene-2 .chip", { opacity: 0, y: 16, duration: 0.24, stagger: 0.05, ease: "power2.out" }, 5.45);
+      tl.from(".scene-2 .scene-card", { opacity: 0, y: 26, duration: 0.42, ease: "power2.out" }, 5.6);
+      tl.to(".scene-2", { opacity: 0, y: -16, duration: 0.35, ease: "power2.inOut" }, 10.15);
+      tl.set(".scene-2", { opacity: 0 }, 10.5);
+
+      tl.fromTo(".scene-3", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 10.5);
+      tl.from(".scene-3 .hero-window", { opacity: 0, scale: 0.97, x: 34, duration: 0.5, ease: "power2.out" }, 10.78);
+      tl.from(".scene-3 .output-card", { opacity: 0, y: 30, duration: 0.42, stagger: 0.1, ease: "power2.out" }, 11.35);
+      tl.from(".scene-3 .scene-card", { opacity: 0, y: 26, duration: 0.42, ease: "power2.out" }, 11.5);
+      tl.to(".scene-3", { opacity: 0, y: -16, duration: 0.35, ease: "power2.inOut" }, 16.15);
+      tl.set(".scene-3", { opacity: 0 }, 16.5);
+
+      tl.fromTo(".scene-4", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 16.5);
+      tl.from(".scene-4 .hero-window", { opacity: 0, scale: 0.97, x: 34, duration: 0.5, ease: "power2.out" }, 16.78);
+      tl.from(".scene-4 .action-chip", { opacity: 0, y: 18, duration: 0.28, stagger: 0.08, ease: "power2.out" }, 17.32);
+      tl.from(".scene-4 .scene-card", { opacity: 0, y: 26, duration: 0.42, ease: "power2.out" }, 17.55);
+      tl.to(".scene-4", { opacity: 0, y: -16, duration: 0.35, ease: "power2.inOut" }, 22.15);
+      tl.set(".scene-4", { opacity: 0 }, 22.5);
+
+      tl.fromTo(".scene-5", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 22.5);
+      tl.from(".scene-5 .hero-window", { opacity: 0, scale: 0.97, x: 34, duration: 0.5, ease: "power2.out" }, 22.78);
+      tl.from(".scene-5 .action-chip", { opacity: 0, y: 18, duration: 0.28, stagger: 0.08, ease: "power2.out" }, 23.28);
+      tl.from(".scene-5 .scene-card", { opacity: 0, y: 26, duration: 0.42, ease: "power2.out" }, 23.5);
+      tl.to({}, { duration: 1.0 });
+
+      window.__timelines["foil-hero"] = tl;
+    </script>
+  </body>
+</html>

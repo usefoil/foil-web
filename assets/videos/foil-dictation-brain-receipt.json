@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "captureType": "hyperframes-generated-hero-animation-from-verified-appshots",
+  "sourceReceipts": [
+    "assets/screenshots/receipt.json",
+    "assets/audio-ux/receipt.json"
+  ],
+  "generator": {
+    "tools": [
+      "Hyperframes 0.7.40",
+      "GSAP",
+      "ffmpeg"
+    ],
+    "renderSettings": {
+      "fps": 30,
+      "width": 1600,
+      "height": 900,
+      "quality": "standard",
+      "workers": "auto"
+    }
+  },
+  "asset": "foil-dictation-brain",
+  "sourceComposition": "marketing/hero-animation/index.html",
+  "sourceAssets": [
+    {
+      "file": "marketing/hero-animation/index.html",
+      "sha256": "c998269903d763cf7c8638e2055ab6f6fda6b066884cc5ec42f0c28b12a5bfc6"
+    },
+    {
+      "file": "marketing/hero-animation/assets/screenshots/foil-app-home.png",
+      "sha256": "5235d27b9e5cfd51cfd38383fe55497b067cb7219c7e95c5d5edb712c15032b8"
+    },
+    {
+      "file": "marketing/hero-animation/assets/screenshots/foil-app-home-recovery.png",
+      "sha256": "5235d27b9e5cfd51cfd38383fe55497b067cb7219c7e95c5d5edb712c15032b8"
+    },
+    {
+      "file": "marketing/hero-animation/assets/screenshots/foil-app-cleanup-groups.png",
+      "sha256": "02c17d04531ea142bee278cbebeb4c7fc2002485eae1a8f31419ee016be4e1bc"
+    },
+    {
+      "file": "marketing/hero-animation/assets/screenshots/foil-app-cleanup-profile.png",
+      "sha256": "b05ac7d042530b8f56a52fd43bde769a94bfe4541f6e1d030f34682a777d2122"
+    },
+    {
+      "file": "marketing/hero-animation/assets/screenshots/foil-app-insights.png",
+      "sha256": "9a6807df5b68479cafc259c2ce138a1803586775240ed5767fc946703be64980"
+    },
+    {
+      "file": "marketing/hero-animation/assets/screenshots/foil-app-transcription-provider.png",
+      "sha256": "e4f3ae87628b12ac6ce303cdd54805d19259aa9ff95fa407348daaee4c3380e2"
+    },
+    {
+      "file": "marketing/hero-animation/assets/audio-ux/recording-floating-status.png",
+      "sha256": "8d08635d889ae6ec9c7110653a84c6fc36791f322b4f0117b0333c4e0fd4a217"
+    },
+    {
+      "file": "marketing/hero-animation/assets/brand/foil-mark.svg",
+      "sha256": "57caaf50ff6f151bab142fa78a2727dc125159d62d0ad59d2ee1c6f5ed19ee5d"
+    }
+  ],
+  "concept": {
+    "title": "Foil hero product walkthrough",
+    "notes": "A 27-second hero animation showing immediate recording, provider routing, app-specific style, recoverable history, and usage visibility."
+  },
+  "artifacts": [
+    {
+      "file": "assets/videos/foil-dictation-brain-poster.png",
+      "pixelWidth": 1600,
+      "pixelHeight": 900,
+      "byteCount": 252784,
+      "sha256": "c794a0244e5407a1aee19c7d99d18270f5ca2bb684b7c7cb4f334007468e9b2c"
+    },
+    {
+      "file": "assets/videos/foil-dictation-brain.mp4",
+      "durationSeconds": 27,
+      "pixelWidth": 1600,
+      "pixelHeight": 900,
+      "codec": "h264",
+      "frameRate": "30/1",
+      "byteCount": 2303086,
+      "sha256": "c8bc05df711fd1608160bdf2392aa81576a6277aaa55a44a3a8026d13b0254f2"
+    },
+    {
+      "file": "assets/videos/foil-dictation-brain.webm",
+      "durationSeconds": 27,
+      "pixelWidth": 1600,
+      "pixelHeight": 900,
+      "codec": "vp9",
+      "frameRate": "30/1",
+      "byteCount": 944811,
+      "sha256": "ce4abbcb351f20497eacd082395601d5827db618a2cde6d56a882d98ff571b7e"
+    }
+  ]
+}
