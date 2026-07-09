@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=1600, height=900">
+    <title>Foil hero concept - speech router</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --paper: #fbfbf8;
+        --ink: #071215;
+        --muted: #4e5f62;
+        --line: #d7ddd8;
+        --teal: #0f5b52;
+        --teal-deep: #0a3f44;
+        --amber: #d79a3d;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        width: 1600px;
+        height: 900px;
+        overflow: hidden;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      #root {
+        position: relative;
+        width: 1600px;
+        height: 900px;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 52% 48%, rgb(15 91 82 / 10%), transparent 34%),
+          linear-gradient(180deg, #fbfbf8 0%, #f5f7f2 100%);
+      }
+
+      .scene {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+      }
+
+      .scene-1 { opacity: 1; }
+
+      .brand {
+        position: absolute;
+        top: 58px;
+        left: 76px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-size: 34px;
+        font-weight: 820;
+      }
+
+      .brand img {
+        width: 46px;
+        height: 46px;
+        border-radius: 10px;
+        box-shadow: 0 12px 28px rgb(7 18 21 / 12%);
+      }
+
+      .kicker {
+        color: var(--teal);
+        font-size: 23px;
+        font-weight: 840;
+        text-transform: uppercase;
+      }
+
+      h1, h2, p { margin: 0; letter-spacing: 0; }
+
+      .headline {
+        position: absolute;
+        left: 76px;
+        top: 166px;
+        width: 640px;
+      }
+
+      .headline h1 {
+        margin-top: 22px;
+        font-size: 78px;
+        line-height: 0.96;
+      }
+
+      .headline p {
+        margin-top: 26px;
+        color: #263437;
+        font-size: 34px;
+        line-height: 1.18;
+      }
+
+      .voice-bubble {
+        position: absolute;
+        left: 76px;
+        bottom: 92px;
+        width: 610px;
+        padding: 26px 30px;
+        border: 1px solid rgb(15 91 82 / 20%);
+        border-radius: 18px;
+        background: white;
+        box-shadow: 0 24px 64px rgb(7 18 21 / 12%);
+      }
+
+      .voice-bubble strong {
+        display: block;
+        margin-bottom: 12px;
+        color: var(--teal-deep);
+        font-size: 22px;
+      }
+
+      .voice-bubble span {
+        display: block;
+        color: #263437;
+        font-size: 29px;
+        line-height: 1.18;
+      }
+
+      .appshot {
+        position: absolute;
+        right: 76px;
+        top: 128px;
+        width: 780px;
+        height: 554px;
+        overflow: hidden;
+        border: 2px solid rgb(110 119 116 / 28%);
+        border-radius: 17px;
+        background: white;
+        box-shadow: 0 30px 92px rgb(7 18 21 / 18%);
+      }
+
+      .appshot img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .router {
+        position: absolute;
+        inset: 0;
+      }
+
+      .router-hub {
+        position: absolute;
+        left: 50%;
+        top: 52%;
+        display: grid;
+        place-items: center;
+        width: 180px;
+        height: 180px;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background: var(--teal);
+        color: white;
+        box-shadow: 0 28px 80px rgb(15 91 82 / 32%);
+      }
+
+      .router-hub img {
+        width: 62px;
+        height: 62px;
+        border-radius: 14px;
+        background: white;
+      }
+
+      .route-line {
+        position: absolute;
+        left: 50%;
+        top: 52%;
+        width: 2px;
+        height: 270px;
+        background: linear-gradient(180deg, rgb(15 91 82 / 0%), rgb(15 91 82 / 75%), rgb(15 91 82 / 0%));
+        transform-origin: top center;
+      }
+
+      .line-human { transform: rotate(-58deg); }
+      .line-agent { transform: rotate(58deg); }
+      .line-notes { transform: rotate(122deg); }
+      .line-history { transform: rotate(238deg); }
+
+      .destination {
+        position: absolute;
+        width: 370px;
+        min-height: 150px;
+        padding: 22px 24px;
+        border: 1px solid var(--line);
+        border-radius: 17px;
+        background: rgb(255 255 255 / 95%);
+        box-shadow: 0 22px 56px rgb(7 18 21 / 12%);
+      }
+
+      .destination h2 {
+        margin-top: 10px;
+        font-size: 33px;
+        line-height: 1.02;
+      }
+
+      .destination p {
+        margin-top: 12px;
+        color: #263437;
+        font-size: 22px;
+        line-height: 1.18;
+      }
+
+      .human { left: 90px; top: 114px; }
+      .agent { right: 90px; top: 114px; }
+      .notes { left: 90px; bottom: 88px; }
+      .history { right: 90px; bottom: 88px; }
+
+      .agent p {
+        font-family: ui-monospace, monospace;
+        font-size: 20px;
+      }
+
+      .comparison-title {
+        position: absolute;
+        left: 76px;
+        top: 110px;
+        width: 600px;
+      }
+
+      .comparison-title h1 {
+        margin-top: 22px;
+        font-size: 72px;
+        line-height: 0.96;
+      }
+
+      .side-by-side {
+        position: absolute;
+        left: 76px;
+        right: 76px;
+        bottom: 92px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+      }
+
+      .result-card {
+        min-height: 275px;
+        padding: 30px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: white;
+        box-shadow: 0 24px 64px rgb(7 18 21 / 12%);
+      }
+
+      .result-card h2 {
+        margin-top: 14px;
+        font-size: 48px;
+        line-height: 1;
+      }
+
+      .result-card p {
+        margin-top: 18px;
+        color: #263437;
+        font-size: 28px;
+        line-height: 1.22;
+      }
+
+      .result-card.agent-result p {
+        font-family: ui-monospace, monospace;
+        font-size: 25px;
+      }
+
+      .end-card {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        text-align: center;
+      }
+
+      .end-card-inner {
+        width: 980px;
+      }
+
+      .end-card h1 {
+        font-size: 104px;
+        line-height: 0.93;
+      }
+
+      .end-card p {
+        margin: 32px auto 0;
+        max-width: 760px;
+        color: #263437;
+        font-size: 36px;
+        line-height: 1.16;
+      }
+
+      .pill-row {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 38px;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 0 16px;
+        border: 1px solid rgb(15 91 82 / 18%);
+        border-radius: 11px;
+        background: white;
+        color: var(--teal-deep);
+        font-size: 21px;
+        font-weight: 780;
+        box-shadow: 0 12px 30px rgb(7 18 21 / 8%);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="speech-router" data-start="0" data-duration="12" data-width="1600" data-height="900">
+      <section id="scene-one-voice" class="scene scene-1 clip" data-start="0" data-duration="3" data-track-index="1">
+        <div class="brand"><img src="assets/brand/foil-mark-brand.svg" alt=""><span>Foil</span></div>
+        <div class="headline">
+          <div class="kicker">One spoken thought</div>
+          <h1>Not one-size-fits-all text.</h1>
+          <p>The same words need different treatment for people, agents, notes, and recovery.</p>
+        </div>
+        <div class="voice-bubble">
+          <strong>You say</strong>
+          <span>“Move the sync to 3 and send the notes after.”</span>
+        </div>
+        <div class="appshot"><img src="assets/screenshots/foil-app-home.png" alt=""></div>
+      </section>
+
+      <section id="scene-router" class="scene scene-2 clip" data-start="3" data-duration="3" data-track-index="2">
+        <div class="router">
+          <div class="route-line line-human"></div>
+          <div class="route-line line-agent"></div>
+          <div class="route-line line-notes"></div>
+          <div class="route-line line-history"></div>
+          <div class="router-hub"><img src="assets/brand/foil-mark-hub.svg" alt=""></div>
+          <article class="destination human">
+            <div class="kicker">Human</div>
+            <h2>Polished</h2>
+            <p>Could we move our sync to 3 PM?</p>
+          </article>
+          <article class="destination agent">
+            <div class="kicker">Agent</div>
+            <h2>Raw intent</h2>
+            <p>move sync 3pm; send notes after</p>
+          </article>
+          <article class="destination notes">
+            <div class="kicker">Docs</div>
+            <h2>Structured</h2>
+            <p>Follow-up notes, ready to paste.</p>
+          </article>
+          <article class="destination history">
+            <div class="kicker">History</div>
+            <h2>Recoverable</h2>
+            <p>Saved, searchable, retryable.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="scene-human-agent" class="scene scene-3 clip" data-start="6" data-duration="3" data-track-index="3">
+        <div class="comparison-title">
+          <div class="kicker">Foil knows the audience</div>
+          <h1>Humans like polish. Agents like intent.</h1>
+        </div>
+        <div class="side-by-side">
+          <article class="result-card">
+            <div class="kicker">People</div>
+            <h2>Could we move our sync to 3 PM?</h2>
+            <p>I’ll send the notes afterward so everyone has the follow-up.</p>
+          </article>
+          <article class="result-card agent-result">
+            <div class="kicker">Agents</div>
+            <h2>Preserve the command</h2>
+            <p>move sync 3pm; send notes after; include follow-up</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="scene-end-card" class="scene scene-4 clip" data-start="9" data-duration="3" data-track-index="4">
+        <div class="end-card">
+          <div class="end-card-inner">
+            <div class="kicker">Cleanup Groups + provider routing + history</div>
+            <h1>One voice. The right text everywhere.</h1>
+            <p>Raw for agents. Polished for people. Structured for docs. Recoverable when macOS gets picky.</p>
+            <div class="pill-row">
+              <span class="pill">App-aware cleanup</span>
+              <span class="pill">Raw intent</span>
+              <span class="pill">Provider routing</span>
+              <span class="pill">History recovery</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.from(".scene-1 .appshot", { opacity: 0, scale: 0.96, x: 26, duration: 0.7, ease: "power2.out" }, 0.2);
+      tl.from(".scene-1 .voice-bubble", { opacity: 0, y: 34, duration: 0.55, ease: "power2.out" }, 0.8);
+      tl.to(".scene-1", { opacity: 0, duration: 0.35, ease: "power2.inOut" }, 2.65);
+      tl.set(".scene-1", { opacity: 0 }, 3.0);
+      tl.fromTo(".scene-2", { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "power2.out" }, 3.0);
+      tl.from(".route-line", { scaleY: 0, duration: 0.55, stagger: 0.06, ease: "power2.out" }, 3.2);
+      tl.from(".destination", { opacity: 0, y: 24, scale: 0.96, duration: 0.4, stagger: 0.08, ease: "power2.out" }, 3.55);
+      tl.to(".router-hub", { scale: 1.06, duration: 0.45, yoyo: true, repeat: 2, ease: "sine.inOut" }, 3.9);
+      tl.to(".scene-2", { opacity: 0, duration: 0.35, ease: "power2.inOut" }, 5.65);
+      tl.set(".scene-2", { opacity: 0 }, 6.0);
+      tl.fromTo(".scene-3", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 6.0);
+      tl.from(".result-card", { opacity: 0, y: 36, duration: 0.48, stagger: 0.16, ease: "power2.out" }, 6.55);
+      tl.to(".scene-3", { opacity: 0, duration: 0.35, ease: "power2.inOut" }, 8.65);
+      tl.set(".scene-3", { opacity: 0 }, 9.0);
+      tl.fromTo(".scene-4", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 9.0);
+      tl.from(".pill", { opacity: 0, y: 18, duration: 0.3, stagger: 0.08, ease: "power2.out" }, 9.65);
+      tl.to({}, { duration: 1.2 });
+      window.__timelines["speech-router"] = tl;
+    </script>
+  </body>
+</html>

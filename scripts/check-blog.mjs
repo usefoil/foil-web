@@ -35,7 +35,7 @@ for (const file of htmlFiles) {
   assert(html.includes('data-analytics-event="blog_cta_click"'), `${relativePath} must include a blog CTA analytics hook`);
   assert(ctaLinks.every((link) => link.includes('data-analytics-label="')), `${relativePath} blog CTA links must have stable labels`);
   assert(html.includes("#install"), `${relativePath} must link to install`);
-  assert(html.includes("#privacy"), `${relativePath} must link to privacy`);
+  assert(html.includes("privacy/"), `${relativePath} must link to privacy`);
   assert(!/bridge[^.]{0,90}\b(shipped|released|available|download|install)\b/i.test(html), `${relativePath} has an unsupported bridge availability claim`);
   assert(!/local-only|local only/i.test(html), `${relativePath} should avoid local-only overclaims`);
   assert(!/Foil[^.]{0,90}\bpublic iOS app\b/i.test(html), `${relativePath} must not describe Foil iOS as public`);
