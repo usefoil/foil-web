@@ -4,24 +4,63 @@ import { fileURLToPath } from "node:url";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dist = join(root, "dist");
-const siteUrl = normalizeSiteUrl(process.env.SITE_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL || "https://sayfoil.com");
-const posthogHost = normalizeSiteUrl(process.env.POSTHOG_HOST || "https://us.i.posthog.com");
+const siteUrl = normalizeSiteUrl(
+  process.env.SITE_URL ||
+    process.env.VERCEL_PROJECT_PRODUCTION_URL ||
+    "https://sayfoil.com",
+);
+const posthogHost = normalizeSiteUrl(
+  process.env.POSTHOG_HOST || "https://us.i.posthog.com",
+);
 
 const excluded = new Set([".git", "dist", "node_modules"]);
-const textExtensions = new Set([".html", ".css", ".js", ".json", ".md", ".txt", ".xml"]);
+const textExtensions = new Set([
+  ".html",
+  ".css",
+  ".js",
+  ".json",
+  ".md",
+  ".txt",
+  ".xml",
+]);
 
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
 
-for (const entry of ["assets", "blog", "privacy", "index.html", "styles.css", "robots.txt", "sitemap.xml", "analytics.js", "observability.js"]) {
+for (const entry of [
+  "assets",
+  "blog",
+  "privacy",
+  "index.html",
+  "robots.txt",
+  "sitemap.xml",
+  "analytics.js",
+  "observability.js",
+  "site.js",
+]) {
   await cp(join(root, entry), join(dist, entry), {
     recursive: true,
-    filter: (source) => !excluded.has(source.split("/").at(-1))
+    filter: (source) => !excluded.has(source.split("/").at(-1)),
   });
 }
 
+await writeStylesheet();
 await replaceSiteUrl(dist);
 await writeAnalyticsConfig();
+
+async function writeStylesheet() {
+  const styleFiles = [
+    "foundation.css",
+    "product.css",
+    "content.css",
+    "homepage.css",
+    "responsive.css",
+  ];
+  const parts = await Promise.all(
+    styleFiles.map((file) => readFile(join(root, "styles", file), "utf8")),
+  );
+  await writeFile(join(dist, "styles.css"), `${parts.join("\n")}\n`);
+}
 
 async function replaceSiteUrl(path) {
   const { readdir, stat } = await import("node:fs/promises");
@@ -29,7 +68,9 @@ async function replaceSiteUrl(path) {
 
   if (info.isDirectory()) {
     const entries = await readdir(path);
-    await Promise.all(entries.map((entry) => replaceSiteUrl(join(path, entry))));
+    await Promise.all(
+      entries.map((entry) => replaceSiteUrl(join(path, entry))),
+    );
     return;
   }
 
@@ -50,10 +91,13 @@ async function writeAnalyticsConfig() {
     posthogKey: process.env.POSTHOG_KEY || "",
     posthogHost,
     siteUrl,
-    environment: process.env.FOIL_ANALYTICS_ENV || process.env.VERCEL_ENV || "production",
+    environment:
+      process.env.FOIL_ANALYTICS_ENV || process.env.VERCEL_ENV || "production",
     sentryDsn: process.env.SENTRY_DSN || "",
-    sentryEnvironment: process.env.SENTRY_ENVIRONMENT || process.env.VERCEL_ENV || "",
-    sentryRelease: process.env.SENTRY_RELEASE || process.env.VERCEL_GIT_COMMIT_SHA || ""
+    sentryEnvironment:
+      process.env.SENTRY_ENVIRONMENT || process.env.VERCEL_ENV || "",
+    sentryRelease:
+      process.env.SENTRY_RELEASE || process.env.VERCEL_GIT_COMMIT_SHA || "",
   };
 
   const output = `window.FOIL_ANALYTICS_CONFIG = Object.freeze(${JSON.stringify(config, null, 2)});\n`;
@@ -69,7 +113,9 @@ function normalizeSiteUrl(value) {
     return "https://sayfoil.com";
   }
 
-  const withProtocol = /^https?:\/\//.test(trimmed) ? trimmed : `https://${trimmed}`;
+  const withProtocol = /^https?:\/\//.test(trimmed)
+    ? trimmed
+    : `https://${trimmed}`;
   return withProtocol.replace(/\/$/, "");
 }
 

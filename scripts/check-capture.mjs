@@ -9,15 +9,17 @@ const privacy = await readText("privacy/index.html");
 const productFilePaths = [
   "index.html",
   "privacy/index.html",
-  ...await findHtmlPages(join(root, "blog")),
+  ...(await findHtmlPages(join(root, "blog"))),
   "analytics.js",
   "analytics-config.js",
-  ".env.example"
+  ".env.example",
 ];
-const productFiles = await Promise.all(productFilePaths.map(async (relativePath) => ({
-  relativePath,
-  text: await readText(relativePath)
-})));
+const productFiles = await Promise.all(
+  productFilePaths.map(async (relativePath) => ({
+    relativePath,
+    text: await readText(relativePath),
+  })),
+);
 
 for (const requiredText of [
   "Supabase capture is deferred for launch",
@@ -30,22 +32,34 @@ for (const requiredText of [
   "spam protection",
   "privacy/legal approval",
   "SUPABASE_URL",
-  "SUPABASE_ANON_KEY"
+  "SUPABASE_ANON_KEY",
 ]) {
-  assert(capture.includes(requiredText), `capture decision missing ${requiredText}`);
+  assert(
+    capture.includes(requiredText),
+    `capture decision missing ${requiredText}`,
+  );
 }
 
 assert(
   privacy.includes("Supabase capture is not used by this static site"),
-  "privacy page must match current Supabase capture decision"
+  "privacy page must match current Supabase capture decision",
 );
 
 for (const { relativePath, text } of productFiles) {
-  assert(!/createClient|supabase\.from|SUPABASE_URL|SUPABASE_ANON_KEY/.test(text), `${relativePath} must not half-wire Supabase while deferred`);
+  assert(
+    !/createClient|supabase\.from|SUPABASE_URL|SUPABASE_ANON_KEY/.test(text),
+    `${relativePath} must not half-wire Supabase while deferred`,
+  );
 
   if (relativePath.endsWith(".html")) {
-    assert(!/<form\b/i.test(text), `${relativePath} must not add form-based capture while Supabase is deferred`);
-    assert(!/\b(?:type|name|id)=["']email["']/i.test(text), `${relativePath} must not add email capture while Supabase is deferred`);
+    assert(
+      !/<form\b/i.test(text),
+      `${relativePath} must not add form-based capture while Supabase is deferred`,
+    );
+    assert(
+      !/\b(?:type|name|id)=["']email["']/i.test(text),
+      `${relativePath} must not add email capture while Supabase is deferred`,
+    );
   }
 }
 
@@ -68,7 +82,7 @@ async function findHtmlPages(dir) {
     const path = join(dir, entry.name);
 
     if (entry.isDirectory()) {
-      pages.push(...await findHtmlPages(path));
+      pages.push(...(await findHtmlPages(path)));
       continue;
     }
 

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "analytics.js",
+    "observability.js",
+    "site.js",
+    "scripts/*.mjs"
+  ],
+  "project": ["**/*.{js,mjs}"],
+  "ignore": ["dist/**", "marketing/**"],
+  "ignoreBinaries": ["html-validate", "prettier", "stylelint"]
+}

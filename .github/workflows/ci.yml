@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  merge_group:
+  workflow_dispatch:
+    inputs:
+      smoke_url:
+        description: Optional deployed preview or production URL to smoke test
+        required: false
+        type: string
+      site_url:
+        description: Expected canonical URL for deployed smoke
+        required: false
+        default: https://sayfoil.com
+        type: string
+      expect_posthog:
+        description: Assert deployed PostHog public config
+        required: false
+        default: false
+        type: boolean
+      expected_analytics_env:
+        description: Expected FOIL_ANALYTICS_ENV when asserting PostHog
+        required: false
+        default: ""
+        type: string
+      expect_sentry:
+        description: Assert deployed Sentry public config
+        required: false
+        default: false
+        type: boolean
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+concurrency:
+  group: ci-${{ github.head_ref || github.sha }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Quality and launch checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - uses: ./.github/actions/setup-node
+
+      - name: Audit production dependencies
+        continue-on-error: true
+        run: npm audit --audit-level=critical --omit=dev
+
+      - name: Run lint, format, Knip, size, build, and launch checks
+        run: npm run quality
+
+      - name: Upload production build
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: foil-web-dist
+          path: dist/
+          retention-days: 7
+
+  deployed-smoke:
+    name: Deployed smoke
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.smoke_url != '' }}
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - uses: ./.github/actions/setup-node
+
+      - name: Verify deployed site
+        env:
+          SMOKE_URL: ${{ inputs.smoke_url }}
+          SITE_URL: ${{ inputs.site_url || 'https://sayfoil.com' }}
+          EXPECT_POSTHOG: ${{ inputs.expect_posthog && '1' || '' }}
+          EXPECTED_ANALYTICS_ENV: ${{ inputs.expected_analytics_env }}
+          EXPECT_SENTRY: ${{ inputs.expect_sentry && '1' || '' }}
+        run: npm run check:deployed

@@ -8,18 +8,24 @@ release work.
 
 ## Local Preview
 
-Open `index.html` directly in a browser, or serve the directory with any static
-file server:
+Install the locked toolchain, build the production site, and serve `dist/`:
 
 ```sh
-python3 -m http.server 4173
+npm ci
+npm run serve
 ```
 
-For the Vercel build output and launch checks:
+Before pushing, run the same quality and launch gate used by CI:
 
 ```sh
-npm run check:launch
+npm run quality
 ```
+
+That gate runs ESLint, Stylelint, HTML validation, Prettier, Knip, the
+300-line source-file limit, the production build, technical SEO checks, and
+the existing analytics, privacy, install, release-surface, and launch smokes.
+Production CSS is assembled from the maintainable files in `styles/` into one
+render-blocking stylesheet during the build.
 
 To audit release drift before updating install copy:
 
@@ -79,5 +85,6 @@ EXPECT_POSTHOG=1 EXPECT_SENTRY=1 EXPECTED_ANALYTICS_ENV=production SMOKE_URL=htt
   `docs/blog-conversion.md`.
 - Supabase capture is deferred until there is an approved capture use case,
   RLS design, retention plan, and privacy/legal approval. See `docs/capture.md`.
-- `.github/workflows/launch-smoke.yml` runs local launch checks on pull
-  requests and `main`; manual dispatch can also test a deployed URL.
+- `.github/workflows/ci.yml` runs the full quality and launch gate on pull
+  requests, merge queues, and `main`; manual dispatch can also test a deployed
+  URL.
