@@ -15,7 +15,7 @@ const htmlFiles = [
   "blog/wispr-flow-vs-superwhisper-vs-foil/index.html",
   "blog/wispr-flow-alternative-for-mac/index.html",
   "blog/does-wispr-flow-work-offline/index.html",
-  "blog/wispr-flow-not-pasting-text/index.html"
+  "blog/wispr-flow-not-pasting-text/index.html",
 ];
 const failures = [];
 
@@ -36,29 +36,42 @@ for (const requiredText of [
   "API keys",
   "free-form user",
   "input before sending",
-  "EXPECT_SENTRY=1"
+  "EXPECT_SENTRY=1",
 ]) {
-  assert(observability.includes(requiredText), `observability decision missing ${requiredText}`);
+  assert(
+    observability.includes(requiredText),
+    `observability decision missing ${requiredText}`,
+  );
 }
 
 assert(
-  privacy.includes("Sentry browser error monitoring is not enabled for launch") &&
-    privacy.includes("exits unless a Sentry DSN is configured"),
-  "privacy page must match current dormant Sentry env-gated state"
+  privacy.includes(
+    "Sentry browser error monitoring is not enabled for launch",
+  ) && privacy.includes("exits unless a Sentry DSN is configured"),
+  "privacy page must match current dormant Sentry env-gated state",
 );
 assert(
   privacy.includes("Sentry session replay, tracing, breadcrumbs") &&
     privacy.includes("raw audio") &&
     privacy.includes("API keys") &&
     privacy.includes("request bodies"),
-  "privacy page must disclose Sentry safeguards"
+  "privacy page must disclose Sentry safeguards",
 );
 
 for (const relativePath of htmlFiles) {
   const html = await readText(relativePath);
-  assert(html.includes('<script defer src="/analytics-config.js"></script>'), `${relativePath} must load generated config before observability`);
-  assert(html.includes('<script defer src="/observability.js"></script>'), `${relativePath} must load observability script`);
-  assert(html.indexOf("/analytics-config.js") < html.indexOf("/observability.js"), `${relativePath} must load config before observability`);
+  assert(
+    html.includes('<script defer src="/analytics-config.js"></script>'),
+    `${relativePath} must load generated config before observability`,
+  );
+  assert(
+    html.includes('<script defer src="/observability.js"></script>'),
+    `${relativePath} must load observability script`,
+  );
+  assert(
+    html.indexOf("/analytics-config.js") < html.indexOf("/observability.js"),
+    `${relativePath} must load config before observability`,
+  );
 }
 
 assertNoSdkLoadWithoutDsn();
@@ -69,7 +82,9 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("Observability check passed for dormant env-gated Sentry launch state.");
+console.log(
+  "Observability check passed for dormant env-gated Sentry launch state.",
+);
 
 async function readText(relativePath) {
   return readFile(join(root, relativePath), "utf8");
@@ -78,7 +93,10 @@ async function readText(relativePath) {
 function assertNoSdkLoadWithoutDsn() {
   const harness = createHarness({ sentryDsn: "" });
   runObservability(harness.context);
-  assert(harness.appendedScripts.length === 0, "Sentry SDK must not load when SENTRY_DSN is empty");
+  assert(
+    harness.appendedScripts.length === 0,
+    "Sentry SDK must not load when SENTRY_DSN is empty",
+  );
 }
 
 function assertSentryPrivacyConfigWithDsn() {
@@ -88,7 +106,7 @@ function assertSentryPrivacyConfigWithDsn() {
     sentryDsn: "https://public@example.ingest.sentry.io/123456",
     sentryEnvironment: "preview",
     sentryRelease: "abc123",
-    siteUrl: "https://sayfoil.com"
+    siteUrl: "https://sayfoil.com",
   });
 
   harness.context.window.Sentry = {
@@ -97,28 +115,71 @@ function assertSentryPrivacyConfigWithDsn() {
     },
     setTag(key, value) {
       tags.set(key, value);
-    }
+    },
   };
 
   runObservability(harness.context);
 
   const [script] = harness.appendedScripts;
-  assert(script?.src === "https://browser.sentry-cdn.com/10.42.0/bundle.min.js", "Sentry SDK URL must use the errors-only CDN bundle");
-  assert(script?.integrity?.startsWith("sha384-"), "Sentry SDK must pin an integrity hash");
-  assert(script?.crossOrigin === "anonymous", "Sentry SDK must set crossOrigin=anonymous");
+  assert(
+    script?.src === "https://browser.sentry-cdn.com/10.42.0/bundle.min.js",
+    "Sentry SDK URL must use the errors-only CDN bundle",
+  );
+  assert(
+    script?.integrity?.startsWith("sha384-"),
+    "Sentry SDK must pin an integrity hash",
+  );
+  assert(
+    script?.crossOrigin === "anonymous",
+    "Sentry SDK must set crossOrigin=anonymous",
+  );
   script.onload();
 
-  assert(initOptions?.dsn === "https://public@example.ingest.sentry.io/123456", "Sentry init must use configured DSN");
-  assert(initOptions?.environment === "preview", "Sentry environment must use configured environment");
-  assert(initOptions?.release === "abc123", "Sentry release must use configured release");
-  assert(initOptions?.sendDefaultPii === false, "Sentry must not send default PII");
-  assert(initOptions?.tracesSampleRate === 0, "Sentry tracing must be disabled");
-  assert(initOptions?.replaysSessionSampleRate === 0, "Sentry session replay must be disabled");
-  assert(initOptions?.replaysOnErrorSampleRate === 0, "Sentry error replay must be disabled");
-  assert(typeof initOptions?.beforeBreadcrumb === "function" && initOptions.beforeBreadcrumb({}) === null, "Sentry breadcrumbs must be dropped");
-  assert(typeof initOptions?.beforeSend === "function", "Sentry must configure beforeSend scrubbing");
-  assert(tags.get("product") === "foil", "Sentry events must be tagged with product=foil");
-  assert(tags.get("site_url") === "https://sayfoil.com", "Sentry events must be tagged with configured site_url");
+  assert(
+    initOptions?.dsn === "https://public@example.ingest.sentry.io/123456",
+    "Sentry init must use configured DSN",
+  );
+  assert(
+    initOptions?.environment === "preview",
+    "Sentry environment must use configured environment",
+  );
+  assert(
+    initOptions?.release === "abc123",
+    "Sentry release must use configured release",
+  );
+  assert(
+    initOptions?.sendDefaultPii === false,
+    "Sentry must not send default PII",
+  );
+  assert(
+    initOptions?.tracesSampleRate === 0,
+    "Sentry tracing must be disabled",
+  );
+  assert(
+    initOptions?.replaysSessionSampleRate === 0,
+    "Sentry session replay must be disabled",
+  );
+  assert(
+    initOptions?.replaysOnErrorSampleRate === 0,
+    "Sentry error replay must be disabled",
+  );
+  assert(
+    typeof initOptions?.beforeBreadcrumb === "function" &&
+      initOptions.beforeBreadcrumb({}) === null,
+    "Sentry breadcrumbs must be dropped",
+  );
+  assert(
+    typeof initOptions?.beforeSend === "function",
+    "Sentry must configure beforeSend scrubbing",
+  );
+  assert(
+    tags.get("product") === "foil",
+    "Sentry events must be tagged with product=foil",
+  );
+  assert(
+    tags.get("site_url") === "https://sayfoil.com",
+    "Sentry events must be tagged with configured site_url",
+  );
 
   const scrubbed = initOptions.beforeSend({
     user: { email: "person@example.com" },
@@ -126,29 +187,45 @@ function assertSentryPrivacyConfigWithDsn() {
       url: "https://sayfoil.com/?token=secret#fragment",
       headers: { authorization: "Bearer secret" },
       cookies: "secret",
-      data: { transcript: "sensitive dictated text" }
+      data: { transcript: "sensitive dictated text" },
     },
     contexts: {
       trace: { trace_id: "abc" },
-      device: { model: "Mac" }
+      device: { model: "Mac" },
     },
     extra: {
       transcriptText: "sensitive dictated text",
       apiKey: "sk_secret_value",
-      safe: "support@example.com"
+      safe: "support@example.com",
     },
-    breadcrumbs: [{ message: "clicked" }]
+    breadcrumbs: [{ message: "clicked" }],
   });
 
   const serialized = JSON.stringify(scrubbed);
-  assert(!serialized.match(/person@example|support@example|secret|sensitive dictated|authorization|cookie|trace_id/i), "Sentry scrubber must remove sensitive values");
-  assert(scrubbed.request.url === "https://sayfoil.com/", "Sentry scrubber must strip query strings and fragments");
-  assert(Array.isArray(scrubbed.breadcrumbs) && scrubbed.breadcrumbs.length === 0, "Sentry scrubber must drop breadcrumbs");
-  assert(scrubbed.contexts.device.model === "Mac", "Sentry scrubber should preserve non-sensitive context");
+  assert(
+    !serialized.match(
+      /person@example|support@example|secret|sensitive dictated|authorization|cookie|trace_id/i,
+    ),
+    "Sentry scrubber must remove sensitive values",
+  );
+  assert(
+    scrubbed.request.url === "https://sayfoil.com/",
+    "Sentry scrubber must strip query strings and fragments",
+  );
+  assert(
+    Array.isArray(scrubbed.breadcrumbs) && scrubbed.breadcrumbs.length === 0,
+    "Sentry scrubber must drop breadcrumbs",
+  );
+  assert(
+    scrubbed.contexts.device.model === "Mac",
+    "Sentry scrubber should preserve non-sensitive context",
+  );
 }
 
 function runObservability(context) {
-  new Script(observabilitySource, { filename: "observability.js" }).runInContext(context);
+  new Script(observabilitySource, {
+    filename: "observability.js",
+  }).runInContext(context);
 }
 
 function createHarness(config) {
@@ -157,13 +234,13 @@ function createHarness(config) {
     URL,
     window: {
       FOIL_ANALYTICS_CONFIG: config,
-      location: { origin: "https://sayfoil.com" }
+      location: { origin: "https://sayfoil.com" },
     },
     document: {
       head: {
         appendChild(script) {
           appendedScripts.push(script);
-        }
+        },
       },
       createElement(tagName) {
         return {
@@ -172,10 +249,10 @@ function createHarness(config) {
           src: "",
           integrity: "",
           crossOrigin: "",
-          onload: null
+          onload: null,
         };
-      }
-    }
+      },
+    },
   });
 
   return { appendedScripts, context };
