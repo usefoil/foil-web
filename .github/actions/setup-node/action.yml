@@ -1,0 +1,21 @@
+name: Set up Node.js and install dependencies
+description: Install the repository Node.js version and locked dependencies.
+
+inputs:
+  node-version:
+    description: Node.js version to install
+    required: false
+    default: "22"
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Node.js
+      uses: actions/setup-node@53b83991c080dac38cc14d2f43b5a2644e99d747 # v6.3.0
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: npm
+
+    - name: Install dependencies
+      shell: bash
+      run: npm ci

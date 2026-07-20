@@ -5,6 +5,13 @@
   "description": "Static landing page and SEO content for Foil.",
   "scripts": {
     "build": "node scripts/build.mjs",
+    "lint": "npm run lint:js && npm run lint:css && npm run lint:html",
+    "lint:js": "eslint . --cache --cache-location .eslintcache --max-warnings=0",
+    "lint:css": "stylelint \"styles.css\"",
+    "lint:html": "html-validate \"index.html\" \"privacy/**/*.html\" \"blog/**/*.html\"",
+    "format": "prettier --write package.json vercel.json \"*.config.mjs\" \".github/**/*.{yml,yaml}\"",
+    "format:check": "prettier --check package.json vercel.json \"*.config.mjs\" \".github/**/*.{yml,yaml}\"",
+    "knip": "knip --production",
     "check:analytics": "node scripts/check-analytics.mjs",
     "check:blog": "node scripts/check-blog.mjs",
     "check:capture": "node scripts/check-capture.mjs",
@@ -15,9 +22,20 @@
     "check:seo": "node scripts/check-seo.mjs",
     "check:launch": "npm run build && node scripts/check-launch.mjs && npm run check:seo && npm run check:analytics && npm run check:blog && npm run check:capture && npm run check:install && npm run check:observability && npm run check:privacy",
     "check:release": "node scripts/check-release-drift.mjs",
+    "quality": "npm run lint && npm run format:check && npm run knip && npm run check:launch",
     "serve": "python3 -m http.server 4173"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.7.0",
+    "globals": "^17.7.0",
+    "html-validate": "^11.5.6",
+    "knip": "^6.26.0",
+    "prettier": "^3.9.5",
+    "stylelint": "^17.14.0",
+    "stylelint-config-standard": "^40.0.0"
   }
 }

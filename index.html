@@ -51,7 +51,7 @@
         <div class="hero-copy">
           <h1 id="hero-title">A dictation app that understands where your words are going.</h1>
           <p class="hero-lede">Open-source Mac dictation with local and self-hosted options.</p>
-          <div class="hero-actions" aria-label="Install actions">
+          <div class="hero-actions" role="group" aria-label="Install actions">
             <a
               class="button primary"
               href="#install"
@@ -73,7 +73,7 @@
           <p class="compatibility">Beta for macOS 14+ · Apple Silicon and Intel</p>
         </div>
 
-        <div class="hero-visual" aria-label="Foil dictation routing animation">
+        <div class="hero-visual">
           <figure class="hero-walkthrough">
             <video
               autoplay
@@ -83,12 +83,12 @@
               poster="assets/videos/foil-dictation-brain-poster.png"
               width="1600"
               height="900"
-              aria-label="Animation showing Foil routing dictation for people, agents, apps, and providers"
+              aria-describedby="hero-walkthrough-caption"
             >
               <source src="assets/videos/foil-dictation-brain.webm" type="video/webm">
               <source src="assets/videos/foil-dictation-brain.mp4" type="video/mp4">
             </video>
-            <figcaption>Foil capture, providers, app-specific style, history, and usage insight in a 27-second walkthrough.</figcaption>
+            <figcaption id="hero-walkthrough-caption">Foil capture, providers, app-specific style, history, and usage insight in a 27-second walkthrough.</figcaption>
           </figure>
         </div>
       </section>
@@ -104,7 +104,7 @@
             <p class="detail-kicker">Core loop</p>
             <h3>Dictate without switching context.</h3>
             <p>Hold a key, speak, release. Foil transcribes, applies the right app policy, and puts the result where you were typing.</p>
-            <div class="feature-tags" aria-label="Capture options">
+            <div class="feature-tags" role="group" aria-label="Capture options">
               <span>Hold-to-record</span>
               <span>Toggle mode</span>
               <span>Custom hotkeys</span>
