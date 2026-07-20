@@ -13,18 +13,12 @@ const release = {
   dmgName: "Foil-1.13.11-macos.dmg",
   dmgSize: 3336613,
   sha256: "4805e6ca60d7bc8597673dbbee89289997363a8c4fe2e0b6c428c6d245fecd57",
-  releaseRepo: "https://github.com/usefoil/foil",
+  releaseRepo: "https://github.com/usefoil/foil"
 };
 
-const latestRelease = await fetchJson(
-  "https://api.github.com/repos/usefoil/foil/releases/latest",
-);
-const cask = await fetchText(
-  "https://raw.githubusercontent.com/mean-weasel/homebrew-foil/main/Casks/foil.rb",
-);
-const checksum = await fetchText(
-  `${release.releaseRepo}/releases/download/${release.tag}/${release.dmgName}.sha256`,
-);
+const latestRelease = await fetchJson("https://api.github.com/repos/usefoil/foil/releases/latest");
+const cask = await fetchText("https://raw.githubusercontent.com/mean-weasel/homebrew-foil/main/Casks/foil.rb");
+const checksum = await fetchText(`${release.releaseRepo}/releases/download/${release.tag}/${release.dmgName}.sha256`);
 const docsAndChecks = await readDocsAndChecks();
 
 checkGitHubRelease(latestRelease);
@@ -37,60 +31,28 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(
-  `Release drift check passed for ${release.tag}, ${release.dmgName}, and Homebrew cask ${release.version}.`,
-);
+console.log(`Release drift check passed for ${release.tag}, ${release.dmgName}, and Homebrew cask ${release.version}.`);
 
 function checkGitHubRelease(latest) {
-  assert(
-    latest.tag_name === release.tag,
-    `GitHub latest release is ${latest.tag_name}; update web install copy/checks from ${release.tag}`,
-  );
-  assert(
-    latest.name === release.name,
-    `GitHub latest release name is ${latest.name}; expected ${release.name}`,
-  );
-  assert(
-    String(latest.published_at || "").startsWith(release.publishedDate),
-    `GitHub release published_at is ${latest.published_at}; expected ${release.publishedDate}`,
-  );
+  assert(latest.tag_name === release.tag, `GitHub latest release is ${latest.tag_name}; update web install copy/checks from ${release.tag}`);
+  assert(latest.name === release.name, `GitHub latest release name is ${latest.name}; expected ${release.name}`);
+  assert(String(latest.published_at || "").startsWith(release.publishedDate), `GitHub release published_at is ${latest.published_at}; expected ${release.publishedDate}`);
 
   const dmg = latest.assets?.find((asset) => asset.name === release.dmgName);
-  const checksumAsset = latest.assets?.find(
-    (asset) => asset.name === `${release.dmgName}.sha256`,
-  );
+  const checksumAsset = latest.assets?.find((asset) => asset.name === `${release.dmgName}.sha256`);
 
-  assert(
-    Boolean(dmg),
-    `GitHub latest release is missing DMG asset ${release.dmgName}`,
-  );
-  assert(
-    Boolean(checksumAsset),
-    `GitHub latest release is missing checksum asset ${release.dmgName}.sha256`,
-  );
+  assert(Boolean(dmg), `GitHub latest release is missing DMG asset ${release.dmgName}`);
+  assert(Boolean(checksumAsset), `GitHub latest release is missing checksum asset ${release.dmgName}.sha256`);
 
   if (dmg) {
-    assert(
-      dmg.size === release.dmgSize,
-      `GitHub DMG size is ${dmg.size}; expected ${release.dmgSize}`,
-    );
-    assert(
-      dmg.browser_download_url ===
-        `${release.releaseRepo}/releases/download/${release.tag}/${release.dmgName}`,
-      `GitHub DMG URL changed: ${dmg.browser_download_url}`,
-    );
+    assert(dmg.size === release.dmgSize, `GitHub DMG size is ${dmg.size}; expected ${release.dmgSize}`);
+    assert(dmg.browser_download_url === `${release.releaseRepo}/releases/download/${release.tag}/${release.dmgName}`, `GitHub DMG URL changed: ${dmg.browser_download_url}`);
   }
 }
 
 function checkChecksumAsset(text) {
-  assert(
-    text.includes(release.sha256),
-    "GitHub checksum asset does not include the pinned DMG SHA-256",
-  );
-  assert(
-    text.includes(release.dmgName),
-    "GitHub checksum asset does not name the pinned DMG",
-  );
+  assert(text.includes(release.sha256), "GitHub checksum asset does not include the pinned DMG SHA-256");
+  assert(text.includes(release.dmgName), "GitHub checksum asset does not name the pinned DMG");
 }
 
 function checkHomebrewCask(text) {
@@ -98,18 +60,9 @@ function checkHomebrewCask(text) {
   const sha256 = matchOne(text, /sha256 "([^"]+)"/, "Homebrew cask sha256");
   const url = matchOne(text, /url "([^"]+)"/, "Homebrew cask URL");
 
-  assert(
-    version === release.version,
-    `Homebrew cask version is ${version}; expected ${release.version}`,
-  );
-  assert(
-    sha256 === release.sha256,
-    `Homebrew cask SHA-256 is ${sha256}; expected ${release.sha256}`,
-  );
-  assert(
-    url.endsWith(`/releases/download/${release.tag}/${release.dmgName}`),
-    `Homebrew cask URL does not point at ${release.tag}/${release.dmgName}`,
-  );
+  assert(version === release.version, `Homebrew cask version is ${version}; expected ${release.version}`);
+  assert(sha256 === release.sha256, `Homebrew cask SHA-256 is ${sha256}; expected ${release.sha256}`);
+  assert(url.endsWith(`/releases/download/${release.tag}/${release.dmgName}`), `Homebrew cask URL does not point at ${release.tag}/${release.dmgName}`);
 }
 
 function checkLocalReleaseSurfaces(text) {
@@ -121,12 +74,9 @@ function checkLocalReleaseSurfaces(text) {
     String(release.dmgSize),
     release.sha256,
     `${release.sha256.slice(0, 8)}...${release.sha256.slice(-7)}`,
-    `${release.releaseRepo}/releases/download/${release.tag}/${release.dmgName}.sha256`,
+    `${release.releaseRepo}/releases/download/${release.tag}/${release.dmgName}.sha256`
   ]) {
-    assert(
-      text.includes(requiredText),
-      `local install surface missing ${requiredText}`,
-    );
+    assert(text.includes(requiredText), `local install surface missing ${requiredText}`);
   }
 }
 
@@ -136,11 +86,9 @@ async function readDocsAndChecks() {
     "docs/install-download.md",
     "scripts/check-install.mjs",
     "scripts/check-launch.mjs",
-    "scripts/check-deployed.mjs",
+    "scripts/check-deployed.mjs"
   ];
-  const values = await Promise.all(
-    paths.map((path) => readFile(join(root, path), "utf8")),
-  );
+  const values = await Promise.all(paths.map((path) => readFile(join(root, path), "utf8")));
   return values.join("\n");
 }
 
@@ -157,10 +105,10 @@ async function fetchText(url, headers = {}) {
     const response = await fetch(url, {
       headers: {
         "user-agent": "foil-web-release-drift-check",
-        ...headers,
+        ...headers
       },
       redirect: "follow",
-      signal: controller.signal,
+      signal: controller.signal
     });
 
     const body = await response.text();

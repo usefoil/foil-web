@@ -6,11 +6,11 @@ const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const failures = [];
 const privacy = await readText("privacy/index.html");
 const privacyChecklist = await readText("docs/privacy-launch.md");
-const supportingDocs = await Promise.all(
-  ["docs/analytics.md", "docs/observability.md", "docs/capture.md"].map(
-    readText,
-  ),
-);
+const supportingDocs = await Promise.all([
+  "docs/analytics.md",
+  "docs/observability.md",
+  "docs/capture.md"
+].map(readText));
 const publicText = normalizeText(privacy);
 
 for (const requiredText of [
@@ -49,12 +49,9 @@ for (const requiredText of [
   "Mac app data",
   "macOS Keychain",
   "Transcription history is local to the Mac",
-  "bridge reliability work linked from the landing page is future-facing",
+  "bridge reliability work linked from the landing page is future-facing"
 ]) {
-  assert(
-    publicText.includes(requiredText),
-    `privacy page missing ${requiredText}`,
-  );
+  assert(publicText.includes(requiredText), `privacy page missing ${requiredText}`);
 }
 
 for (const requiredText of [
@@ -63,37 +60,18 @@ for (const requiredText of [
   "Sentry browser error monitoring is not enabled for launch",
   "Supabase capture is not used",
   "Bridge reliability work is future-facing",
-  "npm run check:privacy",
+  "npm run check:privacy"
 ]) {
-  assert(
-    privacyChecklist.includes(requiredText),
-    `privacy checklist missing ${requiredText}`,
-  );
+  assert(privacyChecklist.includes(requiredText), `privacy checklist missing ${requiredText}`);
 }
 
 for (const docText of supportingDocs) {
-  assert(
-    docText.includes("privacy") || docText.includes("Privacy"),
-    "supporting service doc must mention privacy posture",
-  );
+  assert(docText.includes("privacy") || docText.includes("Privacy"), "supporting service doc must mention privacy posture");
 }
 
-assert(
-  !/bridge[^.]{0,90}\b(shipped|released|available|download|install)\b/i.test(
-    publicText,
-  ),
-  "privacy page must not imply bridge availability",
-);
-assert(
-  !/Sentry[^.]{0,120}\b(session replay|performance tracing)\b[^.]{0,80}\b(enabled|on|captured)\b/i.test(
-    publicText,
-  ),
-  "privacy page must not imply replay/tracing is enabled",
-);
-assert(
-  !/Supabase[^.]{0,120}\b(writes|stores|captures|collects)\b/i.test(publicText),
-  "privacy page must not imply Supabase capture is active",
-);
+assert(!/bridge[^.]{0,90}\b(shipped|released|available|download|install)\b/i.test(publicText), "privacy page must not imply bridge availability");
+assert(!/Sentry[^.]{0,120}\b(session replay|performance tracing)\b[^.]{0,80}\b(enabled|on|captured)\b/i.test(publicText), "privacy page must not imply replay/tracing is enabled");
+assert(!/Supabase[^.]{0,120}\b(writes|stores|captures|collects)\b/i.test(publicText), "privacy page must not imply Supabase capture is active");
 
 if (failures.length) {
   console.error(failures.map((failure) => `- ${failure}`).join("\n"));
