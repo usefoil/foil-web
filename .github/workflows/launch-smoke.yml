@@ -45,7 +45,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Check out repository
-        uses: actions/checkout@9c091bbd1dca4a2bd86d70a4b8322947e7f37ba1 # v7.0.0
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Set up Node.js and install dependencies
         uses: ./.github/actions/setup-node
