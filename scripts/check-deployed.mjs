@@ -153,7 +153,7 @@ async function checkLocalReferences(pagePath, body) {
 function checkLaunchSurface(allHtml) {
   assert(!/mean-weasel\.github\.io\/foil|usefoil\.github\.io\/foil/i.test(allHtml), "deployed HTML contains a stale GitHub Pages canonical URL");
   assert(!/bridge[^.]{0,90}\b(shipped|released|available|download|install)\b/i.test(allHtml), "deployed HTML contains possible unsupported bridge availability claim");
-  assert(allHtml.includes("Foil 1.13.11"), "deployed install trust copy must mention current release Foil 1.13.11");
+  assert(allHtml.includes("Foil 1.13.13"), "deployed install trust copy must mention current release Foil 1.13.13");
   assert(allHtml.includes("assets/screenshots/foil-app-transcription-provider.png"), "deployed home page must include current Transcription provider app shell screenshot");
   assert(allHtml.includes("assets/videos/foil-dictation-brain.mp4"), "deployed home page must include the Foil hero walkthrough MP4");
   assert(allHtml.includes("assets/videos/foil-dictation-brain.webm"), "deployed home page must include the Foil hero walkthrough WebM");

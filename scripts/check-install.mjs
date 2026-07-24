@@ -5,12 +5,12 @@ import { fileURLToPath } from "node:url";
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const failures = [];
 const release = {
-  version: "1.13.11",
-  tag: "v1.13.11",
-  published: "July 6, 2026",
-  dmgName: "Foil-1.13.11-macos.dmg",
-  dmgSize: "3336613",
-  sha256: "4805e6ca60d7bc8597673dbbee89289997363a8c4fe2e0b6c428c6d245fecd57",
+  version: "1.13.13",
+  tag: "v1.13.13",
+  published: "July 22, 2026",
+  dmgName: "Foil-1.13.13-macos.dmg",
+  dmgSize: "3425824",
+  sha256: "33f682b44b558f84f26622536fe7b162fece6053afb5fe4c38f01e58451d2e79",
   tapRepo: "https://github.com/mean-weasel/homebrew-foil",
   tapCommand: "brew tap mean-weasel/foil https://github.com/mean-weasel/homebrew-foil",
   caskCommand: "brew install --cask foil",
@@ -40,12 +40,12 @@ for (const requiredText of [
   "GitHub Releases",
   "Homebrew",
   "signed, notarized, Sparkle update-signed macOS DMG",
-  "public beta",
+  "primary install path",
   "manual DMG",
   "mean-weasel/foil",
   "usefoil/foil",
   "HTTP 200",
-  "content-length: 3336613"
+  "content-length: 3425824"
 ]) {
   assert(allText.includes(requiredText), `install trust surface missing ${requiredText}`);
 }
