@@ -13,9 +13,9 @@ const requiredEvents = [
   "blog_cta_click"
 ];
 const currentRelease = {
-  version: "1.13.11",
-  tag: "v1.13.11",
-  dmgSha256: "4805e6ca60d7bc8597673dbbee89289997363a8c4fe2e0b6c428c6d245fecd57"
+  version: "1.13.13",
+  tag: "v1.13.13",
+  dmgSha256: "33f682b44b558f84f26622536fe7b162fece6053afb5fe4c38f01e58451d2e79"
 };
 
 const htmlFiles = [
