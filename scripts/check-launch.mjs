@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dist = join(root, "dist");
-const siteUrl = normalizeSiteUrl(process.env.SITE_URL || "https://sayfoil.com");
+const siteUrl = normalizeSiteUrl(process.env.SITE_URL || "https://foil.neonwatty.com");
 const requiredEvents = [
   "install_click",
   "dmg_click",
@@ -158,5 +158,5 @@ function assert(condition, message) {
 }
 
 function normalizeSiteUrl(value) {
-  return String(value || "https://sayfoil.com").replace(/\/$/, "");
+  return String(value || "https://foil.neonwatty.com").replace(/\/$/, "");
 }

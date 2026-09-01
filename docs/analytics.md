@@ -6,7 +6,7 @@ Foil web analytics are intentionally narrow. The landing page should measure con
 
 - `POSTHOG_KEY`: required to enable PostHog. When unset, `analytics.js` exits without loading the SDK.
 - `POSTHOG_HOST`: optional, defaults to `https://us.i.posthog.com`.
-- `SITE_URL`: canonical production URL, defaults to `https://sayfoil.com`.
+- `SITE_URL`: canonical production URL, defaults to `https://foil.neonwatty.com`.
 - `FOIL_ANALYTICS_ENV`: optional event environment label.
 
 Production is wired to the shared PostHog project `BugDrop + Foil` (`422537`)
@@ -24,8 +24,9 @@ Launch conversion tracking lives in the shared PostHog project dashboard
 
 - Dashboard URL: `https://us.posthog.com/project/422537/dashboard/1696677`
 - Dashboard ID: `1696677`
-- Required Foil filters: `product=foil`, `site_url=https://sayfoil.com`, and
-  `environment=production`
+- Required Foil filters: `product=foil`, `site_url=https://foil.neonwatty.com`,
+  and `environment=production`. Include the historical
+  `site_url=https://sayfoil.com` value when querying across the domain migration.
 - Primary breakdowns: event name, `page_path`, `location`, `label`, and
   `destination`
 

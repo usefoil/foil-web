@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sayfoil.com/sitemap.xml
+Sitemap: https://foil.neonwatty.com/sitemap.xml

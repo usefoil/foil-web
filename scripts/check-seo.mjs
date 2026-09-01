@@ -17,6 +17,17 @@ const failures = [];
 const titles = new Set();
 const descriptions = new Set();
 
+const vercelConfig = JSON.parse(await readFile(join(root, "vercel.json"), "utf8"));
+for (const legacyHost of ["sayfoil.com", "www.sayfoil.com"]) {
+  const redirect = vercelConfig.redirects?.find(
+    (entry) => entry.has?.some((condition) => condition.type === "host" && condition.value === legacyHost)
+  );
+
+  assert(Boolean(redirect), `vercel.json must redirect legacy host ${legacyHost}`);
+  assert(redirect?.destination === "https://foil.neonwatty.com/:path", `${legacyHost} must preserve paths on the canonical host`);
+  assert(redirect?.permanent === true, `${legacyHost} redirect must be permanent`);
+}
+
 for (const page of pages) {
   const html = await readFile(join(root, page), "utf8");
   const title = one(html, /<title>([^<]+)<\/title>/g, page, "title");
@@ -39,8 +50,8 @@ for (const page of pages) {
     `${page} description must not be empty`,
   );
   assert(
-    canonical?.startsWith("https://sayfoil.com/"),
-    `${page} canonical must use sayfoil.com`,
+    canonical?.startsWith("https://foil.neonwatty.com/"),
+    `${page} canonical must use foil.neonwatty.com`,
   );
   assert(count(html, /<h1\b/g) === 1, `${page} must contain exactly one h1`);
 
@@ -81,7 +92,7 @@ assert(
   "homepage must allow large image previews",
 );
 assert(
-  homepage.includes("https://sayfoil.com/assets/foil-social-card.png"),
+  homepage.includes("https://foil.neonwatty.com/assets/foil-social-card.png"),
   "homepage must use the dedicated social card",
 );
 for (const name of [

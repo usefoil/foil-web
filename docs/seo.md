@@ -1,6 +1,22 @@
 # Foil Web SEO Operations
 
-Foil web uses `https://sayfoil.com` as the production canonical URL.
+Foil web uses `https://foil.neonwatty.com` as the production canonical URL.
+The legacy `sayfoil.com` and `www.sayfoil.com` hosts permanently redirect each
+request to the matching path on the canonical subdomain.
+
+## September 2026 Domain Migration
+
+- Preserve every existing path while moving the canonical origin from
+  `https://sayfoil.com` to `https://foil.neonwatty.com`.
+- Keep the existing `sayfoil.com` Search Console property and DNS verification
+  record so redirect and historical indexing data remain inspectable.
+- The `sc-domain:neonwatty.com` property covers the new Foil subdomain. Submit
+  `https://foil.neonwatty.com/sitemap.xml` after the first production deploy.
+- Keep the permanent redirects indefinitely and verify that both apex and `www`
+  return a single redirect hop to the matching canonical path.
+
+The receipts below describe the original June 2026 `sayfoil.com` launch and are
+retained as migration history.
 
 ## Google Search Console
 

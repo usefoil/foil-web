@@ -21,7 +21,7 @@ on:
       site_url:
         description: "Expected canonical URL for deployed smoke"
         required: false
-        default: "https://sayfoil.com"
+        default: "https://foil.neonwatty.com"
         type: string
       expect_posthog:
         description: "Assert deployed PostHog public config"
@@ -57,7 +57,7 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.smoke_url != '' }}
         env:
           SMOKE_URL: ${{ inputs.smoke_url }}
-          SITE_URL: ${{ inputs.site_url || 'https://sayfoil.com' }}
+          SITE_URL: ${{ inputs.site_url || 'https://foil.neonwatty.com' }}
           EXPECT_POSTHOG: ${{ inputs.expect_posthog && '1' || '' }}
           EXPECTED_ANALYTICS_ENV: ${{ inputs.expected_analytics_env }}
           EXPECT_SENTRY: ${{ inputs.expect_sentry && '1' || '' }}

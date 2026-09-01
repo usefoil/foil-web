@@ -27,7 +27,7 @@ function assertPrivacyConfigAndEventsWithKey() {
   const harness = createHarness({
     posthogKey: "ph_test_key",
     posthogHost: "https://us.i.posthog.com",
-    siteUrl: "https://sayfoil.com",
+    siteUrl: "https://foil.neonwatty.com",
     environment: "preview"
   });
 
@@ -79,7 +79,7 @@ function assertPrivacyConfigAndEventsWithKey() {
     const propertyNames = Object.keys(capture.properties);
     assert(propertyNames.every((propertyName) => allowedProperties.has(propertyName)), `${capture.eventName} includes unexpected property`);
     assert(capture.properties.product === "foil", `${capture.eventName} must include product identifier`);
-    assert(capture.properties.site_url === "https://sayfoil.com", `${capture.eventName} must include configured site_url`);
+    assert(capture.properties.site_url === "https://foil.neonwatty.com", `${capture.eventName} must include configured site_url`);
     assert(capture.properties.page_path === "/launch-test", `${capture.eventName} must include page_path`);
     assert(capture.properties.environment === "preview", `${capture.eventName} must include configured environment`);
     assert(!JSON.stringify(capture.properties).match(/transcript|clipboard|api[_ -]?key|email|password/i), `${capture.eventName} includes sensitive-looking data`);
@@ -100,7 +100,7 @@ function createHarness(config) {
         analyticsLocation: location,
         analyticsLabel: `label-${index}`
       },
-      `https://sayfoil.com/test-${index}`
+      `https://foil.neonwatty.com/test-${index}`
     );
   });
 

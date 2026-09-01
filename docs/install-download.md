@@ -1,7 +1,8 @@
 # Foil Install And Download Trust
 
-This document records the launch install surface that `sayfoil.com` points
-people toward.
+This document records the launch install surface that `foil.neonwatty.com`
+points people toward. The legacy `sayfoil.com` domain redirects to the same
+path on the canonical subdomain.
 
 ## Current Public Release
 
