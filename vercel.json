@@ -3,6 +3,20 @@
   "outputDirectory": "dist",
   "cleanUrls": true,
   "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/:path(.*)",
+      "has": [{ "type": "host", "value": "sayfoil.com" }],
+      "destination": "https://foil.neonwatty.com/:path",
+      "permanent": true
+    },
+    {
+      "source": "/:path(.*)",
+      "has": [{ "type": "host", "value": "www.sayfoil.com" }],
+      "destination": "https://foil.neonwatty.com/:path",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",

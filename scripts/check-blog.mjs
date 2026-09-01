@@ -25,12 +25,12 @@ for (const file of htmlFiles) {
   const isIndex = relativePath === "blog/index.html";
   const ctaLinks = [...html.matchAll(/<a\b[^>]*data-analytics-event="blog_cta_click"[^>]*>/g)].map((match) => match[0]);
 
-  assert(hasOne(html, /<link rel="canonical" href="https:\/\/sayfoil\.com\/blog\/[^"]*">/g), `${relativePath} must have one blog canonical`);
+  assert(hasOne(html, /<link rel="canonical" href="https:\/\/foil\.neonwatty\.com\/blog\/[^"]*">/g), `${relativePath} must have one blog canonical`);
   assert(hasOne(html, /<meta\s+name="description"\s+content="[^"]+"\s*>/g), `${relativePath} must have one meta description`);
   assert(hasOne(html, /<meta property="og:title" content="[^"]+">/g), `${relativePath} must have one og:title`);
   assert(hasOne(html, /<meta property="og:description" content="[^"]+">/g), `${relativePath} must have one og:description`);
-  assert(hasOne(html, /<meta property="og:url" content="https:\/\/sayfoil\.com\/blog\/[^"]*">/g), `${relativePath} must have one og:url`);
-  assert(hasOne(html, /<meta property="og:image" content="https:\/\/sayfoil\.com\/assets\/[^"]+">/g), `${relativePath} must have one absolute og:image`);
+  assert(hasOne(html, /<meta property="og:url" content="https:\/\/foil\.neonwatty\.com\/blog\/[^"]*">/g), `${relativePath} must have one og:url`);
+  assert(hasOne(html, /<meta property="og:image" content="https:\/\/foil\.neonwatty\.com\/assets\/[^"]+">/g), `${relativePath} must have one absolute og:image`);
   assert(hasOne(html, /<meta name="twitter:card" content="summary_large_image">/g), `${relativePath} must have one Twitter card`);
   assert(html.includes('data-analytics-event="blog_cta_click"'), `${relativePath} must include a blog CTA analytics hook`);
   assert(ctaLinks.every((link) => link.includes('data-analytics-label="')), `${relativePath} blog CTA links must have stable labels`);

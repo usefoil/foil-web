@@ -36,7 +36,7 @@ SMOKE_URL=https://your-preview.example npm run check:deployed
 For production, include the analytics assertion:
 
 ```sh
-EXPECT_POSTHOG=1 EXPECTED_ANALYTICS_ENV=production SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com npm run check:deployed
+EXPECT_POSTHOG=1 EXPECTED_ANALYTICS_ENV=production SMOKE_URL=https://foil.neonwatty.com SITE_URL=https://foil.neonwatty.com npm run check:deployed
 ```
 
 The deployed smoke fetches the live launch page inventory, verifies
@@ -48,21 +48,23 @@ Sentry is intentionally not required for the current web launch. If it is
 activated later, include the Sentry assertion too:
 
 ```sh
-EXPECT_POSTHOG=1 EXPECT_SENTRY=1 EXPECTED_ANALYTICS_ENV=production SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com npm run check:deployed
+EXPECT_POSTHOG=1 EXPECT_SENTRY=1 EXPECTED_ANALYTICS_ENV=production SMOKE_URL=https://foil.neonwatty.com SITE_URL=https://foil.neonwatty.com npm run check:deployed
 ```
 
 ## Deployment Notes
 
 - Intended host: Vercel
 - Analytics target: PostHog project `BugDrop + Foil` (`422537`)
-- Production canonical default: `https://sayfoil.com`
+- Production canonical default: `https://foil.neonwatty.com`
 - Vercel build command: `npm run build`
 - Vercel output directory: `dist`
 - Set `SITE_URL` if production moves to another canonical domain.
 - Set `POSTHOG_KEY` and optional `POSTHOG_HOST` to enable analytics. When
   `POSTHOG_KEY` is unset, the analytics script exits without loading PostHog.
   Production Vercel currently sets `POSTHOG_KEY`, `POSTHOG_HOST`,
-  `SITE_URL=https://sayfoil.com`, and `FOIL_ANALYTICS_ENV=production`.
+  `SITE_URL=https://foil.neonwatty.com`, and `FOIL_ANALYTICS_ENV=production`.
+- `sayfoil.com` and `www.sayfoil.com` remain attached to the Vercel project and
+  permanently redirect matching paths to the canonical subdomain.
 - Sentry is not enabled for the current web launch. Leave `SENTRY_DSN` unset
   unless browser error monitoring is deliberately activated later; without a
   DSN, the observability script exits without loading Sentry. See

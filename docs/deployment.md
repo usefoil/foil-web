@@ -5,7 +5,8 @@ Foil web deploys to Vercel from the GitHub repository `usefoil/foil-web`.
 ## Vercel Project
 
 - Vercel project: `jermwatts-projects/foil-web`
-- Production domains: `https://sayfoil.com` and `https://www.sayfoil.com`
+- Canonical production domain: `https://foil.neonwatty.com`
+- Redirect-only legacy domains: `https://sayfoil.com` and `https://www.sayfoil.com`
 - Build command: `npm run build`
 - Output directory: `dist`
 - Git repository: `usefoil/foil-web`
@@ -23,7 +24,7 @@ receipt, or configure an approved preview bypass before running external smoke.
 
 Production Vercel environment variables currently include:
 
-- `SITE_URL=https://sayfoil.com`
+- `SITE_URL=https://foil.neonwatty.com`
 - `FOIL_ANALYTICS_ENV=production`
 - `POSTHOG_HOST=https://us.i.posthog.com`
 - `POSTHOG_KEY`, set in Vercel and not committed to the repo
@@ -100,7 +101,7 @@ dimensions, codec, and SHA-256 values.
 Run strict production smoke after a production deploy:
 
 ```sh
-EXPECT_POSTHOG=1 EXPECTED_ANALYTICS_ENV=production SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com npm run check:deployed
+EXPECT_POSTHOG=1 EXPECTED_ANALYTICS_ENV=production SMOKE_URL=https://foil.neonwatty.com SITE_URL=https://foil.neonwatty.com npm run check:deployed
 ```
 
 The strict production smoke proves the live launch page inventory, canonical
@@ -114,8 +115,8 @@ public Sentry config and privacy disclosure.
 The `Launch Smoke` GitHub Actions workflow also supports a manual dispatch for
 deployed smoke. Use:
 
-- `smoke_url=https://sayfoil.com`
-- `site_url=https://sayfoil.com`
+- `smoke_url=https://foil.neonwatty.com`
+- `site_url=https://foil.neonwatty.com`
 - `expect_posthog=true`
 - `expected_analytics_env=production`
 - `expect_sentry=false` unless production Sentry is intentionally configured

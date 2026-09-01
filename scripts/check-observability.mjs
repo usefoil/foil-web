@@ -88,7 +88,7 @@ function assertSentryPrivacyConfigWithDsn() {
     sentryDsn: "https://public@example.ingest.sentry.io/123456",
     sentryEnvironment: "preview",
     sentryRelease: "abc123",
-    siteUrl: "https://sayfoil.com"
+    siteUrl: "https://foil.neonwatty.com"
   });
 
   harness.context.window.Sentry = {
@@ -118,12 +118,12 @@ function assertSentryPrivacyConfigWithDsn() {
   assert(typeof initOptions?.beforeBreadcrumb === "function" && initOptions.beforeBreadcrumb({}) === null, "Sentry breadcrumbs must be dropped");
   assert(typeof initOptions?.beforeSend === "function", "Sentry must configure beforeSend scrubbing");
   assert(tags.get("product") === "foil", "Sentry events must be tagged with product=foil");
-  assert(tags.get("site_url") === "https://sayfoil.com", "Sentry events must be tagged with configured site_url");
+  assert(tags.get("site_url") === "https://foil.neonwatty.com", "Sentry events must be tagged with configured site_url");
 
   const scrubbed = initOptions.beforeSend({
     user: { email: "person@example.com" },
     request: {
-      url: "https://sayfoil.com/?token=secret#fragment",
+      url: "https://foil.neonwatty.com/?token=secret#fragment",
       headers: { authorization: "Bearer secret" },
       cookies: "secret",
       data: { transcript: "sensitive dictated text" }
@@ -142,7 +142,7 @@ function assertSentryPrivacyConfigWithDsn() {
 
   const serialized = JSON.stringify(scrubbed);
   assert(!serialized.match(/person@example|support@example|secret|sensitive dictated|authorization|cookie|trace_id/i), "Sentry scrubber must remove sensitive values");
-  assert(scrubbed.request.url === "https://sayfoil.com/", "Sentry scrubber must strip query strings and fragments");
+  assert(scrubbed.request.url === "https://foil.neonwatty.com/", "Sentry scrubber must strip query strings and fragments");
   assert(Array.isArray(scrubbed.breadcrumbs) && scrubbed.breadcrumbs.length === 0, "Sentry scrubber must drop breadcrumbs");
   assert(scrubbed.contexts.device.model === "Mac", "Sentry scrubber should preserve non-sensitive context");
 }
@@ -157,7 +157,7 @@ function createHarness(config) {
     URL,
     window: {
       FOIL_ANALYTICS_CONFIG: config,
-      location: { origin: "https://sayfoil.com" }
+      location: { origin: "https://foil.neonwatty.com" }
     },
     document: {
       head: {

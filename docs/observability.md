@@ -72,6 +72,8 @@ Rechecked production activation on June 11, 2026:
   hook and scrubber still work.
 - Strict production smoke without Sentry expectation passed for
   `https://sayfoil.com` with PostHog config.
+- After the September 2026 domain migration, production checks target
+  `https://foil.neonwatty.com`; the prior line remains the pre-migration receipt.
 - Strict production smoke with `EXPECT_SENTRY=1` failed only because the
   deployed analytics config does not include a Sentry DSN.
 - The deployed public config reports production environment metadata, but no

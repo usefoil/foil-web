@@ -1,5 +1,5 @@
 const smokeUrl = normalizeBaseUrl(process.env.SMOKE_URL || process.env.VERCEL_URL || "");
-const expectedCanonical = normalizeBaseUrl(process.env.SITE_URL || "https://sayfoil.com");
+const expectedCanonical = normalizeBaseUrl(process.env.SITE_URL || "https://foil.neonwatty.com");
 const expectPostHog = process.env.EXPECT_POSTHOG === "1";
 const expectSentry = process.env.EXPECT_SENTRY === "1";
 const expectedPostHogHost = normalizeBaseUrl(process.env.POSTHOG_HOST || "https://us.i.posthog.com");
