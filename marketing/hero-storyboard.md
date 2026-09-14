@@ -43,15 +43,15 @@ Assets:
 
 ### 3. App Behavior
 
-Copy: `Each app, its own style`
+Copy: `Direct for agents. Polished for humans.`
 
-Body: `Set cleanup, tone, vocabulary, and raw output rules per app.`
+Body: `Assign raw or polished behavior by app with Cleanup Groups.`
 
 Visual direction: Use the real Cleanup Groups screenshot once, with two small output cards that contrast polished prose and raw command intent.
 
 Example polished output: `Could we move our sync to 3 PM?`
 
-Example raw output: `move sync 3pm; send notes`
+Example raw output (`AI agent`): `move sync 3pm; send notes`
 
 Feature shown: App/context-specific cleanup, raw transcript mode, vocabulary, and preferred terms.
 

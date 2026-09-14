@@ -16,7 +16,7 @@
       "width": 1600,
       "height": 900,
       "quality": "standard",
-      "workers": "auto"
+      "workers": 1
     }
   },
   "asset": "foil-dictation-brain",
@@ -24,7 +24,7 @@
   "sourceAssets": [
     {
       "file": "marketing/hero-animation/index.html",
-      "sha256": "c998269903d763cf7c8638e2055ab6f6fda6b066884cc5ec42f0c28b12a5bfc6"
+      "sha256": "e0c00e3365a116c928b28d2773906e02258fa1bf95d18d8aea4312641918fff9"
     },
     {
       "file": "marketing/hero-animation/assets/screenshots/foil-app-home.png",
@@ -68,8 +68,8 @@
       "file": "assets/videos/foil-dictation-brain-poster.png",
       "pixelWidth": 1600,
       "pixelHeight": 900,
-      "byteCount": 252784,
-      "sha256": "c794a0244e5407a1aee19c7d99d18270f5ca2bb684b7c7cb4f334007468e9b2c"
+      "byteCount": 221657,
+      "sha256": "73be1e02f1a273932028d41048e376f2b056f7ef678870f4afb57c8ffddd2282"
     },
     {
       "file": "assets/videos/foil-dictation-brain.mp4",
@@ -78,8 +78,8 @@
       "pixelHeight": 900,
       "codec": "h264",
       "frameRate": "30/1",
-      "byteCount": 2303086,
-      "sha256": "c8bc05df711fd1608160bdf2392aa81576a6277aaa55a44a3a8026d13b0254f2"
+      "byteCount": 1155413,
+      "sha256": "da15c769241043d58f78727ef31aa4247a25d5da85bb844c5aa64385066de14e"
     },
     {
       "file": "assets/videos/foil-dictation-brain.webm",
@@ -88,8 +88,8 @@
       "pixelHeight": 900,
       "codec": "vp9",
       "frameRate": "30/1",
-      "byteCount": 944811,
-      "sha256": "ce4abbcb351f20497eacd082395601d5827db618a2cde6d56a882d98ff571b7e"
+      "byteCount": 1505203,
+      "sha256": "b2087e406b5754f96f96470c31f3b6eb618dcf58ccc84e5f1de0b21969cef9f9"
     }
   ]
 }

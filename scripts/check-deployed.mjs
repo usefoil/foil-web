@@ -16,7 +16,7 @@ const requiredEvents = [
   "blog_cta_click"
 ];
 const requiredPages = [
-  { path: "/", content: "A deeper dictation toolkit" },
+  { path: "/", content: "Built for AI-first work" },
   { path: "/privacy/", content: "Foil privacy notes" },
   { path: "/blog/", content: "Mac dictation notes" },
   { path: "/blog/superwhisper-alternative-for-mac/", content: "Superwhisper alternative" },
