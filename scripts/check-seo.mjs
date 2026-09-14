@@ -112,7 +112,7 @@ const receipt = JSON.parse(
 );
 assert(
   receipt.text.includes(
-    "A dictation app that understands where your words are going.",
+    "Talk to agents at the speed of thought.",
   ),
   "social card receipt must preserve the approved headline",
 );

@@ -68,16 +68,16 @@ Avoid:
 
 ## Slide 3: App Behavior
 
-Copy: `Each app, its own style`
+Copy: `Direct for agents. Polished for humans.`
 
-Body: `Set cleanup, tone, vocabulary, and raw output rules per app.`
+Body: `Assign raw or polished behavior by app with Cleanup Groups.`
 
 Visual:
 
 - Use the live Cleanup Groups screenshot once.
 - Show two compact output cards:
   - `Message app`: `Could we move our sync to 3 PM?`
-  - `Prompt-driven app`: `move sync 3pm; send notes`
+  - `AI agent`: `move sync 3pm; send notes`
 
 What this should communicate:
 
