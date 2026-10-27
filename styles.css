@@ -989,3 +989,21 @@ button:focus-visible {
     content: none;
   }
 }
+
+/* Preserve the existing cross-project footer navigation's inline presentation. */
+.site-footer .footer-more {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 1.5rem 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  font: 500 14px / 1.5 system-ui, sans-serif;
+}
+
+.site-footer .footer-more .footer-more-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
