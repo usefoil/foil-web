@@ -30,10 +30,15 @@ for (const requiredText of [
   "spam protection",
   "privacy/legal approval",
   "SUPABASE_URL",
-  "SUPABASE_ANON_KEY"
+  "SUPABASE_ANON_KEY",
+  "BugDrop website feedback is currently disabled",
+  "user-initiated",
+  "selected screenshot/context"
 ]) {
   assert(capture.includes(requiredText), `capture decision missing ${requiredText}`);
 }
+
+assert(privacy.includes("Optional website feedback through BugDrop is currently disabled"), "optional feedback must remain disclosed as disabled");
 
 assert(
   privacy.includes("Supabase capture is not used by this static site"),

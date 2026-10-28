@@ -8,9 +8,8 @@ No launch-critical capture use case currently requires Supabase in the static we
 
 Rechecked on June 11, 2026 after the Vercel, PostHog, privacy, install trust,
 blog conversion, Sentry foundation, and launch smoke follow-up work. The
-decision is unchanged: Supabase remains deferred because the current site still
-has no waitlist, newsletter, contact, support, install diagnostics, or
-identified bridge-interest capture flow.
+decision is unchanged for Supabase: no waitlist, newsletter, contact, support, install diagnostics, or
+identified bridge-interest capture flow writes to Supabase.
 
 The current launch funnel uses:
 
@@ -49,3 +48,14 @@ Run `npm run check:capture` to prove the repo is still in the documented
 deferred state. The check fails if static pages introduce form-based capture,
 if product code half-wires Supabase, or if the privacy page no longer matches
 the decision.
+
+## Optional website feedback
+
+BugDrop website feedback is currently disabled. This separate, user-initiated
+flow may send report text and selected screenshot/context to BugDrop and the
+configured GitHub repository after production approval. It does not enable
+Supabase, waitlist or email capture, PostHog autocapture, Sentry, or macOS
+dictation capture. Retention/deletion follow the destination/service policies;
+no fixed retention guarantee is made. See `bugdrop-sdk-install.md` and the
+public privacy disclosure. Hosted admission, scoped approval, budget and
+release evidence are required before enabling either feedback switch.

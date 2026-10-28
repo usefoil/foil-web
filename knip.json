@@ -1,7 +1,24 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "entry": ["analytics.js", "observability.js", "scripts/*.mjs"],
-  "project": ["**/*.{js,mjs}"],
-  "ignore": ["dist/**", "marketing/**"],
-  "ignoreBinaries": ["html-validate", "prettier", "stylelint"]
+  "entry": [
+    "analytics.js",
+    "observability.js",
+    "scripts/*.mjs",
+    "feedback.ts!",
+    "api/bugdrop-capability/v1.ts!",
+    "test/bugdrop-*.test.ts",
+    "analytics-config.js!"
+  ],
+  "project": [
+    "**/*.{js,mjs,ts}!"
+  ],
+  "ignore": [
+    "dist/**",
+    "marketing/**"
+  ],
+  "ignoreBinaries": [
+    "html-validate",
+    "prettier",
+    "stylelint"
+  ]
 }
