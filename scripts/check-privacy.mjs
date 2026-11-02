@@ -14,8 +14,8 @@ const supportingDocs = await Promise.all([
 const publicText = normalizeText(privacy);
 
 for (const requiredText of [
-  "Last updated June 11, 2026",
-  "Optional website feedback through BugDrop is currently disabled",
+  "Last updated November 2, 2026",
+  "Optional website feedback through BugDrop is available when the feedback launcher is enabled",
   "report text and selected screenshot/context",
   "configured GitHub repository",
   "no fixed retention promise",

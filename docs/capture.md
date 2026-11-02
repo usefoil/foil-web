@@ -51,7 +51,7 @@ the decision.
 
 ## Optional website feedback
 
-BugDrop website feedback is currently disabled. This separate, user-initiated
+BugDrop website feedback is optional and deployment-gated. This separate, user-initiated
 flow may send report text and selected screenshot/context to BugDrop and the
 configured GitHub repository after production approval. It does not enable
 Supabase, waitlist or email capture, PostHog autocapture, Sentry, or macOS

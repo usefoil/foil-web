@@ -1,7 +1,7 @@
 # Foil website feedback readiness
 
-This source integration is disabled by default and has not been deployed or
-accepted in production. It applies only to usefoil/foil-web, repository
+This source integration is disabled by default. PR46 is deployed with feedback
+disabled; Foil reporting activation and delivery acceptance remain pending. It applies only to usefoil/foil-web, repository
 1264283880, at candidate origin https://foil.neonwatty.com. It does not modify
 the native macOS app. Repository selection is not an access grant.
 
@@ -22,7 +22,8 @@ These are private file dependencies, not an npm publication or deployed proof.
 ## Two independent switches
 
 `FOIL_FEEDBACK_ENABLED=0` controls build-time public configuration.
-`BUGDROP_ENABLED=0` controls the server-only Vercel function. Leave both off.
+`BUGDROP_ENABLED=0` controls the server-only Vercel function. Both remain off
+unless a separately approved production rollout enables them. Preview stays off.
 The only browser configuration is enabled, public Application ID, and exact
 hosted-widget URL https://widget.bugdrop.dev/widget.v1.js. The homepage alone
 loads the bundled SDK and requires the exact approved origin. Blog and privacy
