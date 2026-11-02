@@ -28,7 +28,7 @@ await build({ entryPoints: [join(root, "feedback.ts")], outfile: join(dist, "fee
 const feedback = {
   enabled: process.env.FOIL_FEEDBACK_ENABLED === "1",
   applicationId: process.env.FOIL_FEEDBACK_APPLICATION_ID || "",
-  widgetUrl: process.env.FOIL_FEEDBACK_WIDGET_URL === "https://widget.bugdrop.dev/widget.v1.js" ? process.env.FOIL_FEEDBACK_WIDGET_URL : ""
+  widgetUrl: process.env.FOIL_FEEDBACK_WIDGET_URL === "https://delivery.bugdrop.dev/widget.managed.v1.js" ? process.env.FOIL_FEEDBACK_WIDGET_URL : ""
 };
 await writeFile(join(dist, "feedback-config.js"), `window.FOIL_FEEDBACK_CONFIG = Object.freeze(${JSON.stringify(feedback)});\n`);
 

@@ -4,7 +4,7 @@ import { managedCapabilityEndpoint } from '../../lib/bugdrop/server.js';
 
 export const config = { api: { bodyParser: false } };
 const ORIGIN = 'https://foil.neonwatty.com';
-const ISSUER = 'https://api.bugdrop.dev/v1/submission-capabilities';
+const ISSUER = 'https://managed.bugdrop.dev/v1/submission-capabilities';
 const PATH = '/api/bugdrop-capability/v1/';
 const failure = () => new Response('{"error":"unable_to_authorize_bugdrop"}', {
   status: 502, headers: { 'Cache-Control': 'no-store', 'Content-Type': 'application/json' },

@@ -18,7 +18,7 @@ if (config?.enabled === true && window.location.origin === 'https://foil.neonwat
     document.body.appendChild(notice);
   };
   try {
-    if (!config.applicationId || config.widgetUrl !== 'https://widget.bugdrop.dev/widget.v1.js') throw new Error();
+    if (!config.applicationId || config.widgetUrl !== 'https://delivery.bugdrop.dev/widget.managed.v1.js') throw new Error();
     void mountFeedback({ applicationId: config.applicationId, widgetUrl: config.widgetUrl }).ready.catch(fail);
   } catch { fail(); }
 }

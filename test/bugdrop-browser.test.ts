@@ -7,14 +7,17 @@ import { JSDOM } from 'jsdom';
 // Child environments contain public synthetic configuration only. No inherited credentials.
 const baseEnv = { PATH: process.env.PATH, HOME: process.env.HOME };
 const sentinel = 'FOIL_SERVER_ONLY_SENTINEL_7a8d';
-function build(enabled: boolean) {
+const widgetUrl = 'https://delivery.bugdrop.dev/widget.managed.v1.js';
+const rejectedWidgetUrl = 'https://widget.bugdrop.dev/widget.v1.js';
+function build(enabled: boolean, configuredWidgetUrl = widgetUrl) {
   execFileSync(process.execPath, ['scripts/build.mjs'], { env: { ...baseEnv, BUGDROP_API_KEY: sentinel, FOIL_PRIVATE_SCAN_SENTINEL: sentinel, DATABASE_URL: 'SERVER_DB_SENTINEL_192a', BUGDROP_INTERNAL_APPLICATION_ID: 'SERVER_APP_SENTINEL_294b',
-    ...(enabled ? { FOIL_FEEDBACK_ENABLED: '1', FOIL_FEEDBACK_APPLICATION_ID: 'public-synthetic-app', FOIL_FEEDBACK_WIDGET_URL: 'https://widget.bugdrop.dev/widget.v1.js' } : {}) } });
+    ...(enabled ? { FOIL_FEEDBACK_ENABLED: '1', FOIL_FEEDBACK_APPLICATION_ID: 'public-synthetic-app', FOIL_FEEDBACK_WIDGET_URL: configuredWidgetUrl } : {}) } });
   execFileSync(process.execPath, ['scripts/check-bugdrop.mjs'], { env: { ...baseEnv, BUGDROP_API_KEY: sentinel, DATABASE_URL: 'SERVER_DB_SENTINEL_192a', BUGDROP_INTERNAL_APPLICATION_ID: 'SERVER_APP_SENTINEL_294b' } });
   return { source: readFileSync('dist/feedback.js', 'utf8'), config: readFileSync('dist/feedback-config.js', 'utf8') };
 }
 const disabled = build(false);
 const enabled = build(true);
+const rejectedWidget = build(true, rejectedWidgetUrl);
 function page(url: string, config = enabled.config, mode = 'ready') {
   const dom = new JSDOM('<!doctype html><html><head></head><body></body></html>', { url, runScripts: 'outside-only' });
   const { window } = dom;
@@ -25,7 +28,7 @@ function page(url: string, config = enabled.config, mode = 'ready') {
   window.document.head.appendChild = ((element: HTMLScriptElement) => {
     if (element.tagName === 'SCRIPT') {
       widgets++;
-      assert.equal(element.src, 'https://widget.bugdrop.dev/widget.v1.js');
+      assert.equal(element.src, 'https://delivery.bugdrop.dev/widget.managed.v1.js');
       assert.equal(element.dataset.applicationId, 'public-synthetic-app');
       assert.equal(Object.keys(element.dataset).some((key) => /apiKey|repository|origin|admission|secret/i.test(key)), false);
       append(element);
@@ -49,6 +52,19 @@ test('actual default build is disabled and emitted config has only public allowl
   assert.equal(p.widgets(), 0); assert.equal(p.requests(), 0);
   assert.deepEqual(Object.keys(p.window.FOIL_FEEDBACK_CONFIG).sort(), ['applicationId', 'enabled', 'widgetUrl']);
   p.window.close();
+});
+test('old widget endpoint is stripped at build time and rejected by the browser', () => {
+  for (const config of [rejectedWidget.config, `window.FOIL_FEEDBACK_CONFIG=${JSON.stringify({ enabled: true, applicationId: 'public-synthetic-app', widgetUrl: rejectedWidgetUrl })}`]) {
+    const p = page('https://foil.neonwatty.com/', config);
+    assert.equal(p.widgets(), 0); assert.equal(p.requests(), 0);
+    assert.equal(p.window.document.getElementById('foil-feedback-error')?.textContent, 'Website feedback is temporarily unavailable.');
+    assert.equal(p.window.localStorage.length, 0); assert.equal(p.window.sessionStorage.length, 0);
+    assert.equal(p.window.document.documentElement.outerHTML.includes(sentinel), false);
+    p.window.close();
+  }
+  assert.equal(rejectedWidget.config.includes(rejectedWidgetUrl), false);
+  assert.equal(rejectedWidget.config.includes(sentinel), false);
+  assert.equal(enabled.config.includes(widgetUrl), true);
 });
 test('wrong origins, nonhomepage and missing public settings never load widget or capability', () => {
   for (const url of ['http://foil.neonwatty.com/', 'https://sub.foil.neonwatty.com/', 'https://foil.neonwatty.com:444/', 'https://foil.neonwatty.com/blog/']) {
