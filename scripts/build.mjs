@@ -1,5 +1,6 @@
 import { cp, mkdir, rm, writeFile, readFile } from "node:fs/promises";
 import { dirname, extname, join, relative } from "node:path";
+import { build } from "esbuild";
 import { fileURLToPath } from "node:url";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
@@ -22,6 +23,14 @@ for (const entry of ["assets", "blog", "privacy", "index.html", "styles.css", "r
 
 await replaceSiteUrl(dist);
 await writeAnalyticsConfig();
+await build({ entryPoints: [join(root, "feedback.ts")], outfile: join(dist, "feedback.js"), bundle: true, platform: "browser", format: "iife", target: "es2022", sourcemap: false });
+// Deliberate browser allowlist. Never serialize server configuration or process.env.
+const feedback = {
+  enabled: process.env.FOIL_FEEDBACK_ENABLED === "1",
+  applicationId: process.env.FOIL_FEEDBACK_APPLICATION_ID || "",
+  widgetUrl: process.env.FOIL_FEEDBACK_WIDGET_URL === "https://widget.bugdrop.dev/widget.v1.js" ? process.env.FOIL_FEEDBACK_WIDGET_URL : ""
+};
+await writeFile(join(dist, "feedback-config.js"), `window.FOIL_FEEDBACK_CONFIG = Object.freeze(${JSON.stringify(feedback)});\n`);
 
 async function replaceSiteUrl(path) {
   const { readdir, stat } = await import("node:fs/promises");

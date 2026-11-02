@@ -95,3 +95,13 @@ Run `npm run check:observability` to prove the repo stays in the documented
 deferred/env-gated state. The check fails if product pages omit
 `observability.js`, if the SDK is not gated by `SENTRY_DSN`, if replay/tracing
 are enabled, or if the privacy page no longer matches the observability posture.
+
+## Optional website feedback boundary
+
+BugDrop website feedback is currently disabled. If approved and enabled, only
+user-initiated reports (report text and selected screenshot/context) go to
+BugDrop and the configured GitHub repository. This is separate from analytics
+and observability; their existing privacy exclusions and dormant Sentry
+settings remain unchanged. It does not capture macOS dictation or enable
+waitlist/email/Supabase capture. Update the public privacy disclosure before
+activation; do not promise fixed retention or deletion across services.

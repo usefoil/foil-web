@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "f2bc49002784048b0c0e3996530f01300efb1dff",
+  "consumerMode": "anonymous",
+  "node": "v22.22.3",
+  "npm": "11.19.1",
+  "sha256": {
+    "vendor/bugdrop-browser-0.1.0.tgz": "1517e5501c86d44f9957a9c7705da87c757ac4e327aabed16f8fd774d1d1cc83",
+    "vendor/bugdrop-server-0.1.0.tgz": "965ef2bcee173501859880b6358bfa4bee6bd12985d7802f5591f171f3d7482d",
+    "package.json": "b1bd5c3a43bf437881e6ab7aa0dca5eea605a11752a6e900482f1c9627d73234",
+    "package-lock.json": "42a45c8dbb19e1a552c8fdaaae54e84489924f24573a129aef7b925e7554a0e5",
+    "tsconfig.json": "4a569c65e73586e7cfe789e0bbd7853b51f96130a08793cf371d137475cf33d2",
+    "README.md": "2605ca504cb3a305b9bef020809e45acce28b7f183520760d2e71569cd7be6c4",
+    "src/handler.ts": "3830f345cf14eefeb97ee7d65fe3d10f1f911c3b17fbcbf5455504f659984dcf",
+    "src/transport.ts": "6d5cd706fb50648c4347901ab2acd5edc37ca761044cc1acb72966611b1c2ab9",
+    "src/browser.ts": "0235702b24ed92b2b119ff5166693006f4f029a3da6628cbca49387a9eb2b8c9",
+    "src/server.ts": "974690f9b2a1bdd34495b5a79f21b29caed1a041c788cd6988233b3d3ecc0210"
+  }
+}

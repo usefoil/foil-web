@@ -15,6 +15,10 @@ const publicText = normalizeText(privacy);
 
 for (const requiredText of [
   "Last updated June 11, 2026",
+  "Optional website feedback through BugDrop is currently disabled",
+  "report text and selected screenshot/context",
+  "configured GitHub repository",
+  "no fixed retention promise",
   "static site hosted for launch on Vercel",
   "account signup",
   "checkout",

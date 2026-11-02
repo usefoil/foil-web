@@ -78,3 +78,13 @@ Production wiring receipt from June 10, 2026:
 - Vercel production env includes `POSTHOG_KEY`, `POSTHOG_HOST`, `SITE_URL`, and `FOIL_ANALYTICS_ENV`.
 - `https://sayfoil.com/analytics-config.js` served `posthogHost=https://us.i.posthog.com`, `siteUrl=https://sayfoil.com`, and `environment=production`.
 - `SMOKE_URL=https://sayfoil.com SITE_URL=https://sayfoil.com npm run check:deployed` passed.
+
+## Optional website feedback boundary
+
+BugDrop website feedback is currently disabled. If approved and enabled, only
+user-initiated reports (report text and selected screenshot/context) go to
+BugDrop and the configured GitHub repository. This is separate from analytics
+and observability; their existing privacy exclusions and dormant Sentry
+settings remain unchanged. It does not capture macOS dictation or enable
+waitlist/email/Supabase capture. Update the public privacy disclosure before
+activation; do not promise fixed retention or deletion across services.

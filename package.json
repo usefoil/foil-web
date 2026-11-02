@@ -22,8 +22,11 @@
     "check:seo": "node scripts/check-seo.mjs",
     "check:launch": "npm run build && node scripts/check-launch.mjs && npm run check:seo && npm run check:analytics && npm run check:blog && npm run check:capture && npm run check:install && npm run check:observability && npm run check:privacy",
     "check:release": "node scripts/check-release-drift.mjs",
-    "quality": "npm run lint && npm run format:check && npm run knip && npm run check:launch",
-    "serve": "python3 -m http.server 4173"
+    "quality": "npm run lint && npm run format:check && npm run knip && npm run check:launch && npm run test:bugdrop && npm run typecheck:bugdrop && npm run check:bugdrop",
+    "serve": "python3 -m http.server 4173",
+    "test:bugdrop": "node --import tsx --test test/bugdrop-route.test.ts test/bugdrop-browser.test.ts test/bugdrop-build.test.ts",
+    "typecheck:bugdrop": "tsc --project tsconfig.bugdrop.json --noEmit",
+    "check:bugdrop": "node scripts/check-bugdrop.mjs"
   },
   "engines": {
     "node": ">=22"
@@ -36,6 +39,16 @@
     "knip": "^6.26.0",
     "prettier": "^3.9.5",
     "stylelint": "^17.14.0",
-    "stylelint-config-standard": "^40.0.0"
-  }
+    "stylelint-config-standard": "^40.0.0",
+    "esbuild": "0.28.1",
+    "typescript": "5.7.2",
+    "tsx": "4.22.4",
+    "@types/node": "22.20.2",
+    "jsdom": "29.0.1"
+  },
+  "dependencies": {
+    "@bugdrop/browser": "file:vendor/sdk/bugdrop-browser-0.1.0.tgz",
+    "@bugdrop/server": "file:vendor/sdk/bugdrop-server-0.1.0.tgz"
+  },
+  "type": "module"
 }

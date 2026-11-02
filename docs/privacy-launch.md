@@ -42,3 +42,13 @@ Before adding a new capture surface, update the relevant docs and checks:
 
 Run `npm run check:privacy` for the privacy-specific disclosure scan. It is also
 included in `npm run check:launch`.
+
+## Optional website feedback boundary
+
+BugDrop website feedback is currently disabled. If approved and enabled, only
+user-initiated reports (report text and selected screenshot/context) go to
+BugDrop and the configured GitHub repository. This is separate from analytics
+and observability; their existing privacy exclusions and dormant Sentry
+settings remain unchanged. It does not capture macOS dictation or enable
+waitlist/email/Supabase capture. Update the public privacy disclosure before
+activation; do not promise fixed retention or deletion across services.
