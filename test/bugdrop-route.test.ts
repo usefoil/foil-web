@@ -11,7 +11,7 @@ import nodeHandler, { createEndpoint } from '../api/bugdrop-capability/v1.js';
 const root = 'bd_api_v1.AAECAwQFBgcICQoLDA0ODw.EBESExQVFhcYGRobHB0eHyAhIiMkJSYnKCkqKywtLi8';
 const authorization = 'Bearer bd_auth_v1.AAECAwQFBgcICQoLDA0ODw.mrJiVKhkJz8d7tNgPkSTl2tRDQ840gImsfUvb1q0ZPo';
 const origin = 'https://foil.neonwatty.com';
-const issuer = 'https://api.bugdrop.dev/v1/submission-capabilities';
+const issuer = 'https://managed.bugdrop.dev/v1/submission-capabilities';
 const binding = { submissionId: '018f1f2e-7b4a-7c3d-9e10-4f5a6b7c8d90', payloadDigest: 'sPybYsPwrJsoR8G8LbuHwYw3y-QHlqrYOfI-8lbJbEQ' };
 const settings = { BUGDROP_ENABLED: '1', BUGDROP_API_KEY: root, BUGDROP_ORIGIN: origin, BUGDROP_ISSUER: issuer };
 globalThis.fetch = async () => { throw new Error('UNEXPECTED EXTERNAL FETCH'); };
@@ -31,6 +31,19 @@ test('disabled and incomplete configuration consume no body and make zero calls'
     await rejected(await createEndpoint(env, deny)(req), env.BUGDROP_ENABLED === '1' ? 502 : 404);
     assert.equal(req.bodyUsed, false);
   }
+});
+test('old issuer endpoint fails closed before body consumption without credential exposure', async () => {
+  const env = { ...settings, BUGDROP_ISSUER: 'https://api.bugdrop.dev/v1/submission-capabilities' };
+  let calls = 0;
+  const exchange: typeof fetch = async () => { calls++; throw new Error(root); };
+  const req = request();
+  await rejected(await createEndpoint(env, exchange)(req));
+  assert.equal(req.bodyUsed, false);
+  assert.equal(calls, 0);
+  const disabledRequest = request();
+  await rejected(await createEndpoint({ ...env, BUGDROP_ENABLED: '0' }, exchange)(disabledRequest), 404);
+  assert.equal(disabledRequest.bodyUsed, false);
+  assert.equal(calls, 0);
 });
 test('request boundary rejects origins, selectors, metadata, methods, paths and malformed bodies', async () => {
   const cases = [

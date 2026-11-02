@@ -25,14 +25,14 @@ These are private file dependencies, not an npm publication or deployed proof.
 `BUGDROP_ENABLED=0` controls the server-only Vercel function. Both remain off
 unless a separately approved production rollout enables them. Preview stays off.
 The only browser configuration is enabled, public Application ID, and exact
-hosted-widget URL https://widget.bugdrop.dev/widget.v1.js. The homepage alone
+hosted-widget URL https://delivery.bugdrop.dev/widget.managed.v1.js. The homepage alone
 loads the bundled SDK and requires the exact approved origin. Blog and privacy
 pages never mount it. Build output excludes API sources, server wrappers,
 vendor tarballs and provenance.
 
 After authorization, server configuration requires BUGDROP_API_KEY (root),
 BUGDROP_ORIGIN=https://foil.neonwatty.com and
-BUGDROP_ISSUER=https://api.bugdrop.dev/v1/submission-capabilities. Never put
+BUGDROP_ISSUER=https://managed.bugdrop.dev/v1/submission-capabilities. Never put
 roots in public variables, source, screenshots, logs, or browser inputs.
 No local secret environment file is required for the offline proofs.
 
