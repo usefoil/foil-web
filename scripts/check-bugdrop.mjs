@@ -98,7 +98,7 @@ export async function scanOutput(directory, sentinels = []) {
     visitLiteral(source);
     if (
       !literals.has("https://foil.neonwatty.com") ||
-      !literals.has("/api/bugdrop-capability/v1")
+      !literals.has("/api/bugdrop-capability/v1/")
     )
       failures.push("Missing browser integration");
   }

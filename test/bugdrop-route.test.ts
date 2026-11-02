@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { PassThrough } from 'node:stream';
 import { EventEmitter } from 'node:events';
+import { readFileSync } from 'node:fs';
+import { createAnonymousTokenProvider } from '../lib/bugdrop/transport.js';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import nodeHandler, { createEndpoint } from '../api/bugdrop-capability/v1.js';
 
@@ -13,7 +15,7 @@ const issuer = 'https://api.bugdrop.dev/v1/submission-capabilities';
 const binding = { submissionId: '018f1f2e-7b4a-7c3d-9e10-4f5a6b7c8d90', payloadDigest: 'sPybYsPwrJsoR8G8LbuHwYw3y-QHlqrYOfI-8lbJbEQ' };
 const settings = { BUGDROP_ENABLED: '1', BUGDROP_API_KEY: root, BUGDROP_ORIGIN: origin, BUGDROP_ISSUER: issuer };
 globalThis.fetch = async () => { throw new Error('UNEXPECTED EXTERNAL FETCH'); };
-function request(body: BodyInit = JSON.stringify(binding), headers: Record<string,string> = {}, url = `${origin}/api/bugdrop-capability/v1`, signal?: AbortSignal) {
+function request(body: BodyInit = JSON.stringify(binding), headers: Record<string,string> = {}, url = `${origin}/api/bugdrop-capability/v1/`, signal?: AbortSignal) {
   return new Request(url, { method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/json', 'Sec-Fetch-Site': 'same-origin', ...headers }, body, signal, ...({ duplex: 'half' } as object) });
 }
 const deny = async () => { assert.fail('Unexpected exchange'); };
@@ -37,7 +39,9 @@ test('request boundary rejects origins, selectors, metadata, methods, paths and 
     request(undefined, { Origin: 'http://foil.neonwatty.com' }),
     request(undefined, { 'Sec-Fetch-Site': '' }), request(undefined, { 'Sec-Fetch-Site': 'cross-site' }),
     request(undefined, { 'Content-Type': 'text/plain' }), request(undefined, {}, `${origin}/wrong`),
-    new Request(`${origin}/api/bugdrop-capability/v1`),
+    request(undefined, {}, `${origin}/api/bugdrop-capability/v1`),
+    request(undefined, {}, `${origin}/api/bugdrop-capability/v1/?selector=evil`),
+    new Request(`${origin}/api/bugdrop-capability/v1/`),
     request(JSON.stringify({ ...binding, applicationId: 'browser-selector' })),
     request(`{"submissionId":"first",${JSON.stringify(binding).slice(1)}`),
     request(`{"submi\\u0073sionId":"first",${JSON.stringify(binding).slice(1)}`),
@@ -109,10 +113,11 @@ test('actual Vercel Node adapter preserves raw bytes and rejects host/path spoof
   };
   try {
     for (const [host, path, body, expected] of [
-      ['foil.neonwatty.com', '/api/bugdrop-capability/v1', JSON.stringify(binding), 200],
-      ['evil.example', '/api/bugdrop-capability/v1', JSON.stringify(binding), 502],
-      ['foil.neonwatty.com', '/api/bugdrop-capability/v1?selector=evil', JSON.stringify(binding), 502],
-      ['foil.neonwatty.com', '/api/bugdrop-capability/v1', new Uint8Array([255]), 502],
+      ['foil.neonwatty.com', '/api/bugdrop-capability/v1/', JSON.stringify(binding), 200],
+      ['foil.neonwatty.com', '/api/bugdrop-capability/v1', JSON.stringify(binding), 502],
+      ['evil.example', '/api/bugdrop-capability/v1/', JSON.stringify(binding), 502],
+      ['foil.neonwatty.com', '/api/bugdrop-capability/v1/?selector=evil', JSON.stringify(binding), 502],
+      ['foil.neonwatty.com', '/api/bugdrop-capability/v1/', new Uint8Array([255]), 502],
     ] as const) {
       const req = new PassThrough() as unknown as IncomingMessage;
       req.method = 'POST'; req.url = path;
@@ -131,5 +136,59 @@ test('actual Vercel Node adapter preserves raw bytes and rejects host/path spoof
   } finally {
     globalThis.fetch = async () => { throw new Error('UNEXPECTED EXTERNAL FETCH'); };
     for (const [key, value] of Object.entries(previous)) { if (value === undefined) delete process.env[key]; else process.env[key] = value; }
+  }
+});
+
+
+test('browser token provider reaches the strict route without Vercel slash normalization', async () => {
+  const routing = JSON.parse(readFileSync('vercel.json', 'utf8')) as { trailingSlash: boolean };
+  assert.equal(routing.trailingSlash, true);
+  const previousLocation = Object.getOwnPropertyDescriptor(globalThis, 'location');
+  const previousFetch = globalThis.fetch;
+  Object.defineProperty(globalThis, 'location', { configurable: true, value: new URL(origin) });
+  const paths: string[] = [];
+  let issuerCalls = 0;
+  const endpoint = createEndpoint(settings, async (url, init) => {
+    issuerCalls++;
+    assert.equal(url, issuer);
+    assert.equal(new Headers(init?.headers).get('Authorization'), authorization);
+    assert.deepEqual(JSON.parse(String(init?.body)), {
+      schemaVersion: 1, ...binding, origin, environment: 'production', admission: 'managed-v1',
+    });
+    return Response.json({ schemaVersion: 1, token: 'synthetic-capability',
+      expiresAt: new Date(Date.now() + 60000).toISOString(), admission: 'managed-v1' });
+  });
+  // This narrow routing boundary reproduces the confirmed hosted 308 for an
+  // extensionless slashless URL. It does not claim to emulate all Vercel routing.
+  globalThis.fetch = async (input, init) => {
+    const url = new URL(String(input));
+    assert.equal(url.origin, origin);
+    paths.push(url.pathname);
+    if (routing.trailingSlash && /^\/((?:[^/]+\/)*[^/\.]+)$/.test(url.pathname)) {
+      if (init?.redirect === 'error') throw new TypeError('Redirect disallowed');
+      return new Response(null, { status: 308, headers: { Location: `${url.pathname}/` } });
+    }
+    assert.equal(init?.redirect, 'error');
+    assert.equal(init?.credentials, 'omit');
+    const headers = new Headers(init?.headers);
+    // Browsers supply these same-origin request headers on the wire.
+    headers.set('Origin', origin);
+    headers.set('Sec-Fetch-Site', 'same-origin');
+    return endpoint(new Request(url, { ...init, headers }));
+  };
+  try {
+    await assert.rejects(fetch(`${origin}/api/bugdrop-capability/v1`, {
+      method: 'POST', body: JSON.stringify(binding), redirect: 'error',
+    }), /Redirect disallowed/);
+    assert.equal(issuerCalls, 0);
+    const capability = await createAnonymousTokenProvider()(binding);
+    assert.equal(capability.schemaVersion, 1);
+    assert.equal(capability.token, 'synthetic-capability');
+    assert.deepEqual(paths, ['/api/bugdrop-capability/v1', '/api/bugdrop-capability/v1/']);
+    assert.equal(issuerCalls, 1);
+  } finally {
+    globalThis.fetch = previousFetch;
+    if (previousLocation) Object.defineProperty(globalThis, 'location', previousLocation);
+    else Reflect.deleteProperty(globalThis, 'location');
   }
 });

@@ -37,7 +37,11 @@ No local secret environment file is required for the offline proofs.
 
 ## Admission and failures
 
-POST /api/bugdrop-capability/v1 is a Vercel Node function with raw body parsing.
+POST /api/bugdrop-capability/v1/ is a Vercel Node function with raw body parsing.
+The trailing slash is canonical under this site's existing Vercel routing.
+The browser requests it directly and rejects redirects; the server rejects
+slashless paths and query selectors. Do not change site-wide routing to enable
+feedback.
 The standard Python static preview cannot execute this route. The SDK canonical
 parser rejects extra/duplicate keys, invalid binding bytes, wrong origin,
 method, media type and path. Same-origin Fetch Metadata is mandatory.

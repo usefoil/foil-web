@@ -1,6 +1,6 @@
 import type { SubmissionTokenProvider } from '@bugdrop/browser';
 
-const PATH = '/api/bugdrop-capability/v1';
+const PATH = '/api/bugdrop-capability/v1/';
 const REQUEST_LIMIT = 1024;
 const RESPONSE_LIMIT = 32768;
 const DEADLINE_MS = 25_000;

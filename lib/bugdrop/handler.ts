@@ -1,6 +1,6 @@
 import { BugDrop, type BugDropServerOptions } from '@bugdrop/server';
 
-const PATH = '/api/bugdrop-capability/v1';
+const PATH = '/api/bugdrop-capability/v1/';
 const LIMIT = 1024;
 const HEADERS = { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' };
 

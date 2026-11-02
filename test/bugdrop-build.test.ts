@@ -17,7 +17,7 @@ test("same output scanner rejects deliberate secret contamination", async () => 
     );
     await writeFile(
       `${directory}/feedback.js`,
-      'const origin = "https://foil.neonwatty.com"; const path = "/api/bugdrop-capability/v1";',
+      'const origin = "https://foil.neonwatty.com"; const path = "/api/bugdrop-capability/v1/";',
     );
     await scanOutput(directory);
     await writeFile(
@@ -68,10 +68,10 @@ async function withLiteralFixture(
 
 test("scanner accepts complete decoded literals independent of quote style and escaping", async () => {
   for (const source of [
-    'const origin = "https://foil.neonwatty.com"; const path = "/api/bugdrop-capability/v1";',
-    "const origin = 'https://foil.neonwatty.com'; const path = '/api/bugdrop-capability/v1';",
-    String.raw`const origin = "https://\u0066oil.neonwatty.com"; const path = "\u002fapi/bugdrop-capability/v1";`,
-    "const origin = `https://foil.neonwatty.com`; const path = `/api/bugdrop-capability/v1`;",
+    'const origin = "https://foil.neonwatty.com"; const path = "/api/bugdrop-capability/v1/";',
+    "const origin = 'https://foil.neonwatty.com'; const path = '/api/bugdrop-capability/v1/';",
+    String.raw`const origin = "https://\u0066oil.neonwatty.com"; const path = "\u002fapi/bugdrop-capability/v1/";`,
+    "const origin = `https://foil.neonwatty.com`; const path = `/api/bugdrop-capability/v1/`;",
   ]) {
     await withLiteralFixture(source, async (directory) => {
       await scanOutput(directory);
@@ -90,7 +90,7 @@ test("scanner rejects canonical origin text embedded in different complete liter
     "https://foil.neonwatty.com?query=1",
   ]) {
     await withLiteralFixture(
-      `const origin = ${JSON.stringify(wrong)}; const path = "/api/bugdrop-capability/v1";`,
+      `const origin = ${JSON.stringify(wrong)}; const path = "/api/bugdrop-capability/v1/";`,
       async (directory) => {
         await assert.rejects(
           scanOutput(directory),
@@ -101,11 +101,12 @@ test("scanner rejects canonical origin text embedded in different complete liter
   }
 });
 
-test("scanner rejects longer capability-path values with an independently valid origin", async () => {
+test("scanner rejects noncanonical capability-path values with an independently valid origin", async () => {
   for (const wrong of [
-    "/prefix/api/bugdrop-capability/v1",
+    "/api/bugdrop-capability/v1",
+    "/prefix/api/bugdrop-capability/v1/",
     "/api/bugdrop-capability/v1/suffix",
-    "/api/bugdrop-capability/v1?query=1",
+    "/api/bugdrop-capability/v1/?query=1",
   ]) {
     await withLiteralFixture(
       `const origin = "https://foil.neonwatty.com"; const path = ${JSON.stringify(wrong)};`,
@@ -121,12 +122,12 @@ test("scanner rejects longer capability-path values with an independently valid 
 
 test("scanner rejects absent, comment-only and interpolated-template contract text", async () => {
   for (const source of [
-    'const path = "/api/bugdrop-capability/v1";',
+    'const path = "/api/bugdrop-capability/v1/";',
     'const origin = "https://foil.neonwatty.com";',
-    '// https://foil.neonwatty.com\nconst path = "/api/bugdrop-capability/v1";',
+    '// https://foil.neonwatty.com\nconst path = "/api/bugdrop-capability/v1/";',
     'const origin = "https://foil.neonwatty.com"; /* /api/bugdrop-capability/v1 */',
     "/* https://foil.neonwatty.com /api/bugdrop-capability/v1 */",
-    'const origin = `https://foil.neonwatty.com${".attacker.example"}`; const path = "/api/bugdrop-capability/v1";',
+    'const origin = `https://foil.neonwatty.com${".attacker.example"}`; const path = "/api/bugdrop-capability/v1/";',
   ]) {
     await withLiteralFixture(source, async (directory) => {
       await assert.rejects(
@@ -139,8 +140,8 @@ test("scanner rejects absent, comment-only and interpolated-template contract te
 
 test("scanner rejects malformed JavaScript and TS-only syntax without echoing contents", async () => {
   for (const source of [
-    'const origin = "https://foil.neonwatty.com"; const path = "/api/bugdrop-capability/v1"; const BROKEN_DO_NOT_ECHO = ;',
-    'const origin: string = "https://foil.neonwatty.com"; const path = "/api/bugdrop-capability/v1";',
+    'const origin = "https://foil.neonwatty.com"; const path = "/api/bugdrop-capability/v1/"; const BROKEN_DO_NOT_ECHO = ;',
+    'const origin: string = "https://foil.neonwatty.com"; const path = "/api/bugdrop-capability/v1/";',
   ]) {
     await withLiteralFixture(source, async (directory) => {
       await assert.rejects(scanOutput(directory), (error: Error) => {
