@@ -81,7 +81,7 @@ Production wiring receipt from June 10, 2026:
 
 ## Optional website feedback boundary
 
-BugDrop website feedback is currently disabled. If approved and enabled, only
+BugDrop website feedback is optional and deployment-gated. If approved and enabled, only
 user-initiated reports (report text and selected screenshot/context) go to
 BugDrop and the configured GitHub repository. This is separate from analytics
 and observability; their existing privacy exclusions and dormant Sentry
