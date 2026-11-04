@@ -15,7 +15,6 @@
   },
   "include": [
     "api/bugdrop-capability/v1.ts",
-    "lib/bugdrop/*.ts",
     "feedback.ts"
   ]
 }
