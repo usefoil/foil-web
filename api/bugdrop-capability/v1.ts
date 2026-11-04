@@ -7,6 +7,8 @@ export const config = { api: { bodyParser: false } };
 const ORIGIN = 'https://foil.neonwatty.com';
 const ISSUER = 'https://managed.bugdrop.dev/v1/submission-capabilities';
 const PATH = '/api/bugdrop-capability/v1/';
+// Allow the managed issuer's 15-second RPC plus exchange overhead.
+const EXCHANGE_TIMEOUT_MS = 18_000;
 const failure = () => new Response('{"error":"unable_to_authorize_bugdrop"}', {
   status: 502, headers: { 'Cache-Control': 'no-store', 'Content-Type': 'application/json' },
 });
@@ -16,7 +18,7 @@ const configurationMatches = (env: Record<string, string | undefined>) => ({
 });
 
 /** Configuration is read per invocation, before constructing a client or consuming input. */
-export function createEndpoint(env: Record<string, string | undefined>, transport: typeof fetch = fetch, deadlineMs = 8000, observer?: FailureObserver) {
+export function createEndpoint(env: Record<string, string | undefined>, transport: typeof fetch = fetch, deadlineMs = EXCHANGE_TIMEOUT_MS, observer?: FailureObserver) {
   return async (request: Request): Promise<Response> => {
     const report = failureReporter(observer);
     const matches = configurationMatches(env);
@@ -67,7 +69,7 @@ export function createEndpoint(env: Record<string, string | undefined>, transpor
 }
 
 /** Vercel Node function: preserve raw bytes; never trust forwarded host/origin selectors. */
-export function createNodeHandler(env: Record<string, string | undefined>, transport: typeof fetch = fetch, deadlineMs = 8000, observer?: FailureObserver) {
+export function createNodeHandler(env: Record<string, string | undefined>, transport: typeof fetch = fetch, deadlineMs = EXCHANGE_TIMEOUT_MS, observer?: FailureObserver) {
   return async (req: IncomingMessage, res: ServerResponse) => {
     const report = failureReporter(observer);
     const controller = new AbortController();

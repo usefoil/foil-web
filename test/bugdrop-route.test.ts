@@ -212,6 +212,69 @@ const capabilityResponse = () => Response.json({ schemaVersion: 1, token: 'synth
   expiresAt: new Date(Date.now() + 60000).toISOString(), admission: 'managed-v1' });
 const immediate = () => new Promise<void>((resolve) => setImmediate(resolve));
 
+for (const boundary of ['web', 'node'] as const) {
+  test(`${boundary} default authorizes a valid 12-second exchange and remains bounded at 18 seconds`, async (t) => {
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    for (const outcome of ['success', 'deadline', 'cancelled'] as const) {
+      const events: FailureDiagnostic[] = [];
+      let calls = 0; let aborts = 0; let contacted!: () => void;
+      const started = new Promise<void>((resolve) => { contacted = resolve; });
+      const exchange: typeof fetch = async (_url, init) => {
+        calls++;
+        return new Promise<Response>((resolve, reject) => {
+          const signal = init?.signal;
+          const abort = () => { aborts++; clearTimeout(timer); reject(new Error('Synthetic cancellation')); };
+          const timer = outcome === 'success' ? setTimeout(() => {
+            signal?.removeEventListener('abort', abort); resolve(capabilityResponse());
+          }, 12_000) : undefined;
+          signal?.addEventListener('abort', abort, { once: true });
+          contacted();
+        });
+      };
+      const controller = new AbortController();
+      const observe = (event: FailureDiagnostic) => { events.push(event); };
+      let cancel = () => controller.abort();
+      let result: Promise<Response>;
+      if (boundary === 'web') {
+        result = createEndpoint(settings, exchange, undefined, observe)(request(undefined, {}, undefined, controller.signal));
+      } else {
+        const req = new PassThrough() as unknown as IncomingMessage;
+        req.method = 'POST'; req.url = '/api/bugdrop-capability/v1/';
+        req.headers = { host: 'foil.neonwatty.com', origin, 'content-type': 'application/json', 'sec-fetch-site': 'same-origin' };
+        const headers = new Headers(); let body = '';
+        const res = Object.assign(new EventEmitter(), { statusCode: 0,
+          setHeader(name: string, value: string) { headers.set(name, value); },
+          end(value: Buffer) { body = String(value); } });
+        cancel = () => { req.emit('aborted'); };
+        result = createNodeHandler(settings, exchange, undefined, observe)(req, res as unknown as ServerResponse)
+          .then(() => new Response(body, { status: res.statusCode, headers }));
+        (req as unknown as PassThrough).end(JSON.stringify(binding));
+      }
+      let settled = false;
+      void result.then(() => { settled = true; });
+      await started;
+      t.mock.timers.tick(outcome === 'success' ? 11_999 : 17_999);
+      await immediate();
+      assert.equal(settled, false);
+      assert.equal(aborts, 0);
+      if (outcome === 'cancelled') cancel();
+      else t.mock.timers.tick(1);
+      const response = await result;
+      assert.equal(calls, 1);
+      if (outcome === 'success') {
+        assert.equal(response.status, 200);
+        assert.equal((await response.json()).token, 'synthetic-capability');
+        assert.equal(aborts, 0); assert.deepEqual(events, []);
+      } else {
+        await rejected(response);
+        assert.equal(aborts, 1); assert.equal(events.length, 1);
+        assert.equal(events[0].phase, outcome);
+        assert.equal(events[0].issuerContacted, true);
+      }
+    }
+  });
+}
+
 test('failure phases distinguish configuration, body, binding, policy, SDK and issuer without disclosure', async () => {
   const events: FailureDiagnostic[] = [];
   const observe = (event: FailureDiagnostic) => { events.push(event); };
