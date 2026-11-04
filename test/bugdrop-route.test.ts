@@ -4,8 +4,9 @@ import { PassThrough } from 'node:stream';
 import { EventEmitter } from 'node:events';
 import { readFileSync } from 'node:fs';
 import { createAnonymousTokenProvider } from '../lib/bugdrop/transport.js';
-import type { IncomingMessage, ServerResponse } from 'node:http';
-import nodeHandler, { createEndpoint } from '../api/bugdrop-capability/v1.js';
+import { createServer, request as httpRequest, type IncomingMessage, type ServerResponse } from 'node:http';
+import { createV1Handler, failureReporter, type FailureDiagnostic } from '../lib/bugdrop/handler.js';
+import nodeHandler, { createEndpoint, createNodeHandler } from '../api/bugdrop-capability/v1.js';
 
 // Shared SDK api-key-credential.v1 and submission-binding.v1 public vectors.
 const root = 'bd_api_v1.AAECAwQFBgcICQoLDA0ODw.EBESExQVFhcYGRobHB0eHyAhIiMkJSYnKCkqKywtLi8';
@@ -204,4 +205,199 @@ test('browser token provider reaches the strict route without Vercel slash norma
     if (previousLocation) Object.defineProperty(globalThis, 'location', previousLocation);
     else Reflect.deleteProperty(globalThis, 'location');
   }
+});
+
+
+const capabilityResponse = () => Response.json({ schemaVersion: 1, token: 'synthetic-capability',
+  expiresAt: new Date(Date.now() + 60000).toISOString(), admission: 'managed-v1' });
+const immediate = () => new Promise<void>((resolve) => setImmediate(resolve));
+
+test('failure phases distinguish configuration, body, binding, policy, SDK and issuer without disclosure', async () => {
+  const events: FailureDiagnostic[] = [];
+  const observe = (event: FailureDiagnostic) => { events.push(event); };
+  const cases = [
+    { env: {}, req: request(), transport: deny, phase: 'configuration' },
+    { env: settings, req: request('x'.repeat(1025)), transport: deny, phase: 'body' },
+    { env: settings, req: request('{'), transport: deny, phase: 'binding' },
+    { env: settings, req: request(undefined, { 'Sec-Fetch-Site': 'cross-site' }), transport: deny, phase: 'policy' },
+    { env: { ...settings, BUGDROP_API_KEY: 'invalid-secret-root' }, req: request(), transport: deny, phase: 'sdk_init' },
+    { env: settings, req: request(), transport: async () => new Response(root, { status: 403 }), phase: 'issuer_exchange' },
+  ];
+  for (const item of cases) {
+    events.length = 0;
+    const response = await createEndpoint(item.env, item.transport, 1000, observe)(item.req);
+    await rejected(response, item.phase === 'configuration' ? 404 : 502);
+    assert.equal(events.length, 1); assert.equal(events[0].phase, item.phase);
+    assert.equal(events[0].issuerContacted, item.phase === 'issuer_exchange');
+    if (item.phase === 'issuer_exchange') assert.equal(events[0].httpStatus, 403);
+    for (const secret of [root, authorization, binding.submissionId, binding.payloadDigest, 'invalid-secret-root']) assert.equal(JSON.stringify(events).includes(secret), false);
+  }
+  const policyEvents: FailureDiagnostic[] = [];
+  const handler = createV1Handler({ apiKey: root, origin, endpoint: issuer, fetch: deny,
+    observeFailure: (event) => { policyEvents.push(event); } }, () => { throw new Error(`${root} ${authorization}`); });
+  await rejected(await handler(request())); assert.equal(policyEvents.length, 1); assert.equal(policyEvents[0].phase, 'policy');
+});
+
+test('transport diagnostics neither consume nor clone the issuer response body', async () => {
+  let calls = 0;
+  const events: FailureDiagnostic[] = [];
+  const exchange: typeof fetch = async () => {
+    calls++;
+    const response = capabilityResponse();
+    Object.defineProperty(response, 'body', { get() { assert.fail('Observer consumed response body'); } });
+    response.clone = () => { assert.fail('Observer cloned response body'); };
+    return response;
+  };
+  assert.equal((await createEndpoint(settings, exchange, 1000, (event) => { events.push(event); })(request())).status, 200);
+  assert.equal(calls, 1); assert.equal(events.length, 0);
+});
+
+test('hostile errors and observer failures never expose secrets or reject authorization handling', async () => {
+  const canary = `${root} ${authorization} cookie-secret ${binding.submissionId} ${binding.payloadDigest}`;
+  const events: unknown[] = [];
+  const warn = console.warn;
+  console.warn = (...args) => { events.push(args); };
+  try { await rejected(await createEndpoint(settings, async () => { throw new Error(canary); })(request())); }
+  finally { console.warn = warn; }
+  assert.equal(events.length, 1);
+  for (const secret of canary.split(' ')) assert.equal(JSON.stringify(events).includes(secret), false);
+  const unhandled: unknown[] = [];
+  const listener = (error: unknown) => { unhandled.push(error); };
+  process.on('unhandledRejection', listener);
+  try {
+    for (const observer of [() => { throw new Error(canary); }, async () => { throw new Error(canary); }]) {
+      let calls = 0;
+      await rejected(await createEndpoint(settings, async () => { calls++; return new Response(canary, { status: 403 }); }, 1000, observer)(request()));
+      assert.equal(calls, 1);
+    }
+    await immediate(); await immediate(); assert.deepEqual(unhandled, []);
+  } finally { process.off('unhandledRejection', listener); }
+  const projected: FailureDiagnostic[] = [];
+  const report = failureReporter((event) => { projected.push(event); });
+  report({ phase: canary, reason: canary, issuerContacted: canary, httpStatus: canary,
+    originMatches: canary, headers: canary } as unknown as FailureDiagnostic);
+  assert.equal(JSON.stringify(projected).includes(root), false);
+  assert.deepEqual(projected, [{ phase: 'sdk_init', reason: 'failed', issuerContacted: false }]);
+});
+
+test('deadline and request cancellation emit once with correct issuer contact and one abort', async () => {
+  for (const cancellation of [false, true]) {
+    const events: FailureDiagnostic[] = [];
+    let calls = 0; let aborts = 0;
+    const controller = new AbortController();
+    let started!: () => void; const contacted = new Promise<void>((resolve) => { started = resolve; });
+    const endpoint = createEndpoint(settings, async (_url, init) => {
+      calls++; started();
+      return new Promise<Response>((_resolve, reject) => init?.signal?.addEventListener('abort', () => { aborts++; reject(new Error(root)); }, { once: true }));
+    }, cancellation ? 1000 : 30, (event) => { events.push(event); });
+    const result = endpoint(request(undefined, {}, undefined, controller.signal));
+    await contacted; if (cancellation) controller.abort();
+    await rejected(await result); await immediate();
+    assert.equal(calls, 1); assert.equal(aborts, 1); assert.equal(events.length, 1);
+    assert.equal(events[0].phase, cancellation ? 'cancelled' : 'deadline'); assert.equal(events[0].issuerContacted, true);
+  }
+});
+
+async function nativeRoundTrip(options: {
+  env?: Record<string, string | undefined>; headers?: Record<string, string>; path?: string;
+  transport?: typeof fetch; deadlineMs?: number; consumeFirst?: boolean;
+}) {
+  const events: FailureDiagnostic[] = [];
+  let reads = 0; let native = false; let completed!: () => void;
+  const completion = new Promise<void>((resolve) => { completed = resolve; });
+  const server = createServer(async (req, res) => {
+    native = req.constructor.name === 'IncomingMessage' && res.constructor.name === 'ServerResponse';
+    if (options.consumeFirst) for await (const chunk of req) { void chunk; }
+    const original = req.read;
+    req.read = function (size?: number) { reads++; return original.call(this, size); };
+    try {
+      await createNodeHandler(options.env ?? settings, options.transport ?? deny, options.deadlineMs ?? 1000,
+        (event) => { events.push(event); })(req, res);
+    } finally { req.read = original; completed(); }
+  });
+  await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const address = server.address(); assert(address && typeof address !== 'string');
+  try {
+    const response = await new Promise<{ status: number; body: string; cache: string | undefined }>((resolve, reject) => {
+      const client = httpRequest({ hostname: '127.0.0.1', port: address.port, method: 'POST', path: options.path ?? '/api/bugdrop-capability/v1/', agent: false,
+        headers: { host: 'foil.neonwatty.com', origin, 'content-type': 'application/json', 'sec-fetch-site': 'same-origin', ...options.headers } }, (res) => {
+        let body = ''; res.setEncoding('utf8'); res.on('data', (chunk: string) => { body += chunk; });
+        res.on('end', () => resolve({ status: res.statusCode!, body, cache: res.headers['cache-control'] }));
+      });
+      client.on('error', reject); client.end(JSON.stringify(binding));
+    });
+    await completion;
+    return { ...response, events, reads, native };
+  } finally { await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve())); }
+}
+
+test('real IncomingMessage envelopes deny without reading input or contacting issuer', async () => {
+  for (const options of [{ env: {} }, { headers: { host: 'evil.example' } }, { path: '/api/bugdrop-capability/v1' },
+    { headers: { origin: 'https://evil.example' } }, { headers: { 'content-encoding': 'gzip' } }]) {
+    const result = await nativeRoundTrip(options);
+    assert.equal(result.native, true); assert.equal(result.status, options.env ? 404 : 502);
+    assert.equal(result.cache, 'no-store'); assert.equal(result.reads, 0); assert.equal(result.events.length, 1);
+    assert.equal(result.events[0].issuerContacted, false);
+  }
+});
+
+test('real IncomingMessage valid exchange, consumed stream and issuer deadline remain bounded', async () => {
+  let calls = 0;
+  const valid = await nativeRoundTrip({ transport: async () => { calls++; return capabilityResponse(); } });
+  assert.equal(valid.status, 200); assert.equal(calls, 1); assert.deepEqual(valid.events, []); assert.equal(valid.native, true);
+  const consumed = await nativeRoundTrip({ consumeFirst: true });
+  assert.equal(consumed.status, 502); assert.equal(consumed.reads, 0); assert.equal(consumed.events.length, 1);
+  assert.equal(consumed.events[0].phase, 'adaptation'); assert.equal(consumed.events[0].reason, 'unavailable');
+  let aborts = 0;
+  const timeout = await nativeRoundTrip({ deadlineMs: 30, transport: async (_url, init) => {
+    calls++;
+    return new Promise<Response>((_resolve, reject) => init?.signal?.addEventListener('abort', () => { aborts++; reject(new Error(root)); }, { once: true }));
+  } });
+  assert.equal(timeout.status, 502); assert.equal(calls, 2); assert.equal(aborts, 1);
+  assert.equal(timeout.events.length, 1); assert.equal(timeout.events[0].phase, 'deadline'); assert.equal(timeout.events[0].issuerContacted, true);
+});
+
+
+test('real native client disconnect cancels a contacted issuer once and records one failure', async () => {
+  let calls = 0; let aborts = 0; let started!: () => void; let finished!: () => void;
+  const contacted = new Promise<void>((resolve) => { started = resolve; });
+  const completion = new Promise<void>((resolve) => { finished = resolve; });
+  const events: FailureDiagnostic[] = [];
+  const server = createServer(async (req, res) => {
+    res.on('error', () => {});
+    try {
+      await createNodeHandler(settings, async (_url, init) => {
+        calls++; started();
+        return new Promise<Response>((_resolve, reject) => init?.signal?.addEventListener('abort', () => { aborts++; reject(new Error(root)); }, { once: true }));
+      }, 1000, (event) => { events.push(event); })(req, res);
+    } finally { finished(); }
+  });
+  await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const address = server.address(); assert(address && typeof address !== 'string');
+  const client = httpRequest({ hostname: '127.0.0.1', port: address.port, method: 'POST', path: '/api/bugdrop-capability/v1/', agent: false,
+    headers: { host: 'foil.neonwatty.com', origin, 'content-type': 'application/json', 'sec-fetch-site': 'same-origin' } });
+  client.on('error', () => {});
+  try {
+    client.end(JSON.stringify(binding)); await contacted; client.destroy(); await completion; await immediate();
+    assert.equal(calls, 1); assert.equal(aborts, 1); assert.equal(events.length, 1);
+    assert.equal(events[0].phase, 'cancelled'); assert.equal(events[0].issuerContacted, true);
+  } finally { client.destroy(); server.closeAllConnections(); await new Promise<void>((resolve) => server.close(() => resolve())); }
+});
+
+test('concurrent invocations keep issuer-contact diagnostics separate', async () => {
+  const events: FailureDiagnostic[] = [];
+  let release!: () => void; let contacted!: () => void;
+  const gate = new Promise<void>((resolve) => { release = resolve; });
+  const started = new Promise<void>((resolve) => { contacted = resolve; });
+  let calls = 0;
+  const handler = createV1Handler({ apiKey: root, origin, endpoint: issuer, fetch: async () => {
+    calls++; contacted(); await gate; return new Response(null, { status: 403 });
+  }, observeFailure: (event) => { events.push(event); } }, (req) => req.headers.get('X-Test-Deny') !== '1');
+  const first = handler(request()); await started;
+  await rejected(await handler(request(undefined, { 'X-Test-Deny': '1' })));
+  release(); await rejected(await first);
+  assert.equal(calls, 1);
+  assert.deepEqual(events.map(({ phase, issuerContacted }) => ({ phase, issuerContacted })), [
+    { phase: 'policy', issuerContacted: false }, { phase: 'issuer_exchange', issuerContacted: true },
+  ]);
 });
