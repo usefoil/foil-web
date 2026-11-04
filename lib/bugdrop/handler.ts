@@ -4,9 +4,48 @@ const PATH = '/api/bugdrop-capability/v1/';
 const LIMIT = 1024;
 const HEADERS = { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' };
 
+export type FailurePhase = 'configuration' | 'node_envelope' | 'adaptation' | 'body' | 'binding' | 'policy' | 'sdk_init' | 'issuer_exchange' | 'deadline' | 'cancelled';
+type FailureReason = 'disabled' | 'incomplete' | 'rejected' | 'unavailable' | 'denied' | 'failed' | 'expired' | 'aborted';
+export type FailureDiagnostic = Readonly<{
+  phase: FailurePhase;
+  reason: FailureReason;
+  issuerContacted: boolean;
+  httpStatus?: number;
+  keyPresent?: boolean;
+  originMatches?: boolean;
+  issuerMatches?: boolean;
+  hostMatches?: boolean;
+  pathMatches?: boolean;
+  methodMatches?: boolean;
+  contentTypeMatches?: boolean;
+  fetchSiteMatches?: boolean;
+  encodingAllowed?: boolean;
+  streamAvailable?: boolean;
+}>;
+export type FailureObserver = (event: FailureDiagnostic) => void | Promise<void>;
+
+/** One sanitized event per invocation; telemetry must never affect authorization. */
+export function failureReporter(observer: FailureObserver = (event) => console.warn('bugdrop_authorization_failure', event)) {
+  let emitted = false;
+  return (event: FailureDiagnostic): void => {
+    if (emitted) return;
+    emitted = true;
+    const safe: FailureDiagnostic = Object.freeze({
+      phase: (['configuration', 'node_envelope', 'adaptation', 'body', 'binding', 'policy', 'sdk_init', 'issuer_exchange', 'deadline', 'cancelled'] as const).includes(event.phase) ? event.phase : 'sdk_init',
+      reason: (['disabled', 'incomplete', 'rejected', 'unavailable', 'denied', 'failed', 'expired', 'aborted'] as const).includes(event.reason) ? event.reason : 'failed',
+      issuerContacted: event.issuerContacted === true,
+      ...(Number.isInteger(event.httpStatus) && event.httpStatus! >= 100 && event.httpStatus! <= 599 ? { httpStatus: event.httpStatus } : {}),
+      ...Object.fromEntries((['keyPresent', 'originMatches', 'issuerMatches', 'hostMatches', 'pathMatches', 'methodMatches', 'contentTypeMatches', 'fetchSiteMatches', 'encodingAllowed', 'streamAvailable'] as const)
+        .filter((key) => typeof event[key] === 'boolean').map((key) => [key, event[key]])),
+    });
+    try { void Promise.resolve(observer(safe)).catch(() => {}); } catch { /* Diagnostics are best effort. */ }
+  };
+}
+
 export interface V1BackendOptions extends BugDropServerOptions {
   origin: string;
   environment?: string;
+  observeFailure?: FailureObserver;
 }
 
 // Enforce session, CSRF, authorization, rate limits and atomic ID-to-digest reuse here.
@@ -120,11 +159,25 @@ export function createV1Handler(options: V1BackendOptions, customerPolicy: Custo
     throw new TypeError('A customer access/CSRF/rate policy is required');
   }
   const origin = canonicalOrigin(options.origin);
-  const { environment } = options;
-  const client = new BugDrop(options);
+  const { environment, observeFailure, ...sdkOptions } = options;
   const endpoint = `${origin}${PATH}`;
   return async (request: Request): Promise<Response> => {
+    const report = failureReporter(observeFailure);
+    let phase: FailurePhase = 'sdk_init';
+    let reason: FailureReason = 'failed';
+    let issuerContacted = false;
+    let httpStatus: number | undefined;
     try {
+      const transport = sdkOptions.fetch ?? globalThis.fetch;
+      const observedTransport: typeof fetch = async (...args) => {
+        issuerContacted = true;
+        const response = await transport(...args);
+        // Observe only metadata; the SDK alone owns the response body.
+        try { if (Number.isInteger(response.status) && response.status >= 100 && response.status <= 599) httpStatus = response.status; } catch { /* Ignore unusable metadata. */ }
+        return response;
+      };
+      const client = new BugDrop({ ...sdkOptions, fetch: typeof transport === 'function' ? observedTransport : transport });
+      phase = 'node_envelope'; reason = 'rejected';
       if (
         request.method !== 'POST' ||
         request.url !== endpoint ||
@@ -134,9 +187,14 @@ export function createV1Handler(options: V1BackendOptions, customerPolicy: Custo
         request.signal.aborted
       )
         reject();
-      const binding = Object.freeze(parse(await read(request)));
+      phase = 'body'; reason = 'failed';
+      const body = await read(request);
+      phase = 'binding'; reason = 'rejected';
+      const binding = Object.freeze(parse(body));
+      phase = 'policy'; reason = 'denied';
       if ((await customerPolicy(request, binding)) !== true) reject();
       if (request.signal.aborted) reject();
+      phase = 'issuer_exchange'; reason = 'failed';
       const capability = await client.createSubmissionToken({
         ...binding,
         origin,
@@ -145,6 +203,8 @@ export function createV1Handler(options: V1BackendOptions, customerPolicy: Custo
       });
       return new Response(JSON.stringify(capability), { status: 200, headers: HEADERS });
     } catch {
+      report({ phase: request.signal.aborted ? 'cancelled' : phase,
+        reason: request.signal.aborted ? 'aborted' : reason, issuerContacted, httpStatus });
       if (!request.body?.locked) void request.body?.cancel().catch(() => {});
       return new Response('{"error":"unable_to_authorize_bugdrop"}', {
         status: 502,
