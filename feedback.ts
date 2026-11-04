@@ -1,4 +1,4 @@
-import { mountFeedback } from './lib/bugdrop/browser.js';
+import { BugDrop, createAnonymousTokenProvider } from '@bugdrop/browser';
 
 declare global {
   interface Window {
@@ -19,6 +19,6 @@ if (config?.enabled === true && window.location.origin === 'https://foil.neonwat
   };
   try {
     if (!config.applicationId || config.widgetUrl !== 'https://delivery.bugdrop.dev/widget.managed.v1.js') throw new Error();
-    void mountFeedback({ applicationId: config.applicationId, widgetUrl: config.widgetUrl }).ready.catch(fail);
+    void BugDrop.init({ applicationId: config.applicationId, widgetUrl: config.widgetUrl, tokenProvider: createAnonymousTokenProvider() }).ready.catch(fail);
   } catch { fail(); }
 }

@@ -47,8 +47,8 @@
     "jsdom": "29.0.1"
   },
   "dependencies": {
-    "@bugdrop/browser": "file:vendor/sdk/bugdrop-browser-0.1.0.tgz",
-    "@bugdrop/server": "file:vendor/sdk/bugdrop-server-0.1.0.tgz"
+    "@bugdrop/browser": "file:vendor/sdk/bugdrop-browser-0.2.0.tgz",
+    "@bugdrop/server": "file:vendor/sdk/bugdrop-server-0.2.0.tgz"
   },
   "type": "module"
 }

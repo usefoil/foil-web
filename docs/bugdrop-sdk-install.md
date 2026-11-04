@@ -1,108 +1,116 @@
 # Foil website feedback readiness
 
-This source integration is disabled by default. PR46 is deployed with feedback
-disabled; Foil reporting activation and delivery acceptance remain pending. It applies only to usefoil/foil-web, repository
-1264283880, at candidate origin https://foil.neonwatty.com. It does not modify
-the native macOS app. Repository selection is not an access grant.
+This source integration is disabled by default and applies only to
+usefoil/foil-web, repository 1264283880, at https://foil.neonwatty.com.
+Foil reporting activation and delivery acceptance remain pending. Repository
+selection is not an access grant. The native macOS app is outside this slice.
 
-## Pinned artifacts
+## Private pinned artifacts
 
-The private anonymous SDK bundle source is
-`f2bc49002784048b0c0e3996530f01300efb1dff`. Original bundle manifest is preserved
-at `vendor/sdk/PROVENANCE.json`; its paths refer to the original bundle, not
-this integration. `src/{browser,server,handler,transport}.ts` map to
-`lib/bugdrop/`. The integration adapts handler body cancellation for the
-Vercel overall deadline, and trims unused customer-policy/CSRF wrapper exports
-for this managed anonymous integration. The SDK tarballs remain byte-for-byte unchanged.
+The active file dependencies are @bugdrop/browser and @bugdrop/server 0.2.0,
+packed with npm 11.19.1 from SDK source commit
+`9f7982a0c05d4723c56ed13c1da57f3d6d5fcf59`, tree
+`8ee272f4c3233de363604458d8cb255ecf77e265`.
+The portable `vendor/sdk/PROVENANCE.json` records both artifact paths, SHA256
+and npm SHA512 integrity. The lockfile pins those same tarballs. These are
+unpublished private release candidates; SDK draft PR50 is
+https://github.com/bugdrophq/bugdrop-sdk-typescript/pull/50.
+No registry publication or remote qualification is implied.
 
-Browser SHA256: `1517e5501c86d44f9957a9c7705da87c757ac4e327aabed16f8fd774d1d1cc83`.
-Server SHA256: `965ef2bcee173501859880b6358bfa4bee6bd12985d7802f5591f171f3d7482d`.
-These are private file dependencies, not an npm publication or deployed proof.
+Browser SHA256: `2890fcf9e74af8d33f21d18c093164ffcb0ae3735c3efb8681f0ee5fa7d4f987`.
+Server SHA256: `44a3149465f851e154025deed3380173bb4753d0dc1be4e32693bba742a10fd9`.
+Both digests and SHA512 integrity were checked before copying. The active
+0.1 artifacts and copied protocol wrappers have been replaced. Their original
+bytes and historical audit/failure receipts remain available in Git history
+and the preserved original worktree; they are not current readiness evidence.
 
 ## Two independent switches
 
 `FOIL_FEEDBACK_ENABLED=0` controls build-time public configuration.
-`BUGDROP_ENABLED=0` controls the server-only Vercel function. Both remain off
-unless a separately approved production rollout enables them. Preview stays off.
+`BUGDROP_ENABLED=0` controls the server-only Vercel function. Production and
+preview reporting flags are untouched. Both remain off unless a separately
+approved rollout enables them; preview stays off.
 The only browser configuration is enabled, public Application ID, and exact
-hosted-widget URL https://delivery.bugdrop.dev/widget.managed.v1.js. The homepage alone
-loads the bundled SDK and requires the exact approved origin. Blog and privacy
-pages never mount it. Build output excludes API sources, server wrappers,
-vendor tarballs and provenance.
+hosted-widget URL https://delivery.bugdrop.dev/widget.managed.v1.js. The homepage
+alone mounts the SDK, once, at the exact approved origin. Readiness failure
+shows a generic notice. Blog and privacy pages never mount it. Build output
+excludes API sources, server wrappers, vendor tarballs and provenance.
 
 After authorization, server configuration requires BUGDROP_API_KEY (root),
 BUGDROP_ORIGIN=https://foil.neonwatty.com and
-BUGDROP_ISSUER=https://managed.bugdrop.dev/v1/submission-capabilities. Never put
-roots in public variables, source, screenshots, logs, or browser inputs.
-No local secret environment file is required for the offline proofs.
+BUGDROP_ISSUER=https://managed.bugdrop.dev/v1/submission-capabilities.
+The thin Foil wrapper reads configuration on every invocation. Disabled
+requests return 404 before input or client construction; incomplete enabled
+configuration, including the old issuer URL, returns generic no-store 502
+before body reads or issuer contact. A fixed safe configuration diagnostic
+contains no environment values. No local secret file is needed for offline tests.
 
-## Admission and failures
+## SDK-owned admission and failures
 
-POST /api/bugdrop-capability/v1/ is a Vercel Node function with raw body parsing.
-The trailing slash is canonical under this site's existing Vercel routing.
-The browser requests it directly and rejects redirects; the server rejects
-slashless paths and query selectors. Do not change site-wide routing to enable
-feedback.
-The standard Python static preview cannot execute this route. The SDK canonical
-parser rejects extra/duplicate keys, invalid binding bytes, wrong origin,
-method, media type and path. Same-origin Fetch Metadata is mandatory.
-The server explicitly requests managed-v1 admission and requires its exact
-confirmation; there is no customer database adapter, in-memory fallback,
-automatic retry, or alternate issuer. An eight-second overall deadline covers
-body read and exchange, with cancellation propagation. Uncertain responses
-fail closed with a generic no-store response. Explicit same-binding retries
-are separate calls and still require durable service admission.
+POST /api/bugdrop-capability/v1/ is a Vercel Node function with
+`bodyParser: false`. The canonical trailing slash matches existing Vercel
+routing; the packaged browser provider requests it directly with redirects
+rejected and cookies omitted. The packaged Node handler enforces exact host,
+origin, path and same-origin Fetch Metadata. Forwarded selectors cannot choose
+an authority. The standard Python static preview cannot execute this route.
 
-## Offline gates
+`createNodeCapabilityHandler` owns raw Node adaptation, bounded canonical
+binding parsing, managed-v1 confirmation, cancellation and the 18-second
+overall server deadline. The browser provider owns its 25-second deadline.
+There is no copied Foil parser, transport, deadline or Web endpoint wrapper.
+The SDK uses production environment and managed admission with no automatic
+retry or alternate issuer. Uncertain responses fail closed. Explicit retries
+remain separate calls requiring durable service admission.
 
-Run npm run test:bugdrop, npm run typecheck:bugdrop, npm run build,
-npm run check:bugdrop, npm run quality and npm audit --audit-level=moderate.
-Tests use only public synthetic vectors, injected exchange mocks and a mocked
-DOM; they do not establish durable production behavior. The output scanner has
-a deliberate secret-contamination negative control. No deployed/release smoke
-is part of these gates.
+Foil explicitly supplies a console observer because the SDK default is a no-op.
+SDK diagnostics are sanitized metadata only; configuration diagnostics are
+fixed literals. Neither observer throws nor rejected promises affect responses.
+Do not log bindings, roots, headers or raw errors.
 
-## Before any enablement
+## Offline evidence and coverage ownership
 
-Obtain exact owner/repository, destination and origin approvals, production
-App grants and scoped activation authorization. Verify deployed managed-v1
-flag and durable namespace, exact response confirmation, current setup fences,
-release identity and shared owner budget headroom. Never reset, copy or refund
-the shared owner ledger. Complete actual-base review and final-head CI,
-approve deployment and inspect the preview/build route mapping. Review the
-public optional-feedback disclosure. Then prove correlated delivery, scope
-isolation, independent revocation and replacement through the normal product
-flow. Do not reset neonwatty. These are unresolved production prerequisites.
+Run `npm run quality`. Consumer route tests import the installed tarballs and
+use real native Node HTTP requests on a loopback fixture, with a synthetic
+public credential vector and injected managed issuer responses. They cover
+per-invocation configuration, zero body reads/exchanges at configuration gates,
+exact Foil wiring, the derived vector bearer and SDK version, safe observer
+wiring, and the packaged browser provider reaching the canonical Node route.
+Artifact tests check installed versions, tarball hashes and lock integrity.
+Existing emitted-browser DOM guards and build-output secret contamination
+negative controls remain in place.
 
-## Local candidate status (2026-10-27)
+Algorithm regression coverage belongs to the SDK source suites:
 
-The T086 candidate passed 12 offline route/browser/build tests, standalone
-typing, format, output-boundary scan and existing launch checks. Its original
-verification remained blocked after two corrections: Knip found an unused
-exported type, and quality reproduced four unchanged base homepage HTML errors.
-T090 explicitly authorized one terminal mechanical cleanup of those exact
-causes with zero corrective retries. Original T086 failures and its exhausted
-counter remain historical records; this is not a fresh repair allowance.
-The terminal verification receipt records the current outcome.
+| Previous Foil algorithm coverage | SDK test suite |
+| --- | --- |
+| Binding parser and request boundary | `test/server-adapter-boundary.test.ts`, `test/server-adapter.test.ts` |
+| Raw Node stream/envelope handling | `test/server-node-adapter.test.ts` |
+| Deadline and cancellation | `test/server-adapter-deadline.test.ts` |
+| Managed response bounds/confirmation | `test/server-adapter-response.test.ts` |
+| Sanitization and observer isolation | `test/server-adapter-diagnostics.test.ts` |
+| Browser provider and deadline | `test/browser-token-provider.test.ts`, `test/browser-token-provider-deadline.test.ts` |
 
-The full dependency audit has 10 unchanged baseline findings: seven high and
-three moderate advisories in the development/tooling graph. Their identities
-and paths were independently compared with the exact base package/lock audit.
-They remain unresolved security work, even if a production-only graph check
-finds no advisory. No package upgrade, audit threshold reduction or blanket
-security acceptance is authorized here. This source remains uncommitted and
-unpublished pending refreshed actual-base review and final-head CI.
+These tests establish local consumer wiring, not hosted raw-body behavior or
+durable production admission. No live report, provider write, activation,
+deployment or deployed smoke is part of this slice. After quality, rebuild
+with `FOIL_FEEDBACK_ENABLED=0 npm run build`, then run `npm run check:bugdrop`;
+browser tests otherwise leave synthetic enabled output. A local disabled
+build is not an approved deployment artifact.
 
-Terminal cleanup results: Knip, full quality (including the 12 offline tests and
-typing) and the output scanner pass. The full audit still reports the same 10
-baseline findings; the production-only dependency audit reports zero findings.
-This narrows the dependency-graph result without clearing tooling or production
-security. Original failures remain recorded.
+Existing development-tooling dependency advisories remain unresolved. No
+unrelated upgrades or audit threshold changes are authorized by this adoption.
+Historical counts and exhausted repair receipts are retained in Git/history;
+consult current audit output rather than treating older counts as current.
 
-The local footer-browser comparison did not complete: the quality tests leave
-a synthetically enabled public config in generated dist, while the comparison
-expected the default-disabled build. The first config assertion stopped it
-before desktop/mobile style equality was established. External requests were
-intercepted and blocked. No corrective retry was authorized. Do not treat that
-generated test output as an approved deployment artifact. Source defaults are
-unchanged, and footer equivalence still needs independent verification.
+## Before enablement
+
+Exact owner/repository, destination and origin approvals, production App grants
+and scoped activation authorization are still required. Verify deployed
+managed-v1 configuration and durable namespace, exact response confirmation,
+current setup fences, release identity and shared owner budget headroom.
+Never reset, copy or refund the shared owner ledger. Complete actual-base
+review and final-head CI, approve deployment, inspect the preview/build route
+mapping and prove hosting raw-body handling. Review the public feedback
+disclosure, then prove correlated delivery, scope isolation, independent
+revocation and replacement through the normal product flow. These gates remain
+unqualified by this local adoption. Do not reset neonwatty.
