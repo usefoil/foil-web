@@ -7,22 +7,22 @@ selection is not an access grant. The native macOS app is outside this slice.
 
 ## Private pinned artifacts
 
-The active file dependencies are @bugdrop/browser and @bugdrop/server 0.2.0,
-packed with npm 11.19.1 from SDK source commit
-`9f7982a0c05d4723c56ed13c1da57f3d6d5fcf59`, tree
-`8ee272f4c3233de363604458d8cb255ecf77e265`.
-The portable `vendor/sdk/PROVENANCE.json` records both artifact paths, SHA256
-and npm SHA512 integrity. The lockfile pins those same tarballs. These are
-unpublished private release candidates; SDK draft PR50 is
-https://github.com/bugdrophq/bugdrop-sdk-typescript/pull/50.
-No registry publication or remote qualification is implied.
+The active file dependencies are @bugdrop/browser 0.2.0 and @bugdrop/server 0.2.1.
+The browser artifact is unchanged from SDK source
+`9f7982a0c05d4723c56ed13c1da57f3d6d5fcf59`, packed with npm 11.19.1.
+The repaired server artifact was packed with npm 10.9.8 from SDK source
+`fe29f52da22e1e2517672abb802a8acee11f0ad2`, tree
+`ad31e11018fd42e683060fcc47362c75a0c3d4a3`.
+The portable `vendor/sdk/PROVENANCE.json` records per-package source identity,
+artifact paths, SHA256 and npm SHA512 integrity. Its top-level source identity
+refers to the server patch. The lockfile pins those same tarballs. These remain
+unpublished private candidates; no registry publication or remote qualification
+is implied.
 
 Browser SHA256: `2890fcf9e74af8d33f21d18c093164ffcb0ae3735c3efb8681f0ee5fa7d4f987`.
-Server SHA256: `44a3149465f851e154025deed3380173bb4753d0dc1be4e32693bba742a10fd9`.
-Both digests and SHA512 integrity were checked before copying. The active
-0.1 artifacts and copied protocol wrappers have been replaced. Their original
-bytes and historical audit/failure receipts remain available in Git history
-and the preserved original worktree; they are not current readiness evidence.
+Server SHA256: `649063111dc7dc412303343be1709637df9cdbb87ec4d2affe172d38fdcea018`.
+The previous server bytes remain in Git history; this patch does not change the
+browser package or any deployed release.
 
 ## Two independent switches
 
@@ -58,8 +58,10 @@ an authority. The standard Python static preview cannot execute this route.
 binding parsing, managed-v1 confirmation, cancellation and the 18-second
 overall server deadline. The browser provider owns its 25-second deadline.
 There is no copied Foil parser, transport, deadline or Web endpoint wrapper.
-The SDK uses production environment and managed admission with no automatic
-retry or alternate issuer. Uncertain responses fail closed. Explicit retries
+The route omits the optional authorization environment because its managed
+authority has a null environment. A production deployment does not imply a
+`production` authorization constraint. The repaired SDK preserves omission and
+still requests managed admission with no automatic retry or alternate issuer. Uncertain responses fail closed. Explicit retries
 remain separate calls requiring durable service admission.
 
 Foil explicitly supplies a console observer because the SDK default is a no-op.
@@ -73,7 +75,8 @@ Run `npm run quality`. Consumer route tests import the installed tarballs and
 use real native Node HTTP requests on a loopback fixture, with a synthetic
 public credential vector and injected managed issuer responses. They cover
 per-invocation configuration, zero body reads/exchanges at configuration gates,
-exact Foil wiring, the derived vector bearer and SDK version, safe observer
+exact Foil wiring, omitted environment against the null-authority contract,
+the derived vector bearer and SDK version, safe observer
 wiring, and the packaged browser provider reaching the canonical Node route.
 Artifact tests check installed versions, tarball hashes and lock integrity.
 Existing emitted-browser DOM guards and build-output secret contamination
