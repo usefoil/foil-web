@@ -61,14 +61,17 @@ async function rejected(response: Response, status = 502) {
 test('installed private SDK versions, tarball digests and lock integrity match portable provenance', () => {
   const provenance = JSON.parse(readFileSync('vendor/sdk/PROVENANCE.json', 'utf8'));
   const lock = JSON.parse(readFileSync('package-lock.json', 'utf8'));
-  assert.equal(provenance.sourceCommit, '9f7982a0c05d4723c56ed13c1da57f3d6d5fcf59');
-  assert.equal(provenance.sourceTree, '8ee272f4c3233de363604458d8cb255ecf77e265');
-  assert.equal(provenance.npm, '11.19.1');
+  assert.equal(provenance.sourceCommit, 'fe29f52da22e1e2517672abb802a8acee11f0ad2');
+  assert.equal(provenance.sourceTree, 'ad31e11018fd42e683060fcc47362c75a0c3d4a3');
+  assert.equal(provenance.npm, '10.9.8');
   assert.equal(provenance.published, false);
   assert.equal(provenance.remoteQualificationTransferred, false);
   for (const name of ['browser', 'server']) {
     const artifact = provenance.packages[name];
-    assert.equal(JSON.parse(readFileSync(`node_modules/@bugdrop/${name}/package.json`, 'utf8')).version, '0.2.0');
+    assert.equal(artifact.version, name === 'server' ? '0.2.1' : '0.2.0');
+    assert.match(artifact.sourceCommit, /^[a-f0-9]{40}$/);
+    assert.match(artifact.sourceTree, /^[a-f0-9]{40}$/);
+    assert.equal(JSON.parse(readFileSync(`node_modules/@bugdrop/${name}/package.json`, 'utf8')).version, artifact.version);
     assert.equal(createHash('sha256').update(readFileSync(artifact.path)).digest('hex'), artifact.sha256);
     assert.equal(lock.packages[`node_modules/@bugdrop/${name}`].integrity, artifact.integrity);
     assert.equal(lock.packages[`node_modules/@bugdrop/${name}`].resolved, `file:${artifact.path}`);
@@ -127,17 +130,17 @@ test('packaged native adapter enforces exact Foil host, origin and canonical pat
   });
 });
 
-test('actual packaged managed exchange derives vector bearer and sends SDK 0.2 without root', async () => {
+test('actual packaged managed exchange derives vector bearer and omits an unassigned environment', async () => {
   let calls = 0;
   const exchange: typeof fetch = async (url, init) => {
     calls++;
     assert.equal(url, issuer);
     const headers = new Headers(init?.headers);
     assert.equal(headers.get('Authorization'), authorization);
-    assert.equal(headers.get('X-BugDrop-SDK-Version'), '0.2.0');
+    assert.equal(headers.get('X-BugDrop-SDK-Version'), '0.2.1');
     assert.equal(JSON.stringify([...headers]).includes(root), false);
     assert.equal(String(init?.body).includes(root), false);
-    assert.deepEqual(JSON.parse(String(init?.body)), { schemaVersion: 1, ...binding, origin, environment: 'production', admission: 'managed-v1' });
+    assert.deepEqual(JSON.parse(String(init?.body)), { schemaVersion: 1, ...binding, origin, admission: 'managed-v1' });
     return capability();
   };
   await native(createNodeHandler(() => settings, exchange, quiet), async (send) => {
@@ -145,6 +148,22 @@ test('actual packaged managed exchange derives vector bearer and sends SDK 0.2 w
     assert.equal(response.status, 200);
     assert.equal(response.headers.get('cache-control'), 'no-store');
     assert.deepEqual(Object.keys(await response.json()).sort(), ['expiresAt', 'schemaVersion', 'token']);
+  });
+  assert.equal(calls, 1);
+});
+
+test('null-environment issuer contract accepts the packaged Foil route without inferring production', async () => {
+  let calls = 0;
+  const exchange: typeof fetch = async (_url, init) => {
+    calls++;
+    const body = JSON.parse(String(init?.body));
+    if (Object.hasOwn(body, 'environment') && body.environment !== null) {
+      return Response.json({ schemaVersion: 1, error: { code: 'invalid_capability', retryable: false } }, { status: 401 });
+    }
+    return capability();
+  };
+  await native(createNodeHandler(() => settings, exchange, quiet), async (send) => {
+    assert.equal((await send()).status, 200);
   });
   assert.equal(calls, 1);
 });

@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "releaseVersion": "0.2.0",
+  "releaseVersion": "0.2.1",
   "sourceRepository": "https://github.com/bugdrophq/bugdrop-sdk-typescript",
-  "sourceCommit": "9f7982a0c05d4723c56ed13c1da57f3d6d5fcf59",
-  "sourceTree": "8ee272f4c3233de363604458d8cb255ecf77e265",
+  "sourceCommit": "fe29f52da22e1e2517672abb802a8acee11f0ad2",
+  "sourceTree": "ad31e11018fd42e683060fcc47362c75a0c3d4a3",
   "node": "v22.22.3",
-  "npm": "11.19.1",
+  "npm": "10.9.8",
   "packages": {
     "browser": {
       "name": "@bugdrop/browser",
@@ -13,15 +13,23 @@
       "filename": "bugdrop-browser-0.2.0.tgz",
       "sha256": "2890fcf9e74af8d33f21d18c093164ffcb0ae3735c3efb8681f0ee5fa7d4f987",
       "integrity": "sha512-ETO91+C3RAHMc1piysa9/DUY0wJj1zIcdqwFkaK10CB6C0DZ533I24mk5fYUeEFou6O+qFoDiTGSAj9wdKW+bA==",
-      "path": "vendor/sdk/bugdrop-browser-0.2.0.tgz"
+      "path": "vendor/sdk/bugdrop-browser-0.2.0.tgz",
+      "sourceCommit": "9f7982a0c05d4723c56ed13c1da57f3d6d5fcf59",
+      "sourceTree": "8ee272f4c3233de363604458d8cb255ecf77e265",
+      "node": "v22.22.3",
+      "npm": "11.19.1"
     },
     "server": {
       "name": "@bugdrop/server",
-      "version": "0.2.0",
-      "filename": "bugdrop-server-0.2.0.tgz",
-      "sha256": "44a3149465f851e154025deed3380173bb4753d0dc1be4e32693bba742a10fd9",
-      "integrity": "sha512-hHxtpNKRsskLtvdes+Il8gmUaTUzdr4StNm+zNoa++15O7YcbSmro9MBmVRO+sRdm2RtEDDDUdhmF2hzKQgKIw==",
-      "path": "vendor/sdk/bugdrop-server-0.2.0.tgz"
+      "version": "0.2.1",
+      "filename": "bugdrop-server-0.2.1.tgz",
+      "sha256": "649063111dc7dc412303343be1709637df9cdbb87ec4d2affe172d38fdcea018",
+      "integrity": "sha512-WT0cWf9HP2L/CFHHLqhX27J0wxsowGFCI1gfcXLewBtK1AdYeRHaqmqwK5YmuDN1BklukeycFAKQTU42/UvOag==",
+      "path": "vendor/sdk/bugdrop-server-0.2.1.tgz",
+      "sourceCommit": "fe29f52da22e1e2517672abb802a8acee11f0ad2",
+      "sourceTree": "ad31e11018fd42e683060fcc47362c75a0c3d4a3",
+      "node": "v22.22.3",
+      "npm": "10.9.8"
     }
   },
   "status": "private release candidate; not published or remotely qualified",

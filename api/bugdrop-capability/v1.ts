@@ -32,7 +32,7 @@ export function createNodeHandler(
     }
     await createNodeCapabilityHandler({
       enabled: true, mode: 'anonymous', apiKey: env.BUGDROP_API_KEY,
-      origin: ORIGIN, path: PATH, endpoint: ISSUER, environment: 'production',
+      origin: ORIGIN, path: PATH, endpoint: ISSUER,
       fetch: transport, observeFailure: observer,
     })(req, res);
   };

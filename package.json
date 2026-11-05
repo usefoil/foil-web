@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "@bugdrop/browser": "file:vendor/sdk/bugdrop-browser-0.2.0.tgz",
-    "@bugdrop/server": "file:vendor/sdk/bugdrop-server-0.2.0.tgz"
+    "@bugdrop/server": "file:vendor/sdk/bugdrop-server-0.2.1.tgz"
   },
   "type": "module"
 }
